@@ -37,7 +37,9 @@ class Input extends Component {
       case 'select':
         inputElement = (
           <div>
-            <button
+            <div
+              role="button"
+              tabIndex={0}
               className={[...inputClasses, styles.Select].join(' ')}
               id={this.props.id}
               onClick={() => this.setState({ show: !this.state.show })}
@@ -47,9 +49,10 @@ class Input extends Component {
               </div>
               <div className={this.state.show ? styles.Options : [styles.Options, styles.Hide].join(' ')}>
                 {
-                  this.props.elementConfig.options.map(option => (
+                  this.props.elementConfig.options.map((option, i) => (
                     <button
-                      key={option.value}
+                      tabIndex={0}
+                      key={i}
                       onClick={() => this.props.changed(option)}
                     >
                       {option.displayValue}
@@ -60,7 +63,7 @@ class Input extends Component {
               <div className={styles.ArrowDown}>
                 <i className="fa fa-chevron-down" aria-hidden="true" />
               </div>
-            </button>
+            </div>
           </div>
         );
         break;

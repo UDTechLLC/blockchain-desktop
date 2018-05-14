@@ -64,6 +64,10 @@
   align-items: flex-start;
 }
 
+.alignEnd {
+  align-items: flex-end;
+}
+
 .justifyCenter {
   justify-content: center;
 }
@@ -84,6 +88,13 @@
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.flexAroundCenter {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-around;
   align-items: center;
 }
 

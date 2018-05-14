@@ -17,10 +17,9 @@ const rateCalc = props => {
       <div className={classes.FormWrapper}>
         <form>
           {
-            Object.keys(props.calculator).map(k => (
+            Object.keys(props.calculator).map((k, i) => (
               <Input
-                key={k}
-                elKey={k}
+                key={i}
                 type={props.calculator[k].type}
                 elementType={props.calculator[k].elementType}
                 value={props.calculator[k].value}

@@ -20,7 +20,7 @@ const deposit = props => (
       />
     </div>
     <div className={classes.Middle}>
-      <input type="text" value="0xa658b225a2c34579963612eea3d61c7755ebf8c6" />
+      <input type="text" value="0xa658b225a2c34579963612eea3d61c7755ebf8c6" readOnly />
       <button>Copy</button>
       <button>Qr-code</button>
     </div>

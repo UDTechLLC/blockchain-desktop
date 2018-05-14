@@ -12,7 +12,7 @@ import Homepage from './containers/Homepage/Homepage';
 import FilesList from './containers/FilesList/FilesList';
 import FileUpload from './containers/FileUpload/FileUpload';
 import Wallet from './containers/Wallet/Wallet';
-import Account from './containers/Account/Account';
+import Settings from './containers/Settings/Settings';
 import GhostPad from './containers/GhostPad/GhostPad';
 import Deposit from './containers/Deposit/Deposit';
 import XFiles from './containers/XFiles/XFiles';
@@ -48,7 +48,7 @@ class App extends Component {
         if (this.props.isAuth) {
           routes = (
             <Switch>
-              <Route exact path="/account" component={Account} key={Math.random()} />
+              <Route exact path="/account" component={Settings} key={Math.random()} />
               <Route exact path="/wallet" component={Wallet} key={Math.random()} />
               <Route exact path="/upload" component={FileUpload} key={Math.random()} />
               <Route exact path="/files" component={FilesList} key={Math.random()} />

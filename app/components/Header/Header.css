@@ -62,3 +62,12 @@
 .IconsMenu > li:not(:last-of-type) {
   margin-right: 21px;
 }
+
+.IconsMenu > li > a > img {
+  transition: transform 0.2s linear;
+}
+
+.IconsMenu > li > a > img:hover,
+.IconsMenu > li > a > img:active {
+  transform: scale(1.2);
+}

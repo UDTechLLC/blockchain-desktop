@@ -16,6 +16,7 @@
 .Middle {
   width: 100%;
   display: flex;
+  margin-bottom: 15px;
 }
 
 .Middle > input {
@@ -68,5 +69,9 @@
 
   .Bottom > p {
     margin-top: 0;
+  }
+
+  .Middle {
+    margin-bottom: 3px;
   }
 }

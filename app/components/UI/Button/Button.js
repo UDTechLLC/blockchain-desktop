@@ -34,7 +34,9 @@ const button = (props) => (
       }
       onClick={props.onClick}
     >
-      {props.children}
+      <div>
+        {props.children}
+      </div>
     </button>
   </div>
 );

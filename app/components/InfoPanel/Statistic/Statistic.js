@@ -3,10 +3,10 @@ import React from 'react';
 import classes from './Statistic.css';
 
 const statistic = () => {
-  let numArr = [];
+  const numArr = [];
   for (let i = 1; i < 31; i += 1) {
     const j = i < 10 ? `0${i}` : i;
-    numArr.push((<div>{j}</div>));
+    numArr.push((<div key={i}>{j}</div>));
   }
   return (
     <div className={classes.Statistic}>

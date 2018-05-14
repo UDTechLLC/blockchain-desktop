@@ -11,6 +11,7 @@
   font-weight: bold;
   text-transform: uppercase;
   margin: 4px 0 22px;
+  margin-top: -10px;
 }
 
 .FormWrapper > form {

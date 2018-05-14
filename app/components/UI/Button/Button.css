@@ -12,10 +12,20 @@
   min-height: 50px;
 }
 
+.Button > div {
+  transition: all 0.2s linear;
+}
+
 .Button:hover,
 .Button:active {
   color: white;
   border-color: white;
+
+}
+
+.Button:hover > div,
+.Button:active > div {
+  transform: scale(1.2);
 }
 
 .Button:disabled {
