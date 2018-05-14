@@ -6,10 +6,14 @@ import { ipcRenderer } from 'electron';
 
 import * as actions from '../../store/actions';
 
-import classes from './Wallet.css';
-
-import Heading from '../../components/UI/Heading/Heading';
 import CreateTransaction from '../../components/PagesSections/Wallet/CreateTransaction/CreateTransaction';
+import WalletInfo from '../../components/PagesSections/Wallet/WalletInfo/WalletInfo';
+
+import css from './Wallet.css';
+import commonCss from '../../assets/css/common.css';
+// global classes names starts with lowercase letter: styles.class
+// and component classes - uppercase: styles.Class
+const styles = { ...commonCss, ...css };
 
 class Wallet extends Component {
   state = {
@@ -36,23 +40,33 @@ class Wallet extends Component {
   };
   render() {
     return (
-      <div className={classes.Wallet}>
-        <Heading fontWeight={200} fontSize={50}>My <span>wallets</span></Heading>
-        <div className={classes.BodyWrapper}>
-          <div className={classes.WaleltsInfo}>
-            <p>Wallet: <span>{this.props.userData.address}</span></p>
-            <p>Public key: <span>{this.props.userData.cpk}</span></p>
-            <p>Balance: <span>{ this.props.balance } WB</span></p>
-          </div>
-          <div className={classes.WalletOperations}>
-            <Heading size={2} fontSize={24} fontWeight={200} divider={false}>
-              Trans<span>action</span>
-            </Heading>
+      <div className={[styles.wh100, styles.WalletWrapper].join(' ')}>
+        <div className={[styles.wh100, styles.flexBetweenCenter].join(' ')}>
+          <div
+            className={[
+              styles.flex2,
+              styles.WalletOperations
+            ].join(' ')}
+          >
             <CreateTransaction
               transactionLoading={this.state.transactionLoading}
               minenow={this.state.minenow}
               handleOnMineNowCheck={() => this.handleOnMineNowCheck()}
               handleSubmitTransaction={(to, amount) => this.handleSubmitTransaction(to, amount)}
+            />
+          </div>
+          <div
+            className={[
+              styles.flex3,
+              styles.flexColumnAllCenter,
+              styles.wh100,
+              styles.WalletInfoWrapper
+            ].join(' ')}
+          >
+            <WalletInfo
+              address={this.props.userData.address}
+              cpk={this.props.userData.cpk}
+              balance={this.props.balance}
             />
           </div>
         </div>
@@ -67,7 +81,7 @@ Wallet.propTypes = {
     cpk: PropTypes.string,
     address: PropTypes.string
   }),
-  balance: PropTypes.number.isRequired,
+  balance: PropTypes.number,
   getBalance: PropTypes.func.isRequired,
   bcNodes: PropTypes.arrayOf(PropTypes.string)
 };
@@ -78,7 +92,8 @@ Wallet.defaultProps = {
     cpk: null,
     address: null
   },
-  bcNodes: []
+  bcNodes: [],
+  balance: 0
 };
 
 const mapStateToProps = state => ({

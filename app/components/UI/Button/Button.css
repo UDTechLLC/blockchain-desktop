@@ -1,22 +1,19 @@
 .Button {
-  background-color: transparent;
-  border: 1px solid #0cf;
-  color: #0cf;
+  border: none;
   outline: none;
   cursor: pointer;
   font: inherit;
-  font-size: 21px;
-  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.71px;
-  padding: 15px 60px;
+  font-size: 1.4rem;
+  padding: 16px 60px;
   box-sizing: border-box;
-  transition: opacity 0.2s linear;
+  transition: color 0.2s linear;
+  min-height: 50px;
 }
 
 .Button:hover,
 .Button:active {
-  background-color: #0cf;
   color: white;
   border-color: white;
 }

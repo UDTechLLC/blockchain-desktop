@@ -1,20 +1,42 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import classes from './Button.css';
+import css from './Button.css';
+import commonCss from '../../../assets/css/common.css';
+// global classes names starts with lowercase letter: styles.class
+// and component classes - uppercase: styles.Class
+const styles = { ...commonCss, ...css };
 
 const button = (props) => (
-  <button
-    disabled={props.disabled}
-    className={
-      props.btnType.length === 0
-        ? classes.Button
-        : [classes.Button, classes[props.btnType]].join(' ')
-    }
-    onClick={props.onClick}
+  <div
+    className={[
+      styles.flexColumnAllCenter,
+      styles.h100,
+    ].join(' ')}
   >
-    {props.children}
-  </button>
+    <button
+      disabled={props.disabled}
+      className={
+        props.btnType.length === 0
+          ? [
+            styles.h100,
+            styles.lightBlueBg,
+            styles.blue,
+            styles.Button
+          ].join(' ')
+          : [
+            styles.h100,
+            styles.lightBlueBg,
+            styles.blue,
+            styles.Button,
+            ...styles[props.btnType]
+          ].join(' ')
+      }
+      onClick={props.onClick}
+    >
+      {props.children}
+    </button>
+  </div>
 );
 
 button.propTypes = {

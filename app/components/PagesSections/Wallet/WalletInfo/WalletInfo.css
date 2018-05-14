@@ -1,0 +1,18 @@
+.WaletsInfo {
+  padding: 40px;
+  overflow-x: auto;
+}
+
+.WaletsInfo p {
+  margin-bottom: 25px;
+}
+
+.WaletsInfo p > span {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.WaletsInfo p > span:nth-of-type(2) {
+  color: #30d6d6;
+}

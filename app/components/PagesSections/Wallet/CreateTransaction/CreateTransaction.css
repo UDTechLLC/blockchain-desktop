@@ -1,9 +1,25 @@
 .FormGroup {
   display: block;
   width: 100%;
-  margin: 15px 0;
+  margin: 15px;
 }
 
 .FormGroup label {
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.LineWithButton > div:first-of-type {
+  padding-right: 25px;
+}
+
+.Title {
+  color: #e34530;
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin-bottom: 35px;
+  padding: 0 15px;
 }

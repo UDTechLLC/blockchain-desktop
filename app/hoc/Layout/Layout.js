@@ -39,12 +39,12 @@ class Layout extends Component {
 Layout.propTypes = {
   isAuth: PropTypes.bool.isRequired,
   children: PropTypes.element.isRequired,
-  balance: PropTypes.number
+  // balance: PropTypes.number
 };
 
-Layout.defaultProps = {
-  balance: 0
-};
+// Layout.defaultProps = {
+//   balance: 0
+// };
 
 const mapStateToProps = state => ({
   isAuth: state.auth.userData.csk !== null,

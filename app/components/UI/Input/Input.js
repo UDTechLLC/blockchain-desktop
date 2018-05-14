@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import classes from './Input.css';
-
 import Aux from '../../../hoc/Aux/Aux';
 import Backdrop from '../../UI/Backdrop/Backdrop';
+
+import css from './Input.css';
+import commonCss from '../../../assets/css/common.css';
+// global classes names starts with lowercase letter: styles.class
+// and component classes - uppercase: styles.Class
+const styles = { ...commonCss, ...css };
 
 class Input extends Component {
   state = {
@@ -12,9 +16,9 @@ class Input extends Component {
   };
   render() {
     let inputElement = null;
-    const inputClasses = [classes.InputElement];
+    const inputClasses = [styles.InputElement];
     if (this.props.invalid && this.props.shouldValidate && this.props.touched) {
-      inputClasses.push(classes.Invalid);
+      inputClasses.push(styles.Invalid);
     }
     switch (this.props.elementType) {
       case 'textarea':
@@ -34,14 +38,14 @@ class Input extends Component {
         inputElement = (
           <div>
             <button
-              className={[...inputClasses, classes.Select].join(' ')}
+              className={[...inputClasses, styles.Select].join(' ')}
               id={this.props.id}
               onClick={() => this.setState({ show: !this.state.show })}
             >
               <div>
                 {this.props.value.displayValue ? this.props.value.displayValue : 'Choose one'}
               </div>
-              <div className={this.state.show ? classes.Options : [classes.Options, classes.Hide].join(' ')}>
+              <div className={this.state.show ? styles.Options : [styles.Options, styles.Hide].join(' ')}>
                 {
                   this.props.elementConfig.options.map(option => (
                     <button
@@ -53,7 +57,7 @@ class Input extends Component {
                   ))
                 }
               </div>
-              <div className={classes.ArrowDown}>
+              <div className={styles.ArrowDown}>
                 <i className="fa fa-chevron-down" aria-hidden="true" />
               </div>
             </button>
@@ -71,7 +75,7 @@ class Input extends Component {
                 id={this.props.id}
                 {...this.props.elementConfig}
               />
-              <div className={classes.ErrorMessage}>
+              <div className={styles.ErrorMessage}>
                 {this.props.invalid ? this.props.errorMessage : null}
               </div>
             </div>
@@ -86,12 +90,12 @@ class Input extends Component {
           show={this.state.show}
           clicked={() => this.setState({ show: !this.state.show })}
         />
-        <div className={classes.Input}>
+        <div className={styles.Input}>
           {
             this.props.label && (typeof this.props.label !== 'object' || (typeof this.props.label === 'object' && this.props.label.top))
               ? (
                 // eslint-disable-next-line jsx-a11y/label-has-for
-                <label className={classes.Label} htmlFor={this.props.id}>
+                <label className={styles.Label} htmlFor={this.props.id}>
                   {
                     typeof this.props.label !== 'object'
                       ? this.props.label
@@ -106,7 +110,7 @@ class Input extends Component {
             this.props.label && typeof this.props.label === 'object' && this.props.label.bottom
               ? (
                 // eslint-disable-next-line jsx-a11y/label-has-for
-                <div className={[classes.Label, classes.BottomLabel].join(' ')}>
+                <div className={[styles.Label, styles.BottomLabel].join(' ')}>
                   {this.props.label.bottom}
                 </div>
               )

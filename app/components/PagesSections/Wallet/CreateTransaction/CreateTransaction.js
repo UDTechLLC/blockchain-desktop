@@ -3,14 +3,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import classes from './CreateTransaction.css';
 import checkValidity from '../../../../utils/validation';
-
 import Spinner from '../../../UI/Spinner/Spinner';
 import Input from '../../../UI/Input/Input';
 import Button from '../../../UI/Button/Button';
-import Aux from '../../../../hoc/Aux/Aux';
-import Modal from '../../../UI/Modal/Modal';
+
+import css from './CreateTransaction.css';
+import commonCss from '../../../../assets/css/common.css';
+// global classes names starts with lowercase letter: styles.class
+// and component classes - uppercase: styles.Class
+const styles = { ...commonCss, ...css };
 
 class CreateTransaction extends Component {
   state = {
@@ -19,8 +21,10 @@ class CreateTransaction extends Component {
         elementType: 'input',
         elementConfig: {
           type: 'text',
-          placeholder: 'To wallet'
+          placeholder: 'Wallet number'
         },
+        id: 'wallet-to',
+        label: 'To',
         value: '',
         validation: {
           required: true,
@@ -39,6 +43,8 @@ class CreateTransaction extends Component {
           step: '0.0001'
         },
         value: '0',
+        id: 'amount-to',
+        label: '',
         validation: {
           required: true,
           isNumeric: true,
@@ -91,29 +97,58 @@ class CreateTransaction extends Component {
     let form = (
       <form onSubmit={e => { e.preventDefault(); this.onSubmitForm(); }}>
         {
-          formElementsArray.map(formElement => (
-            <Input
-              errorMessage={formElement.config.errorMessage}
-              key={formElement.id}
-              elementType={formElement.config.elementType}
-              elementConfig={formElement.config.elementConfig}
-              value={formElement.config.value}
-              invalid={!formElement.config.valid}
-              shouldValidate={formElement.config.validation.required}
-              touched={formElement.config.touched}
-              changed={val => this.inputChangedHandler(val, formElement.id)}
-            />
-          ))
+          formElementsArray.map((formElement, index) => {
+            const input = (
+              <Input
+                errorMessage={formElement.config.errorMessage}
+                key={formElement.id}
+                elementType={formElement.config.elementType}
+                elementConfig={formElement.config.elementConfig}
+                value={formElement.config.value}
+                id={formElement.config.id}
+                label={formElement.config.label}
+                invalid={!formElement.config.valid}
+                shouldValidate={formElement.config.validation.required}
+                touched={formElement.config.touched}
+                changed={val => this.inputChangedHandler(val, formElement.id)}
+              />
+            );
+            if (formElementsArray.length === index + 1) {
+              return (
+                <div
+                  className={[
+                    styles.flex,
+                    styles.LineWithButton,
+                  ].join(' ')}
+                  key={formElement.id}
+                >
+                  {input}
+                  <Button
+                    disabled={
+                      // !this.state.controls.from.valid ||
+                      !this.state.controls.to.valid ||
+                      !this.state.controls.amount.value >= 1 ||
+                      this.props.transactionLoading
+                    }
+                  >
+                    Send
+                  </Button>
+                </div>
+              );
+            }
+            return input;
+          })
         }
         {
           process.env.NODE_ENV !== 'development'
             ? null
             : (
-              <div className={classes.FormGroup}>
+              <div className={[styles.flexAllCenter, styles.FormGroup].join(' ')}>
                 <input
                   id="wallet-minenow"
                   type="checkbox"
                   checked={this.props.minenow}
+                  style={{ marginRight: 15 }}
                   onChange={() => this.props.handleOnMineNowCheck()}
                 />
                 {/* eslint-disable-next-line jsx-a11y/label-has-for */}
@@ -121,16 +156,6 @@ class CreateTransaction extends Component {
               </div>
             )
         }
-        <Button
-          disabled={
-            // !this.state.controls.from.valid ||
-            !this.state.controls.to.valid ||
-            !this.state.controls.amount.value >= 1 ||
-            this.props.transactionLoading
-          }
-        >
-          Send
-        </Button>
       </form>
     );
 
@@ -139,33 +164,14 @@ class CreateTransaction extends Component {
     }
 
     return (
-      <Aux>
-        <Modal
-          show={this.state.error}
-          modalClosed={() => this.setState({ error: null })}
-        >
-          {
-            this.state.error
-              ? (
-                <div className={classes.ModalContent}>
-                  <h1>{this.state.error}</h1>
-                  <Button
-                    onClick={() => this.setState({ error: null })}
-                  >
-                    Ok
-                  </Button>
-                </div>
-              )
-              : null
-          }
-        </Modal>
-
-        <div>
-          <div>
-            {form}
-          </div>
+      <div className={[styles.wh100, styles.flexColumn].join(' ')}>
+        <div className={styles.Title}>
+          Transaction
         </div>
-      </Aux>
+        <div>
+          {form}
+        </div>
+      </div>
     );
   }
 }

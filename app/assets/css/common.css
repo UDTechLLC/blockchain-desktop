@@ -42,6 +42,10 @@
   flex: 1;
 }
 
+.flex2 {
+  flex: 2;
+}
+
 .flex3 {
   flex: 3;
 }
@@ -112,6 +116,10 @@
 
 .blueBg {
   background-color: #2f96ba;
+}
+
+.lightBlueBg {
+  background-color: rgba(22, 94, 106, 0.3);;
 }
 
 .white {
