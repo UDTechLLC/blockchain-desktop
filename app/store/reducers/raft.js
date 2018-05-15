@@ -32,7 +32,7 @@ const initialState = {
     }
   },
   folders: {
-    somehash: {
+    b472a266d0bd89c13706a4132ccfb16f7c3b9fcb: {
       parentFolder: null,
       name: 'root',
       securityLayers: {
@@ -96,6 +96,14 @@ const getUserDataSuccess = (state, action) => (updateObject(state, {
   loading: false
 }));
 
+const createNewFolderSuccess = (state, action) => (updateObject(state, {
+  folders: {
+    ...state.folders,
+    ...action.newFolder
+  },
+  loading: false
+}));
+
 const reducer = (state = initialState, action) => {
   if (action) {
     switch (action.type) {
@@ -103,6 +111,8 @@ const reducer = (state = initialState, action) => {
       case actionTypes.GET_APP_SETTINGS_SUCCESS: return getAppSettingsSuccess(state, action);
       case actionTypes.GET_USER_DATA_START: return actionStart(state, action);
       case actionTypes.GET_USER_DATA_SUCCESS: return getUserDataSuccess(state, action);
+      case actionTypes.CREATE_NEW_FOLDER_START: return actionStart(state, action);
+      case actionTypes.CREATE_NEW_FOLDER_SUCCESS: return createNewFolderSuccess(state, action);
       // case actionTypes.GET_NOTES_START: return actionStart(state, action);
       // case actionTypes.GET_NOTES_SUCCESS: return getNotes(state, action);
       // case actionTypes.EDIT_NOTE_LIST_START: return actionStart(state, action);

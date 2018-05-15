@@ -1,9 +1,11 @@
 /* eslint-disable max-len,no-plusplus */
-const fs = require('fs');
+// const _ = require('lodash');
 const aesjs = require('aes-js');
-const pbkdf2 = require('pbkdf2');
-const bitcoin = require('bitcoinjs-lib');
 const axios = require('axios');
+const bitcoin = require('bitcoinjs-lib');
+const fs = require('fs');
+const pbkdf2 = require('pbkdf2');
+
 
 /**
  * unmount fs buckets
@@ -161,6 +163,46 @@ const getHash = string => {
   return bitcoin.crypto.ripemd160(publicSHA256).toString('hex');
 };
 
+// /**
+//  * get axios response data and insert new data inside with previous encryption of it
+//  * @param data {string}
+//  * @param newDataObject {object}
+//  * @param key {string}
+//  * @param password {string}
+//  * @returns {Object}
+//  */
+// const encryptDataForRaft = (data, newDataObject, key, password) => {
+//   const defaultObj = data.length
+//     ? JSON.parse(data)[key]
+//     : {};
+//   const encryptedNewDataObj = _.mapValues(newDataObject, v => aesEncrypt(JSON.stringify(v), password).encryptedHex);
+//   return {
+//     ...defaultObj,
+//     ...encryptedNewDataObj
+//   };
+// };
+
+/**
+ * decrypt users data object after axios request
+ * @param data {object}
+ * @param key {string}
+ * @param password {string}
+ * @returns {string}
+ */
+const decryptDataFromRaft = (data, key, password) => {
+  // const rawSettings = data.length
+  //   ? JSON.parse(data)[key]
+  //   : {};
+  // return Object.keys(rawSettings).length
+  //   ? _.mapValues(rawSettings, v => JSON.parse(aesDecrypt(v, password).strData))
+  //   : {};
+  // console.log(JSON.stringify(data), key, password);
+  console.log(aesDecrypt(data[key], password).strData);
+  return typeof data === 'object' && Object.keys(data).length > 0
+    ? aesDecrypt(data[key], password).strData
+    : JSON.stringify({});
+};
+
 module.exports = {
   unmountFs,
   stringToBytes,
@@ -169,5 +211,7 @@ module.exports = {
   aesEncrypt,
   aesDecrypt,
   fileCrushing,
-  getHash
+  getHash,
+  // encryptDataForRaft,
+  decryptDataFromRaft
 };

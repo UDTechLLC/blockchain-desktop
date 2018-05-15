@@ -2,7 +2,7 @@ const axios = require('axios');
 const { ipcMain, dialog } = require('electron');
 const cF = require('../utils/commonFunc');
 
-const ghostPad = mainWindow => {
+const notesListeners = mainWindow => {
   ipcMain.on('get-notes:start', (event, { userData, raftNode }) => {
     const key = `${userData.cpk}_gpd`;
     return axios.get(`${raftNode}/key/${key}`)
@@ -83,4 +83,4 @@ const ghostPad = mainWindow => {
   });
 };
 
-export default ghostPad;
+export default notesListeners;

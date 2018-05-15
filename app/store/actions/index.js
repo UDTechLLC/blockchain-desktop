@@ -17,5 +17,6 @@ export {
 } from './notes';
 export {
   getAppSettings,
-  getUserData
+  getUserData,
+  createNewFolder
 } from './raft';

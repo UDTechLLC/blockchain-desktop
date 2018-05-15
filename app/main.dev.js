@@ -25,7 +25,7 @@ const FS = require('./electron/app/filesystem');
 const Raft = require('./electron/app/raft');
 const FilesListeners = require('./electron/app/files');
 const BlockChain = require('./electron/app/blockchain');
-const GhostPad = require('./electron/app/ghost-pad');
+const GhostPad = require('./electron/app/notes');
 
 let configFolder = `${process.cwd()}/.wizeconfig`;
 if (process.platform === 'darwin') {
@@ -118,12 +118,12 @@ app.on('ready', async () => {
   FS(mainWindow, cpkGlob, fsUrlGlob);
   //  auth
   Auth(mainWindow, configFolder, cpkGlob);
-  //  files listeners
-  FilesListeners(mainWindow);
+  // //  files listeners
+  // FilesListeners(mainWindow);
   //  blockchain listeners
   BlockChain(mainWindow);
-  //  notes listeners
-  GhostPad(mainWindow);
+  // //  notes listeners
+  // GhostPad(mainWindow);
 });
 
 // this listeners is here because of redefining cpkGlob and fsUrlGlob
