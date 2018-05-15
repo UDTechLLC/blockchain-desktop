@@ -86,7 +86,7 @@ Settings.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  settings: state.settings.settings
+  settings: state.raft.settings
 });
 
 export default connect(mapStateToProps)(Settings);

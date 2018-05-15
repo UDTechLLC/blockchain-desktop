@@ -15,3 +15,7 @@ export {
   editNotesList,
   deleteNote
 } from './notes';
+export {
+  getAppSettings,
+  getUserData
+} from './raft';

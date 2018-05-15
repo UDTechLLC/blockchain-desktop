@@ -8,7 +8,7 @@ import { createHashHistory } from 'history';
 import thunk from 'redux-thunk';
 
 import authReducer from './store/reducers/auth';
-import settingsReducer from './store/reducers/settings';
+import raftReducer from './store/reducers/raft';
 import commonInfoReducer from './store/reducers/commonInfo';
 import blockchainReducer from './store/reducers/blockchain';
 import digestReducer from './store/reducers/digest';
@@ -22,7 +22,7 @@ const history = createHashHistory();
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  settings: settingsReducer,
+  raft: raftReducer,
   commonInfo: commonInfoReducer,
   blockchain: blockchainReducer,
   digest: digestReducer,

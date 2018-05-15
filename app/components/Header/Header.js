@@ -32,6 +32,10 @@ class Header extends Component {
     ],
     authorisedMenu: [
       {
+        link: '/ghost-drive',
+        label: 'Ghost drive'
+      },
+      {
         link: '/files',
         label: 'Files'
       },

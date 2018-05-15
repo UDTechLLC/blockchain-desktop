@@ -22,6 +22,7 @@ const CommonListeners = require('./electron/app/common');
 const Digest = require('./electron/app/digest');
 const Auth = require('./electron/app/auth');
 const FS = require('./electron/app/filesystem');
+const Raft = require('./electron/app/raft');
 const FilesListeners = require('./electron/app/files');
 const BlockChain = require('./electron/app/blockchain');
 const GhostPad = require('./electron/app/ghost-pad');
@@ -111,6 +112,8 @@ app.on('ready', async () => {
   CommonListeners(mainWindow, configFolder);
   //  digest
   Digest(mainWindow);
+  //  raft
+  Raft(mainWindow);
   //  file system listeners
   FS(mainWindow, cpkGlob, fsUrlGlob);
   //  auth

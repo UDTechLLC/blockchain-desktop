@@ -9,6 +9,7 @@ import Spinner from './components/UI/Spinner/Spinner';
 import Layout from './hoc/Layout/Layout';
 import NoInternetConnection from './components/NoInternetConnection/NoInternetConnection';
 import Homepage from './containers/Homepage/Homepage';
+import GhostDrive from './containers/GhostDrive/GhostDrive';
 import FilesList from './containers/FilesList/FilesList';
 import FileUpload from './containers/FileUpload/FileUpload';
 import Wallet from './containers/Wallet/Wallet';
@@ -48,6 +49,7 @@ class App extends Component {
         if (this.props.isAuth) {
           routes = (
             <Switch>
+              <Route exact path="/ghost-drive" component={GhostDrive} key={Math.random()} />
               <Route exact path="/account" component={Settings} key={Math.random()} />
               <Route exact path="/wallet" component={Wallet} key={Math.random()} />
               <Route exact path="/upload" component={FileUpload} key={Math.random()} />
@@ -56,7 +58,7 @@ class App extends Component {
               <Route exact path="/deposit" component={Deposit} key={Math.random()} />
               <Route exact path="/x-files" component={XFiles} key={Math.random()} />
               <Route exact path="/logout" component={Logout} key={Math.random()} />
-              <Redirect to="/files" />
+              <Redirect to="/ghost-drive" />
             </Switch>
           );
         }
