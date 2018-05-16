@@ -33,15 +33,13 @@ const getUserDataSuccess = data => ({
 
 export const getUserData = (userData, raftNode) => dispatch => {
   dispatch(getUserDataStart(userData, raftNode));
-  ipcRenderer.once('user-data:get-complete', (event, data) => {
-    console.log(data);
-    return dispatch(getUserDataSuccess(data));
-  });
+  ipcRenderer.once('user-data:get-complete', (event, data) => (
+    dispatch(getUserDataSuccess(data))
+  ));
 };
 
 //  create new folder
 const createNewFolderStart = (newFolderName, userData, raftNode) => {
-  console.log('folder:create');
   ipcRenderer.send('folder:create', { newFolderName, userData, raftNode });
   return { type: actionTypes.CREATE_NEW_FOLDER_START };
 };
@@ -53,9 +51,9 @@ const createNewFolderSuccess = newFolder => ({
 
 export const createNewFolder = (newFolderName, userData, raftNode) => dispatch => {
   dispatch(createNewFolderStart(newFolderName, userData, raftNode));
-  ipcRenderer.once('folder:create-success', (event, newFolder) => {
-    dispatch(createNewFolderSuccess(newFolder));
-  });
+  ipcRenderer.once('folder:create-success', (event, newFolder) => (
+    dispatch(createNewFolderSuccess(newFolder))
+  ));
 };
 
 // const getNotesStart = (userData, raftNode) => {

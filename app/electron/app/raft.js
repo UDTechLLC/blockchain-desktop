@@ -11,6 +11,7 @@ const raft = mainWindow => {
   let notes = {};
 
   ipcMain.on('user-data:get', (event, { userData, raftNode }) => {
+    // console.log(cF.getHash('root', ''));
     //  keys in raft
     const foldersKey = `${userData.cpk}_flds`;
     const filesKey = `${userData.cpk}_fls`;
@@ -32,7 +33,7 @@ const raft = mainWindow => {
           files,
           notes
         };
-        console.log(JSON.stringify(data));
+        // console.log(JSON.stringify(data));
         return mainWindow.webContents.send('user-data:get-complete', data);
       })
       .catch(({ response }) => {
@@ -42,11 +43,11 @@ const raft = mainWindow => {
       });
   });
   //  folders listeners
-  Folders(mainWindow, folders);
+  Folders(mainWindow);
   //  files listeners
-  Files(mainWindow, files);
+  Files(mainWindow);
   //  notes listeners
-  Notes(mainWindow, notes);
+  Notes(mainWindow);
 };
 
 export default raft;

@@ -155,10 +155,11 @@ const fileCrushing = (file, shardsNumber = 3) => {
 /**
  * get hash from string
  * @param string {string}
+ * @param format {string}
  * @returns {string}
  */
-const getHash = string => {
-  const buffer = Buffer.from(string, 'hex');
+const getHash = (string, format = 'hex') => {
+  const buffer = Buffer.from(string, format);
   const publicSHA256 = bitcoin.crypto.sha256(buffer);
   return bitcoin.crypto.ripemd160(publicSHA256).toString('hex');
 };
@@ -187,9 +188,9 @@ const getHash = string => {
  * @param data {object}
  * @param key {string}
  * @param password {string}
- * @returns {string}
+ * @returns {object}
  */
-const decryptDataFromRaft = (data, key, password) => {
+const decryptDataFromRaft = (data, key, password) => (
   // const rawSettings = data.length
   //   ? JSON.parse(data)[key]
   //   : {};
@@ -197,11 +198,10 @@ const decryptDataFromRaft = (data, key, password) => {
   //   ? _.mapValues(rawSettings, v => JSON.parse(aesDecrypt(v, password).strData))
   //   : {};
   // console.log(JSON.stringify(data), key, password);
-  console.log(aesDecrypt(data[key], password).strData);
-  return typeof data === 'object' && Object.keys(data).length > 0
-    ? aesDecrypt(data[key], password).strData
-    : JSON.stringify({});
-};
+  typeof data === 'object' && data[key]
+    ? JSON.parse(aesDecrypt(data[key], password).strData)
+    : {}
+);
 
 module.exports = {
   unmountFs,

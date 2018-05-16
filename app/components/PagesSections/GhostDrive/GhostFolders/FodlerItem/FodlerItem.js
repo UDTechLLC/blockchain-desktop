@@ -9,12 +9,18 @@ const styles = { ...commonCss, ...css };
 
 const ghostFolders = props => (
   <div className={styles.w100}>
-    {props.folder.name}
+    <button onClick={() => props.onFolderCheck(props.folder.name)}>
+      {/* <div></div> */}
+      <div>
+        {props.folder.name}
+      </div>
+    </button>
   </div>
 );
 
 ghostFolders.propTypes = {
-  folder: PropTypes.shape().isRequired
+  folder: PropTypes.shape().isRequired,
+  onFolderCheck: PropTypes.func.isRequired
 };
 
 export default ghostFolders;

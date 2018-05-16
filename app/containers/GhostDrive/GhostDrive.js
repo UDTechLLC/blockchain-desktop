@@ -16,15 +16,14 @@ const styles = { ...commonCss, ...css };
 
 class GhostDrive extends Component {
   state = {
-    checkedFolder: 'b472a266d0bd89c13706a4132ccfb16f7c3b9fcb',
+    checkedFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5',
     newFolderName: ''
   };
   componentWillMount() {
-    // console.log(this.props.userData);
-    // console.log(this.props.raftNode);
     this.props.getUserData(this.props.userData, this.props.raftNode);
   }
   render() {
+    console.log(this.state.checkedFolder);
     const files = _.pick(this.props.files, 'parentFolder', this.state.checkedFolder);
     return (
       <PageWithInfoPanel>
@@ -37,7 +36,14 @@ class GhostDrive extends Component {
           <div
             className={styles.flex1}
           >
-            <GhostFolders folders={this.props.folders} />
+            <GhostFolders
+              folders={this.props.folders}
+              onFolderCheck={name => this.setState({
+                checkedFolder: Object.keys(this.props.folders).find(el => (
+                  this.props.folders[el].name === name
+                ))
+              })}
+            />
             <form
               onSubmit={e => {
                 e.preventDefault();

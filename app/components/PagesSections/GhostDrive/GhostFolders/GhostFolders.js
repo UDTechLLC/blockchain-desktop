@@ -12,13 +12,20 @@ const styles = { ...commonCss, ...css };
 const ghostFolders = props => (
   <div className={styles.wh100}>
     {
-      Object.keys(props.folders).map((key, i) => <FolderItem key={i} folder={props.folders[key]} />)
+      Object.keys(props.folders).map((key, i) => (
+        <FolderItem
+          key={i}
+          folder={props.folders[key]}
+          onFolderCheck={name => props.onFolderCheck(name)}
+        />
+      ))
     }
   </div>
 );
 
 ghostFolders.propTypes = {
-  folders: PropTypes.shape(PropTypes.shape()).isRequired
+  folders: PropTypes.shape(PropTypes.shape()).isRequired,
+  onFolderCheck: PropTypes.func.isRequired
 };
 
 export default ghostFolders;

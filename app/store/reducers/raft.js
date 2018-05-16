@@ -32,7 +32,7 @@ const initialState = {
     }
   },
   folders: {
-    b472a266d0bd89c13706a4132ccfb16f7c3b9fcb: {
+    '175aeb081e74c9116ac7f6677c874ff6963ce1f5': {
       parentFolder: null,
       name: 'root',
       securityLayers: {
