@@ -1,0 +1,15 @@
+.FolderItem {
+  padding-top: calc(100% / 3);
+  position: relative;
+  height: 0;
+}
+
+.FolderItem > div {
+  background-position: center;
+  background-size: 50%;
+  background-repeat: no-repeat;
+}
+
+.FolderItem > div.Active {
+  background-color: black;
+}

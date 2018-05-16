@@ -12,6 +12,7 @@ import Data2 from './Data2/Data2';
 import Statistic from './Statistic/Statistic';
 import SecurityLayer from './SecurityLayer/SecurityLayer';
 import NewBlock from './NewBlock/NewBlock';
+import CreateFolder from './CreateFolder/CreateFolder';
 
 const infoPanel = props => {
   const getBlock = name => {
@@ -25,6 +26,7 @@ const infoPanel = props => {
       case 'Statistic': block = <Statistic key={Math.random()} />; break;
       case 'SecurityLayer': block = <SecurityLayer key={Math.random()} />; break;
       case 'NewBlock': block = <NewBlock key={Math.random()} />; break;
+      case 'CreateFolder': block = <CreateFolder key={Math.random()} />; break;
       default:
         block = (
           <div key={Math.random()}>

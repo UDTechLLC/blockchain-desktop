@@ -1,0 +1,7 @@
+.GhostFolders {
+  flex-wrap: wrap;
+}
+
+.GhostFolders > div {
+  width: calc(100% / 3);
+}

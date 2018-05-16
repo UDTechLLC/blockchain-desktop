@@ -50,6 +50,10 @@
   flex: 3;
 }
 
+.flex4 {
+  flex: 4;
+}
+
 .flexColumn {
   box-sizing: border-box;
   display: flex;
@@ -110,6 +114,14 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+}
+
+.flexColumnBetweenCenter {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
 }
 

@@ -10,13 +10,20 @@ import commonCss from '../../../../assets/css/common.css';
 const styles = { ...commonCss, ...css };
 
 const ghostFolders = props => (
-  <div className={styles.wh100}>
+  <div
+    className={[
+      styles.flex,
+      styles.wh100,
+      styles.GhostFolders
+    ].join(' ')}
+  >
     {
       Object.keys(props.folders).map((key, i) => (
         <FolderItem
           key={i}
           folder={props.folders[key]}
           onFolderCheck={name => props.onFolderCheck(name)}
+          isActive={props.folders[key].name === props.activeFolder}
         />
       ))
     }
@@ -25,7 +32,8 @@ const ghostFolders = props => (
 
 ghostFolders.propTypes = {
   folders: PropTypes.shape(PropTypes.shape()).isRequired,
-  onFolderCheck: PropTypes.func.isRequired
+  onFolderCheck: PropTypes.func.isRequired,
+  activeFolder: PropTypes.string.isRequired
 };
 
 export default ghostFolders;
