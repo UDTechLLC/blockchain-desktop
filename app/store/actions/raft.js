@@ -56,6 +56,22 @@ export const createNewFolder = (newFolderName, userData, raftNode) => dispatch =
   ));
 };
 
+//  delete folder
+const deleteFolderStart = (folderId, userData, raftNode) => {
+  ipcRenderer.send('folder:delete', { folderId, userData, raftNode });
+  return { type: actionTypes.DELETE_FOLDER_START };
+};
+
+const deleteFolderSuccess = folderId => ({
+  type: actionTypes.DELETE_FOLDER_SUCCESS,
+  folderId
+});
+
+export const deleteFolder = (folderId, userData, raftNode) => dispatch => {
+  dispatch(deleteFolderStart(folderId, userData, raftNode));
+  ipcRenderer.once('folder:delete-success', () => dispatch(deleteFolderSuccess(folderId)));
+};
+
 // const getNotesStart = (userData, raftNode) => {
 //   ipcRenderer.send('notes:get', { userData, raftNode });
 //   return { type: actionTypes.GET_NOTES_START };

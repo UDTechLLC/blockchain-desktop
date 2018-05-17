@@ -6,10 +6,6 @@ const Files = require('./files');
 const Notes = require('./notes');
 
 const raft = mainWindow => {
-  let folders = {};
-  let files = {};
-  let notes = {};
-
   ipcMain.on('user-data:get', (event, { userData, raftNode }) => {
     // console.log(cF.getHash('root', ''));
     //  keys in raft
@@ -25,13 +21,10 @@ const raft = mainWindow => {
     //  requests to get all user data
     return Promise.all(reqs)
       .then(responses => {
-        folders = cF.decryptDataFromRaft(responses[0].data, foldersKey, userData.csk);
-        files = cF.decryptDataFromRaft(responses[1].data, filesKey, userData.csk);
-        notes = cF.decryptDataFromRaft(responses[2].data, notesKey, userData.csk);
         const data = {
-          folders,
-          files,
-          notes
+          folders: cF.decryptDataFromRaft(responses[0].data, foldersKey, userData.csk),
+          files: cF.decryptDataFromRaft(responses[1].data, filesKey, userData.csk),
+          notes: cF.decryptDataFromRaft(responses[2].data, notesKey, userData.csk)
         };
         // console.log(JSON.stringify(data));
         return mainWindow.webContents.send('user-data:get-complete', data);

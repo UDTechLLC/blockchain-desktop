@@ -24,6 +24,7 @@ const ghostFolders = props => (
           folder={props.folders[key]}
           onFolderCheck={name => props.onFolderCheck(name)}
           isActive={props.folders[key].name === props.activeFolder}
+          onDelete={name => props.onFolderDelete(name)}
         />
       ))
     }
@@ -33,7 +34,8 @@ const ghostFolders = props => (
 ghostFolders.propTypes = {
   folders: PropTypes.shape(PropTypes.shape()).isRequired,
   onFolderCheck: PropTypes.func.isRequired,
-  activeFolder: PropTypes.string.isRequired
+  activeFolder: PropTypes.string.isRequired,
+  onFolderDelete: PropTypes.func.isRequired
 };
 
 export default ghostFolders;

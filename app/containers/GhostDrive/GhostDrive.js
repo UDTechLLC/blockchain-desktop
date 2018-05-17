@@ -21,8 +21,16 @@ class GhostDrive extends Component {
   componentWillMount() {
     this.props.getUserData(this.props.userData, this.props.raftNode);
   }
+  handleDeleteFolder = name => {
+    this.setState({ checkedFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5' }, () => {
+      const folderId = Object.keys(this.props.folders).find(el => (
+        this.props.folders[el].name === name
+      ));
+      this.props.deleteFolder(folderId, this.props.userData, this.props.raftNode);
+    });
+  };
   render() {
-    console.log(this.state.checkedFolder);
+    console.log(this.state.checkedFolder, this.props.folders);
     const files = _.pick(this.props.files, 'parentFolder', this.state.checkedFolder);
     return (
       <PageWithInfoPanel
@@ -47,6 +55,7 @@ class GhostDrive extends Component {
                   this.props.folders[el].name === name
                 ))
               })}
+              onFolderDelete={name => this.handleDeleteFolder(name)}
               activeFolder={this.props.folders[this.state.checkedFolder].name}
             />
           </div>
@@ -81,7 +90,7 @@ GhostDrive.propTypes = {
   folders: PropTypes.shape().isRequired,
   files: PropTypes.shape().isRequired,
   getUserData: PropTypes.func.isRequired,
-  // createNewFolder: PropTypes.func.isRequired
+  deleteFolder: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -93,9 +102,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getUserData: (userData, raftNode) => dispatch(actionTypes.getUserData(userData, raftNode)),
-  // createNewFolder: (newFolderName, userData, raftNode) => (
-  //   dispatch(actionTypes.createNewFolder(newFolderName, userData, raftNode))
-  // )
+  deleteFolder: (folderId, userData, raftNode) => (
+    dispatch(actionTypes.deleteFolder(folderId, userData, raftNode))
+  )
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GhostDrive);

@@ -15,7 +15,7 @@ const foldersListeners = mainWindow => {
       .then(folders => {
         const hashKey = cF.getHash(`root/${newFolderName}`, '');
         //  reject creation of folder if there is a folder with such name
-        if (folders[hashKey]) {
+        if (folders[hashKey] || hashKey === '175aeb081e74c9116ac7f6677c874ff6963ce1f5') {
           const error = `There is a folder with name "${newFolderName}"`;
           console.log(error);
           return dialog.showErrorBox('Error', error);
@@ -25,6 +25,7 @@ const foldersListeners = mainWindow => {
           [hashKey]: {
             parentFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5',
             name: newFolderName,
+            date: +new Date() / 1000,
             securityLayers: {
               _2fa: false,
               pin: false,
@@ -60,6 +61,10 @@ const foldersListeners = mainWindow => {
       });
   });
   ipcMain.on('folder:delete', (event, { folderId, userData, raftNode }) => {
+    //  cannot delete root folder
+    if (folderId === '175aeb081e74c9116ac7f6677c874ff6963ce1f5') {
+      return dialog.showErrorBox('Error', 'You can`t delete root folder');
+    }
     //  keys in raft
     const foldersKey = `${userData.cpk}_flds`;
     const filesKey = `${userData.cpk}_fls`;
@@ -76,8 +81,10 @@ const foldersListeners = mainWindow => {
       }))
       .then(({ folders, files }) => {
         //  delete folder from raft list
+        // console.log(`folders ${JSON.stringify(folders)}`);
         const newFolders = folders;
         delete newFolders[folderId];
+        // console.log(`newFolders ${JSON.stringify(newFolders)}`);
         const deleteFilesArray = _.pickBy(files, v => v.parentFolder === folderId);
         //  if folder was empty
         if (!Object.keys(deleteFilesArray).length) {
@@ -87,7 +94,9 @@ const foldersListeners = mainWindow => {
             }
           };
           const data = {
-            [foldersKey]: cF.aesEncrypt(newFolders, userData.csk).encryptedHex,
+            [foldersKey]: Object.keys(newFolders).length
+              ? cF.aesEncrypt(JSON.stringify(newFolders), userData.csk).encryptedHex
+              : '',
           };
           return axios.post(`${raftNode}/key`, data, config)
             .then(() => mainWindow.webContents.send('folder:delete-success'))

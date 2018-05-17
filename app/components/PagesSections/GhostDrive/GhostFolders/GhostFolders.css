@@ -1,5 +1,6 @@
 .GhostFolders {
   flex-wrap: wrap;
+  padding: 15px 0;
 }
 
 .GhostFolders > div {

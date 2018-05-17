@@ -18,17 +18,10 @@ const ghostFolders = props => (
     ].join(' ')}
   >
     <div
-      role="button"
-      tabIndex={0}
-      onClick={() => props.onFolderCheck(props.folder.name)}
       className={
         !props.isActive
-          ? [
-            styles.transparentButton,
-            styles.absolute100,
-          ].join(' ')
+          ? styles.absolute100
           : [
-            styles.transparentButton,
             styles.absolute100,
             styles.Active
           ].join(' ')
@@ -42,27 +35,47 @@ const ghostFolders = props => (
           styles.Content
         ].join(' ')}
       >
-        <div className={styles.flex1}>
-          <button>
+        <div
+          className={[
+            styles.flexAllCenter,
+            styles.w100,
+            styles.flex1,
+            styles.DeleteButtonWrapper
+          ].join(' ')}
+        >
+          <button
+            type="button"
+            className={styles.transparentButton}
+            onClick={() => props.onDelete(props.folder.name)}
+          >
             delete
           </button>
         </div>
         <div
+          role="button"
+          tabIndex={0}
+          onClick={() => props.onFolderCheck(props.folder.name)}
           className={[
             styles.flex,
             styles.wh100,
-            styles.flex4
+            styles.flex4,
+            styles.SecurityLayers
           ].join(' ')}
         >
           {
             Object.keys(props.folder.securityLayers).map((key, i) => (
               <div key={i}>
-                {props.folder.securityLayers[key] ? key : key}
+                {props.folder.securityLayers[key] ? key : null}
               </div>
             ))
           }
         </div>
-        <div className={styles.flex1}>
+        <div
+          className={[
+            styles.flex1,
+            styles.flexAllCenter
+          ].join(' ')}
+        >
           {props.folder.name}
         </div>
       </div>
@@ -82,7 +95,8 @@ const ghostFolders = props => (
 ghostFolders.propTypes = {
   folder: PropTypes.shape().isRequired,
   onFolderCheck: PropTypes.func.isRequired,
-  isActive: PropTypes.bool
+  isActive: PropTypes.bool,
+  onDelete: PropTypes.func.isRequired
 };
 
 ghostFolders.defaultProps = {

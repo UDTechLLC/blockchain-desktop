@@ -1,3 +1,4 @@
+const _  = require('lodash');
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../utils/utility';
 
@@ -35,6 +36,7 @@ const initialState = {
     '175aeb081e74c9116ac7f6677c874ff6963ce1f5': {
       parentFolder: null,
       name: 'root',
+      date: 0,
       securityLayers: {
         _2fa: false,
         pin: false,
@@ -104,6 +106,11 @@ const createNewFolderSuccess = (state, action) => (updateObject(state, {
   loading: false
 }));
 
+const deleteFolderSuccess = (state, action) => (updateObject(state, {
+  folders: _.pickBy(state.folders, (v, k) => k !== action.folderId),
+  loading: false
+}));
+
 const reducer = (state = initialState, action) => {
   if (action) {
     switch (action.type) {
@@ -113,6 +120,8 @@ const reducer = (state = initialState, action) => {
       case actionTypes.GET_USER_DATA_SUCCESS: return getUserDataSuccess(state, action);
       case actionTypes.CREATE_NEW_FOLDER_START: return actionStart(state, action);
       case actionTypes.CREATE_NEW_FOLDER_SUCCESS: return createNewFolderSuccess(state, action);
+      case actionTypes.DELETE_FOLDER_START: return actionStart(state, action);
+      case actionTypes.DELETE_FOLDER_SUCCESS: return deleteFolderSuccess(state, action);
       // case actionTypes.GET_NOTES_START: return actionStart(state, action);
       // case actionTypes.GET_NOTES_SUCCESS: return getNotes(state, action);
       // case actionTypes.EDIT_NOTE_LIST_START: return actionStart(state, action);
