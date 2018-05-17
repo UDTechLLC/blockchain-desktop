@@ -62,21 +62,12 @@ class GhostDrive extends Component {
           <div
             className={styles.flex3}
           >
-            {
-              Object.keys(files).length > 0
-                ? <GhostFiles files={files} />
-                : (
-                  <div
-                    className={[
-                      styles.flexAllCenter,
-                      styles.wh100
-                    ].join(' ')}
-                  >
-                    There is no files in {this.props.folders[this.state.checkedFolder].name} folder.
-                  </div>
-                )
-            }
-
+            <GhostFiles
+              folderInfo={{
+                [this.state.checkedFolder]: this.props.folders[this.state.checkedFolder]
+              }}
+              files={files}
+            />
           </div>
         </div>
       </PageWithInfoPanel>
