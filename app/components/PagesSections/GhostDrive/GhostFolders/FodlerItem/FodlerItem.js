@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 
 import { folder } from '../../../../../assets/img/img';
 import css from './FodlerItem.css';
+import cornersCss from '../../../../../assets/css/corners.css';
 import commonCss from '../../../../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
-const styles = { ...commonCss, ...css };
+const styles = { ...commonCss, ...cornersCss, ...css };
 
 const ghostFolders = props => (
   <div
@@ -37,7 +38,8 @@ const ghostFolders = props => (
       <div
         className={[
           styles.flexColumnBetweenCenter,
-          styles.absolute100
+          styles.absolute100,
+          styles.Content
         ].join(' ')}
       >
         <div className={styles.flex1}>
@@ -45,11 +47,13 @@ const ghostFolders = props => (
             delete
           </button>
         </div>
-        <div className={[
-          styles.flex,
-          styles.wh100,
-          styles.flex4
-        ].join(' ')}>
+        <div
+          className={[
+            styles.flex,
+            styles.wh100,
+            styles.flex4
+          ].join(' ')}
+        >
           {
             Object.keys(props.folder.securityLayers).map((key, i) => (
               <div key={i}>
@@ -61,6 +65,15 @@ const ghostFolders = props => (
         <div className={styles.flex1}>
           {props.folder.name}
         </div>
+      </div>
+      <div
+        className={[
+          styles.absolute100,
+          styles.corners,
+          styles.Corners
+        ].join(' ')}
+      >
+        <div /><div />
       </div>
     </div>
   </div>

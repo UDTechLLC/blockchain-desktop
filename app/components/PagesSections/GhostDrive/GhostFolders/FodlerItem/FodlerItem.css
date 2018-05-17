@@ -8,8 +8,13 @@
   background-position: center;
   background-size: 50%;
   background-repeat: no-repeat;
+  z-index: 2;
 }
 
-.FolderItem > div.Active {
-  background-color: black;
+.Corners {
+  display: none;
+}
+
+.FolderItem > div.Active > .Corners {
+  display: block;
 }
