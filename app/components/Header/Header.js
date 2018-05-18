@@ -35,18 +35,18 @@ class Header extends Component {
         link: '/ghost-drive',
         label: 'Ghost drive'
       },
-      {
-        link: '/files',
-        label: 'Files'
-      },
-      {
-        link: '/upload',
-        label: 'Upload'
-      },
-      {
-        link: '/x-files',
-        label: 'Ghost Files'
-      },
+      // {
+      //   link: '/files',
+      //   label: 'Files'
+      // },
+      // {
+      //   link: '/upload',
+      //   label: 'Upload'
+      // },
+      // {
+      //   link: '/x-files',
+      //   label: 'Ghost Files'
+      // },
       {
         link: '/ghost-pad',
         label: 'Ghost pad'

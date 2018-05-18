@@ -1,0 +1,13 @@
+.GhostFiles {
+  padding: 15px 15px 0;
+}
+
+.DropzoneWrapper > div {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border: 1px solid #0b3f46 !important;
+}

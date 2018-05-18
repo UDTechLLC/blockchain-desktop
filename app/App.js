@@ -10,13 +10,13 @@ import Layout from './hoc/Layout/Layout';
 import NoInternetConnection from './components/NoInternetConnection/NoInternetConnection';
 import Homepage from './containers/Homepage/Homepage';
 import GhostDrive from './containers/GhostDrive/GhostDrive';
-import FilesList from './containers/FilesList/FilesList';
-import FileUpload from './containers/FileUpload/FileUpload';
+// import FilesList from './containers/FilesList/FilesList';
+// import FileUpload from './containers/FileUpload/FileUpload';
 import Wallet from './containers/Wallet/Wallet';
 import Settings from './containers/Settings/Settings';
 import GhostPad from './containers/GhostPad/GhostPad';
 import Deposit from './containers/Deposit/Deposit';
-import XFiles from './containers/XFiles/XFiles';
+// import XFiles from './containers/XFiles/XFiles';
 import Logout from './containers/Homepage/Logout/Logout';
 import Ghost from './components/Animations/Ghost/Ghost';
 
@@ -52,11 +52,11 @@ class App extends Component {
               <Route exact path="/ghost-drive" component={GhostDrive} key={Math.random()} />
               <Route exact path="/account" component={Settings} key={Math.random()} />
               <Route exact path="/wallet" component={Wallet} key={Math.random()} />
-              <Route exact path="/upload" component={FileUpload} key={Math.random()} />
-              <Route exact path="/files" component={FilesList} key={Math.random()} />
+              {/* <Route exact path="/upload" component={FileUpload} key={Math.random()} /> */}
+              {/* <Route exact path="/files" component={FilesList} key={Math.random()} /> */}
               <Route exact path="/ghost-pad" component={GhostPad} key={Math.random()} />
               <Route exact path="/deposit" component={Deposit} key={Math.random()} />
-              <Route exact path="/x-files" component={XFiles} key={Math.random()} />
+              {/* <Route exact path="/x-files" component={XFiles} key={Math.random()} /> */}
               <Route exact path="/logout" component={Logout} key={Math.random()} />
               <Redirect to="/ghost-drive" />
             </Switch>
