@@ -10,6 +10,7 @@ import GhostFiles from '../../components/PagesSections/GhostDrive/GhostFiles/Gho
 
 import css from './GhostDrive.css';
 import commonCss from '../../assets/css/common.css';
+import {ipcRenderer} from "electron";
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
 const styles = { ...commonCss, ...css };
@@ -28,6 +29,30 @@ class GhostDrive extends Component {
       ));
       this.props.deleteFolder(folderId, this.props.userData, this.props.raftNode);
     });
+  };
+  handleOnDropFile = (accepted, rejected) => {
+    // const timestamp = Math.round(+new Date() / 1000);
+    // const promises = _.map(accepted, file => (new Promise(resolve => {
+    //   const reader = new FileReader();
+    //   reader.readAsDataURL(file);
+    //   reader.onload = event => resolve({
+    //     name: file.name,
+    //     size: file.size,
+    //     data: event.target.result,
+    //     timestamp
+    //   });
+    // })));
+    // return Promise.all(promises)
+    //   .then(files => ipcRenderer.send('file:send', {
+    //     userData,
+    //     files,
+    //     digestServers,
+    //     raftNode
+    //   }))
+    //   .catch(error => console.log(error));
+    // if (rejected.length) {
+    //   this.hanfleFlashReject(rejected[0]);
+    // }
   };
   render() {
     console.log(this.state.checkedFolder, this.props.folders);
@@ -78,6 +103,7 @@ class GhostDrive extends Component {
 GhostDrive.propTypes = {
   userData: PropTypes.shape().isRequired,
   raftNode: PropTypes.string.isRequired,
+  storageNodes: PropTypes.arrayOf().isRequired,
   folders: PropTypes.shape().isRequired,
   files: PropTypes.shape().isRequired,
   getUserData: PropTypes.func.isRequired,
@@ -87,6 +113,7 @@ GhostDrive.propTypes = {
 const mapStateToProps = state => ({
   userData: state.auth.userData,
   raftNode: state.digest.digestInfo.raftNodes[0],
+  storageNodes: state.digest.digestInfo.storageNodes,
   folders: state.raft.folders,
   files: state.raft.files
 });
