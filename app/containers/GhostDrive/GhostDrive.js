@@ -58,12 +58,7 @@ class GhostDrive extends Component {
     console.log(this.state.checkedFolder, this.props.folders);
     const files = _.pick(this.props.files, 'parentFolder', this.state.checkedFolder);
     return (
-      <PageWithInfoPanel
-        leftColumn={[
-          'CreateFolder',
-          'NavMenu'
-          ]}
-      >
+      <PageWithInfoPanel>
         <div
           className={[
             styles.wh100,

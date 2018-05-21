@@ -13,6 +13,8 @@ import Statistic from './Statistic/Statistic';
 import SecurityLayer from './SecurityLayer/SecurityLayer';
 import NewBlock from './NewBlock/NewBlock';
 import CreateFolder from './CreateFolder/CreateFolder';
+import NodesMenu from './NodesMenu/NodesMenu';
+import Manipulation from './Manipulation/Manipulation';
 
 const infoPanel = props => {
   const getBlock = name => {
@@ -27,6 +29,8 @@ const infoPanel = props => {
       case 'SecurityLayer': block = <SecurityLayer key={Math.random()} />; break;
       case 'NewBlock': block = <NewBlock key={Math.random()} />; break;
       case 'CreateFolder': block = <CreateFolder key={Math.random()} />; break;
+      case 'NodesMenu': block = <NodesMenu key={Math.random()} />; break;
+      case 'Manipulation': block = <Manipulation key={Math.random()} />; break;
       default:
         block = (
           <div key={Math.random()}>
@@ -72,12 +76,12 @@ infoPanel.propTypes = {
 infoPanel.defaultProps = {
   hide: false,
   leftColumn: [
-    'ProgressBar',
-    'NavMenu'
+    'CreateFolder',
+    'NodesMenu'
   ],
   rightColumn: [
-    'Data',
-    'Graph'
+    'SecurityLayer',
+    'Manipulation'
   ]
 };
 

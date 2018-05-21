@@ -91,12 +91,12 @@ PageWithInfoPanel.propTypes = {
 
 PageWithInfoPanel.defaultProps = {
   leftColumn: [
-    'ProgressBar',
-    'NavMenu'
+    'CreateFolder',
+    'NodesMenu'
   ],
   rightColumn: [
-    'Data',
-    'Graph'
+    'SecurityLayer',
+    'Manipulation'
   ]
 };
 
