@@ -17,7 +17,7 @@ const ghostFiles = props => {
         !Object.keys(props.files).length
           ? (
             <p>
-              {`There is no files in folder "${props.folderInfo[Object.keys(props.folderInfo)[0]].name}"`}
+              {`There is no files in folder "${props.folderInfo[Object.keys(props.folderInfo)[0]].name}". You can drop it here or upload file with click.`}
             </p>
           )
           : null

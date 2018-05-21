@@ -23,9 +23,9 @@ const Digest = require('./electron/app/digest');
 const Auth = require('./electron/app/auth');
 const FS = require('./electron/app/filesystem');
 const Raft = require('./electron/app/raft');
-const FilesListeners = require('./electron/app/files');
+// const FilesListeners = require('./electron/app/files');
 const BlockChain = require('./electron/app/blockchain');
-const GhostPad = require('./electron/app/notes');
+// const GhostPad = require('./electron/app/notes');
 
 let configFolder = `${process.cwd()}/.wizeconfig`;
 if (process.platform === 'darwin') {
@@ -134,41 +134,88 @@ ipcMain.on('fs:mount', (event, fsUrl) => {
   const threeUrls = fsUrl.slice(0, 3);
   //  send fs url of user to main func
   fsUrlGlob = threeUrls;
-  let reqs = [];
-  let reqs2 = [];
+  const reqAllState = [];
+  const reqAllMount = [];
+  // const reqAllCreate = [];
   if (threeUrls[0] === threeUrls[2]) {
-    reqs = [
-      axios.post(threeUrls[0], { data: { origin } })
-    ];
-    reqs2 = [
-      axios.post(`${threeUrls[0]}/${origin}/mount`, { data: { origin } })
-    ];
+    reqAllState.push(axios.get(`${threeUrls[0]}/${origin}/state`));
+    reqAllMount.push(axios.post(`${threeUrls[0]}/${origin}/mount`));
+    // reqAllCreate.push(axios.post(threeUrls[0], { data: { origin } }));
   } else {
-    reqs = threeUrls.map(url => axios.post(url, { data: { origin } }));
-    reqs2 = threeUrls.map(url => axios.post(`${url}/${origin}/mount`, { data: { origin } }));
+    for (let i = 0; i < threeUrls.length; i += 1) {
+      reqAllState.push(axios.get(`${threeUrls[i]}/${origin}/state`));
+      reqAllMount.push(axios.post(`${threeUrls[i]}/${origin}/mount`));
+      //  unexpected trigger on create request
+      // reqAllCreate.push(axios.post(`${threeUrls[i]}`, { data: { origin }}));
+    }
   }
-  // user origin create and mount requests
-  setTimeout(() => axios.all(reqs)
-    .then(() => (setTimeout(() => axios.all(reqs2)
-      // .then(() => mainWindow.webContents.send('fs:mounted'))
-      .catch(error => console.log(error.response)), 100)
-    ))
-    .catch(error => {
-      if (error.response.status === 500) {
-        return setTimeout(() => axios.all(reqs2)
-        // .then(() => mainWindow.webContents.send('fs:mounted'))
-          .catch(err => {
-            if (err.response.status === 500) {
-              // mainWindow.webContents.send('fs:mounted');
-            } else {
-              console.log(err.response.message);
-            }
-          }), 100);
-      }
-      console.log(error.response);
-    }), 100);
+  // // user origin create and mount requests
+  // return Promise.all(reqAllMount)
+  //   .then(() => mainWindow.webContents.send('fs:mounted'))
+  //   .catch(({ response }) => {
+  //     if (response.data.data.exitcode === 7) {
+  //       return mainWindow.webContents.send('fs:mounted');
+  //     }
+  //     return setTimeout(() => (
+  //       Promise.all(reqAllCreate)
+  //         .then(() => mainWindow.webContents.send('fs:mounted'))
+  //         .catch(({ response }) => {
+  //           if (response.data.data.exitcode === 7) {
+  //             return mainWindow.webContents.send('fs:mounted');
+  //           }
+  //           console.log(response.data.data);
+  //         })
+  //     ), 100);
+  //   });
 
-  mainWindow.webContents.send('fs:mounted');
+  // with status method
+  return Promise.all(reqAllState)
+    .then(responses => {
+      //  find out what nodes are not mounted
+      const reqMount = cF.cleanArray(responses.map((response, i) => (
+        !response.data.mounted
+          ? reqAllMount[i]
+          : null
+      )));
+      // not created
+      const urlsCreate = cF.cleanArray(responses.map((response, i) => (
+        !response.data.created
+          ? threeUrls[i]
+          : null
+      )));
+      // if we have nodes to create
+      if (urlsCreate.length) {
+        return Promise.all(urlsCreate.map(url => (
+          axios.post(url, { data: { origin } })
+        )))
+          .then(() => (
+            Promise.all(reqMount)
+              .then(() => mainWindow.webContents.send('fs:mounted'))
+              .catch(({ response }) => {
+                console.log(response.data);
+                return dialog.showErrorBox('Error', response.data.message);
+              })
+          ))
+          .catch(({ response }) => {
+            console.log(response.data);
+            return dialog.showErrorBox('Error', response.data.message);
+          });
+      } else
+      if (!urlsCreate && reqMount.length) {
+        //  only mount
+        return Promise.all(reqMount)
+          .then(() => mainWindow.webContents.send('fs:mounted'))
+          .catch(({ response }) => {
+            console.log(response.data);
+            return dialog.showErrorBox('Error', response.data.message);
+          });
+      }
+      return mainWindow.webContents.send('fs:mounted');
+    })
+    .catch(({ response }) => {
+      console.log(response.data);
+      return dialog.showErrorBox('Error', response.data.message);
+    });
 });
 //  on auth listener
 ipcMain.on('auth:start', (event, { password, filePath }) => {

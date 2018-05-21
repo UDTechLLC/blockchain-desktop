@@ -117,7 +117,8 @@ const foldersListeners = mainWindow => {
         // return Promise.all(reqs)
         //   .then()
         //   .catch(({ response }) => {
-        //     const error = response && response.data ? response.data : 'Unexpected error on folder:delete DELETE';
+        //     const error = response && response.data
+        // ? response.data : 'Unexpected error on folder:delete DELETE';
         //     console.log(error);
         //     return dialog.showErrorBox('Error on folder:delete', error);
         //   });

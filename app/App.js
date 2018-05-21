@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
 
 import { checkInternet } from './store/actions/index';
-import PreventSelection from './utils/preventSelection';
+// import PreventSelection from './utils/preventSelection';
 import Spinner from './components/UI/Spinner/Spinner';
 import Layout from './hoc/Layout/Layout';
 import NoInternetConnection from './components/NoInternetConnection/NoInternetConnection';
@@ -29,7 +29,7 @@ class App extends Component {
     content: false,
   };
   componentWillMount() {
-    PreventSelection(document);
+    // PreventSelection(document);
     this.props.checkInternet();
     setTimeout(() => this.setState({ content: true }), 1649);
   }
