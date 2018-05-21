@@ -25,7 +25,7 @@ const foldersListeners = mainWindow => {
           [hashKey]: {
             parentFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5',
             name: newFolderName,
-            date: +new Date() / 1000,
+            date: Math.round(+new Date() / 1000),
             securityLayers: {
               _2fa: false,
               pin: false,

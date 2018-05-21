@@ -30,7 +30,7 @@ class GhostPad extends Component {
   handleAddNote = () => {
     const newNote = {
       id: uuidv4(),
-      date: +new Date() / 1000,
+      date: Math.round(+new Date() / 1000),
       title: 'Untitled',
       text: ''
     };

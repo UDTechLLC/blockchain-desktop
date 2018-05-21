@@ -10,7 +10,6 @@ import GhostFiles from '../../components/PagesSections/GhostDrive/GhostFiles/Gho
 
 import css from './GhostDrive.css';
 import commonCss from '../../assets/css/common.css';
-import {ipcRenderer} from "electron";
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
 const styles = { ...commonCss, ...css };
@@ -31,32 +30,33 @@ class GhostDrive extends Component {
     });
   };
   handleOnDropFile = (accepted, rejected) => {
-    // const timestamp = Math.round(+new Date() / 1000);
-    // const promises = _.map(accepted, file => (new Promise(resolve => {
-    //   const reader = new FileReader();
-    //   reader.readAsDataURL(file);
-    //   reader.onload = event => resolve({
-    //     name: file.name,
-    //     size: file.size,
-    //     data: event.target.result,
-    //     timestamp
-    //   });
-    // })));
-    // return Promise.all(promises)
-    //   .then(files => ipcRenderer.send('file:send', {
-    //     userData,
-    //     files,
-    //     digestServers,
-    //     raftNode
-    //   }))
-    //   .catch(error => console.log(error));
-    // if (rejected.length) {
-    //   this.hanfleFlashReject(rejected[0]);
-    // }
+    if (rejected.length) {
+      console.log(rejected);
+    }
+    const timestamp = Math.round(+new Date() / 1000);
+    const promises = _.map(accepted, file => (new Promise(resolve => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = event => resolve({
+        name: file.name,
+        parentFolder: this.state.checkedFolder,
+        size: file.size,
+        data: event.target.result,
+        timestamp
+      });
+    })));
+    return Promise.all(promises)
+      .then(files => (
+        this.props.uploadFiles(
+          this.props.userData,
+          files,
+          this.props.storageNodes,
+          this.props.raftNode
+        )
+      ))
+      .catch(error => console.log(error));
   };
   render() {
-    console.log(this.state.checkedFolder, this.props.folders);
-    const files = _.pick(this.props.files, 'parentFolder', this.state.checkedFolder);
     return (
       <PageWithInfoPanel>
         <div
@@ -86,7 +86,8 @@ class GhostDrive extends Component {
               folderInfo={{
                 [this.state.checkedFolder]: this.props.folders[this.state.checkedFolder]
               }}
-              files={files}
+              files={_.pickBy(this.props.files, v => v.parentFolder === this.state.checkedFolder)}
+              onDrop={(accepted, rejected) => this.handleOnDropFile(accepted, rejected)}
             />
           </div>
         </div>
@@ -102,7 +103,8 @@ GhostDrive.propTypes = {
   folders: PropTypes.shape().isRequired,
   files: PropTypes.shape().isRequired,
   getUserData: PropTypes.func.isRequired,
-  deleteFolder: PropTypes.func.isRequired
+  deleteFolder: PropTypes.func.isRequired,
+  uploadFiles: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -117,6 +119,9 @@ const mapDispatchToProps = dispatch => ({
   getUserData: (userData, raftNode) => dispatch(actionTypes.getUserData(userData, raftNode)),
   deleteFolder: (folderId, userData, raftNode) => (
     dispatch(actionTypes.deleteFolder(folderId, userData, raftNode))
+  ),
+  uploadFiles: (userData, files, storageNodes, raftNode) => (
+    dispatch(actionTypes.uploadFiles(userData, files, storageNodes, raftNode))
   )
 });
 

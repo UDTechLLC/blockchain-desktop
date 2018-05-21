@@ -72,23 +72,28 @@ export const deleteFolder = (folderId, userData, raftNode) => dispatch => {
   ipcRenderer.once('folder:delete-success', () => dispatch(deleteFolderSuccess(folderId)));
 };
 
-// const getNotesStart = (userData, raftNode) => {
-//   ipcRenderer.send('notes:get', { userData, raftNode });
-//   return { type: actionTypes.GET_NOTES_START };
-// };
-//
-// const getNotesSuccess = notes => ({
-//   type: actionTypes.GET_NOTES_SUCCESS,
-//   notes
-// });
-//
-// export const getNotes = (userData, raftNode) => dispatch => {
-//   dispatch(getNotesStart(userData, raftNode));
-//   ipcRenderer.once('notes:get-complete', (event, notes) => {
-//     dispatch(getNotesSuccess(notes));
-//   });
-// };
+//  upload new files
+const uploadFilesStart = (userData, files, storageNodes, raftNode) => {
+  ipcRenderer.send('files:upload', {
+    userData,
+    files,
+    storageNodes,
+    raftNode
+  });
+  return { type: actionTypes.UPLOAD_FILES_START };
+};
 
+const uploadFilesSuccess = filesList => ({
+  type: actionTypes.UPLOAD_FILES_SUCCESS,
+  filesList
+});
+
+export const uploadFiles = (userData, files, storageNodes, raftNode) => dispatch => {
+  dispatch(uploadFilesStart(userData, files, storageNodes, raftNode));
+  ipcRenderer.once('files:upload-success', (event, filesList) => dispatch(uploadFilesSuccess(filesList)));
+};
+
+// TODO: Refactoring of notes actions
 const editNotesListStart = (notes, userData, raftNode) => {
   ipcRenderer.send('notes:edit-list', { notes, userData, raftNode });
   return { type: actionTypes.EDIT_NOTE_LIST_START };
@@ -122,5 +127,3 @@ export const deleteNote = (id, userData, raftNode) => dispatch => {
     dispatch(deleteNoteSuccess(id))
   ));
 };
-
-

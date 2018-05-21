@@ -19,5 +19,6 @@ export {
   getAppSettings,
   getUserData,
   createNewFolder,
-  deleteFolder
+  deleteFolder,
+  uploadFiles
 } from './raft';

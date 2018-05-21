@@ -111,6 +111,11 @@ const deleteFolderSuccess = (state, action) => (updateObject(state, {
   loading: false
 }));
 
+const uploadFilesSuccess = (state, action) => (updateObject(state, {
+  files: action.filesList,
+  loading: false
+}));
+
 const reducer = (state = initialState, action) => {
   if (action) {
     switch (action.type) {
@@ -122,6 +127,8 @@ const reducer = (state = initialState, action) => {
       case actionTypes.CREATE_NEW_FOLDER_SUCCESS: return createNewFolderSuccess(state, action);
       case actionTypes.DELETE_FOLDER_START: return actionStart(state, action);
       case actionTypes.DELETE_FOLDER_SUCCESS: return deleteFolderSuccess(state, action);
+      case actionTypes.UPLOAD_FILES_START: return actionStart(state, action);
+      case actionTypes.UPLOAD_FILES_SUCCESS: return uploadFilesSuccess(state, action);
       // case actionTypes.GET_NOTES_START: return actionStart(state, action);
       // case actionTypes.GET_NOTES_SUCCESS: return getNotes(state, action);
       // case actionTypes.EDIT_NOTE_LIST_START: return actionStart(state, action);

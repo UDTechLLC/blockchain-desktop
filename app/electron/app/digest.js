@@ -21,8 +21,8 @@ const digest = mainWindow => {
         ],
         storageNodes: [
           'http://127.0.0.1:13000',
-          'http://127.0.0.1:13000',
-          'http://127.0.0.1:13000'
+          'http://127.0.0.1:13001',
+          'http://127.0.0.1:13002'
         ],
         spaceleft: 0,
         totalNodes: 0,

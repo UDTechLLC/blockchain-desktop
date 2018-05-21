@@ -12,3 +12,12 @@
   border: 1px solid #0b3f46 !important;
   font-size: 1.4rem;
 }
+
+.ItemsWrapper {
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.ItemsWrapper > div:not(:last-of-type) {
+  width: calc(100% / 6);
+}

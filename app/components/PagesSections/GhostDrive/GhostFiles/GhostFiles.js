@@ -12,7 +12,10 @@ const styles = { ...commonCss, ...css };
 
 const ghostFiles = props => {
   const dropzone = (
-    <Dropzone>
+    <Dropzone
+      onDrop={(accepted, rejected) => props.onDrop(accepted, rejected)}
+      maxSize={102400000}
+    >
       {
         !Object.keys(props.files).length
           ? (
@@ -24,6 +27,7 @@ const ghostFiles = props => {
       }
     </Dropzone>
   );
+  console.log(props.files);
   return (
     <div
       className={[
@@ -35,7 +39,13 @@ const ghostFiles = props => {
       {
         Object.keys(props.files).length
           ? (
-            <div>
+            <div
+              className={[
+                styles.flex,
+                styles.wh100,
+                styles.ItemsWrapper
+              ].join(' ')}
+            >
               {
                 Object.keys(props.files).map((k, i) => (
                   <FileItem key={i} file={props.files[k]} />
@@ -44,7 +54,6 @@ const ghostFiles = props => {
               <div
                 className={[
                   styles.absolute100,
-                  styles.wh100,
                   styles.DropzoneWrapper
                 ].join(' ')}
               >
@@ -69,7 +78,8 @@ const ghostFiles = props => {
 
 ghostFiles.propTypes = {
   folderInfo: PropTypes.shape().isRequired,
-  files: PropTypes.shape()
+  files: PropTypes.shape(),
+  onDrop: PropTypes.func.isRequired
 };
 
 ghostFiles.defaultProps = {
