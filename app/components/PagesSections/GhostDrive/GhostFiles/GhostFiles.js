@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 
 import FileItem from './FileItem/FileItem';
+import WithCustomScrollbar from '../../../../components/UI/WithCustomScrollbar/WithCustomScrollbar';
 
 import css from './GhostFiles.css';
 import commonCss from '../../../../assets/css/common.css';
@@ -29,50 +30,52 @@ const ghostFiles = props => {
   );
   console.log(props.files);
   return (
-    <div
-      className={[
-        styles.flex,
-        styles.wh100,
-        styles.GhostFiles
-      ].join(' ')}
-    >
-      {
-        Object.keys(props.files).length
-          ? (
-            <div
-              className={[
-                styles.flex,
-                styles.wh100,
-                styles.ItemsWrapper
-              ].join(' ')}
-            >
-              {
-                Object.keys(props.files).map((k, i) => (
-                  <FileItem key={i} file={props.files[k]} />
-                ))
-              }
+    <WithCustomScrollbar>
+      <div
+        className={[
+          styles.flex,
+          styles.wh100,
+          styles.GhostFiles
+        ].join(' ')}
+      >
+        {
+          Object.keys(props.files).length
+            ? (
               <div
                 className={[
-                  styles.absolute100,
+                  styles.flex,
+                  styles.wh100,
+                  styles.ItemsWrapper
+                ].join(' ')}
+              >
+                {
+                  Object.keys(props.files).map((k, i) => (
+                    <FileItem key={i} file={props.files[k]} />
+                  ))
+                }
+                <div
+                  className={[
+                    styles.absolute100,
+                    styles.DropzoneWrapper
+                  ].join(' ')}
+                >
+                  {dropzone}
+                </div>
+              </div>
+            )
+            : (
+              <div
+                className={[
+                  styles.wh100,
                   styles.DropzoneWrapper
                 ].join(' ')}
               >
                 {dropzone}
               </div>
-            </div>
-          )
-          : (
-            <div
-              className={[
-                styles.wh100,
-                styles.DropzoneWrapper
-              ].join(' ')}
-            >
-              {dropzone}
-            </div>
-          )
-      }
-    </div>
+            )
+        }
+      </div>
+    </WithCustomScrollbar>
   );
 };
 

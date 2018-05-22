@@ -7,6 +7,7 @@ const { DIGEST_URL } = require('../../utils/const');
 const digest = mainWindow => {
   //  get network digest listener
   ipcMain.on('digest:get', (event, { userData, password }) => {
+    //  local servers
     if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
       const data = {
         bcNodes: [
@@ -54,6 +55,31 @@ const digest = mainWindow => {
           }
         });
     }
+  //   //  prod servers
+  //   const reqData = {
+  //     address: userData.address,
+  //     pubKey: userData.cpk,
+  //     AES: cF.getHash(password)
+  //   };
+  //   return axios.post(`${DIGEST_URL}/hello/application`, reqData)
+  //     .then(({ data }) => mainWindow.webContents.send('digest:success', data))
+  //     .catch(({ response }) => {
+  //       if (response.data.message === 'PrivKey is empty') {
+  //         axios.post(`${DIGEST_URL}/hello/application`, {
+  //           ...reqData,
+  //           PrivKey: userData.csk
+  //         })
+  //           .then(({ data }) => mainWindow.webContents.send('digest:success', data))
+  //           .catch(({ res }) => {
+  //             console.log(res.data);
+  //             return dialog.showErrorBox('Error', res.data.message);
+  //           });
+  //       } else {
+  //         console.log(response.data);
+  //         dialog.showErrorBox('Error', response.data.message);
+  //       }
+  //     });
+  // //
   });
 };
 

@@ -16,8 +16,5 @@
 .ItemsWrapper {
   position: relative;
   flex-wrap: wrap;
-}
-
-.ItemsWrapper > div:not(:last-of-type) {
-  width: calc(100% / 6);
+  padding: 15px;
 }

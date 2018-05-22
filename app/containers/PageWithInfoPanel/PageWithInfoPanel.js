@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import WithCustomScrollbar from '../../components/UI/WithCustomScrollbar/WithCustomScrollbar';
 import InfoPanel from '../../components/InfoPanel/InfoPanel';
 
 import css from './PageWithInfoPanel.css';
@@ -54,9 +53,7 @@ class PageWithInfoPanel extends Component {
               ].join(' ')
           }
         >
-          <WithCustomScrollbar>
-            {this.props.children}
-          </WithCustomScrollbar>
+          {this.props.children}
         </div>
         <div
           className={
