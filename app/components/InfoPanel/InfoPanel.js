@@ -30,7 +30,15 @@ const infoPanel = props => {
       case 'NewBlock': block = <NewBlock key={Math.random()} />; break;
       case 'CreateFolder': block = <CreateFolder key={Math.random()} />; break;
       case 'NodesMenu': block = <NodesMenu key={Math.random()} />; break;
-      case 'Manipulation': block = <Manipulation key={Math.random()} />; break;
+      case 'Manipulation':
+        block = (
+          <Manipulation
+            key={Math.random()}
+            handleDownloadFile={() => props.handleDownloadFile()}
+            handleRemoveFile={() => props.handleRemoveFile()}
+          />
+        );
+        break;
       default:
         block = (
           <div key={Math.random()}>
@@ -70,7 +78,9 @@ infoPanel.propTypes = {
   leftColumn: PropTypes.arrayOf(PropTypes.string),
   rightColumn: PropTypes.arrayOf(PropTypes.string),
   handleTogglePanel: PropTypes.func.isRequired,
-  hide: PropTypes.bool
+  hide: PropTypes.bool,
+  handleDownloadFile: PropTypes.func,
+  handleRemoveFile: PropTypes.func
 };
 
 infoPanel.defaultProps = {
@@ -82,7 +92,9 @@ infoPanel.defaultProps = {
   rightColumn: [
     'SecurityLayer',
     'Manipulation'
-  ]
+  ],
+  handleDownloadFile: null,
+  handleRemoveFile: null
 };
 
 export default infoPanel;

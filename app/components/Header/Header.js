@@ -49,7 +49,7 @@ class Header extends Component {
       // },
       {
         link: '/ghost-pad',
-        label: 'Ghost pad'
+        label: 'Ghost note'
       }
     ],
     iconsMenu: [

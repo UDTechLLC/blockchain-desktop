@@ -1,7 +1,7 @@
 {
-  "name": "wizebit-electron",
-  "productName": "WizebitElectron",
-  "version": "0.0.1",
+  "name": "ghostdrive",
+  "productName": "GhostDrive",
+  "version": "0.2.1",
   "description": "Wizebit desktop application",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
@@ -32,7 +32,7 @@
   },
   "browserslist": "electron 1.6",
   "build": {
-    "productName": "Wizebit",
+    "productName": "GhostDrive",
     "appId": "org.develar.Wizebit",
     "files": [
       "dist/",

@@ -28,16 +28,15 @@ const ghostFiles = props => {
       }
     </Dropzone>
   );
-  console.log(props.files);
   return (
-    <WithCustomScrollbar>
-      <div
-        className={[
-          styles.flex,
-          styles.wh100,
-          styles.GhostFiles
-        ].join(' ')}
-      >
+    <div
+      className={[
+        styles.flex,
+        styles.wh100,
+        styles.GhostFiles
+      ].join(' ')}
+    >
+      <WithCustomScrollbar>
         {
           Object.keys(props.files).length
             ? (
@@ -50,7 +49,12 @@ const ghostFiles = props => {
               >
                 {
                   Object.keys(props.files).map((k, i) => (
-                    <FileItem key={i} file={props.files[k]} />
+                    <FileItem
+                      key={i}
+                      file={props.files[k]}
+                      isActive={props.files[k].signature === props.activeFile}
+                      onFileCheck={signature => props.onFileCheck(signature)}
+                    />
                   ))
                 }
                 <div
@@ -74,19 +78,22 @@ const ghostFiles = props => {
               </div>
             )
         }
-      </div>
-    </WithCustomScrollbar>
+      </WithCustomScrollbar>
+    </div>
   );
 };
 
 ghostFiles.propTypes = {
   folderInfo: PropTypes.shape().isRequired,
   files: PropTypes.shape(),
-  onDrop: PropTypes.func.isRequired
+  onDrop: PropTypes.func.isRequired,
+  onFileCheck: PropTypes.func.isRequired,
+  activeFile: PropTypes.string
 };
 
 ghostFiles.defaultProps = {
-  files: {}
+  files: {},
+  activeFile: ''
 };
 
 export default ghostFiles;

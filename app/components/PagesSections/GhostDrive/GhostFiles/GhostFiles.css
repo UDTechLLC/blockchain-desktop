@@ -1,5 +1,10 @@
 .GhostFiles {
   padding: 15px 15px 0;
+  overflow: hidden;
+}
+
+.DropzoneWrapper {
+  z-index: 0;
 }
 
 .DropzoneWrapper > div {

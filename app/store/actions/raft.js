@@ -93,6 +93,46 @@ export const uploadFiles = (userData, files, storageNodes, raftNode) => dispatch
   ipcRenderer.once('files:upload-success', (event, filesList) => dispatch(uploadFilesSuccess(filesList)));
 };
 
+//  download file
+const downloadFileStart = (signature, userData, raftNode) => {
+  ipcRenderer.send('file:download', { signature, userData, raftNode });
+  return { type: actionTypes.DOWNLOAD_FILE_START };
+};
+
+const downloadFileSuccess = (signature, base64File) => ({
+  type: actionTypes.DOWNLOAD_FILE_SUCCESS,
+  signature,
+  base64File
+});
+
+export const downloadFile = (signature, userData, raftNode) => dispatch => {
+  dispatch(downloadFileStart(signature, userData, raftNode));
+  ipcRenderer.once('file:download-success', (event, base64File) => (
+    dispatch(downloadFileSuccess(signature, base64File))
+  ));
+};
+
+export const saveDownloadedFile = signature => ({
+  type: actionTypes.SAVE_DOWNLOADED_FILE,
+  signature
+});
+
+//  delete file
+const removeFileStart = (signature, userData, raftNode) => {
+  ipcRenderer.send('file:remove', { signature, userData, raftNode });
+  return { type: actionTypes.REMOVE_FILE_START };
+};
+
+const removeFileSuccess = signature => ({
+  type: actionTypes.REMOVE_FILE_SUCCESS,
+  signature
+});
+
+export const removeFile = (signature, userData, raftNode) => dispatch => {
+  dispatch(removeFileStart(signature, userData, raftNode));
+  ipcRenderer.once('file:remove-success', () => dispatch(removeFileSuccess(signature)));
+};
+
 // TODO: Refactoring of notes actions
 const editNotesListStart = (notes, userData, raftNode) => {
   ipcRenderer.send('notes:edit-list', { notes, userData, raftNode });

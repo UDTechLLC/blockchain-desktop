@@ -16,11 +16,27 @@ const styles = { ...commonCss, ...css };
 
 class GhostDrive extends Component {
   state = {
-    checkedFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5'
+    checkedFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5',
+    checkedFile: ''
   };
   componentWillMount() {
     this.props.getUserData(this.props.userData, this.props.raftNode);
   }
+  handleCheckFolder = name => (
+    this.setState({
+      checkedFolder: Object.keys(this.props.folders).find(el => (
+        this.props.folders[el].name === name
+      )),
+      checkedFile: ''
+    })
+  );
+  handleCheckFile = signature => (
+    this.setState({
+      checkedFile: Object.keys(this.props.files).find(el => (
+        this.props.files[el].signature === signature
+      ))
+    })
+  );
   handleDeleteFolder = name => {
     this.setState({ checkedFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5' }, () => {
       const folderId = Object.keys(this.props.folders).find(el => (
@@ -56,9 +72,32 @@ class GhostDrive extends Component {
       ))
       .catch(error => console.log(error));
   };
+  handleDownloadFile = () => {
+    if (!this.state.checkedFile) {
+      return false;
+    }
+    return this.props.downloadFile(
+      this.state.checkedFile,
+      this.props.userData,
+      this.props.raftNode
+    );
+  };
+  handleRemoveFile = () => {
+    if (!this.state.checkedFile) {
+      return false;
+    }
+    return this.props.removeFile(
+      this.state.checkedFile,
+      this.props.userData,
+      this.props.raftNode
+    );
+  };
   render() {
     return (
-      <PageWithInfoPanel>
+      <PageWithInfoPanel
+        handleDownloadFile={() => this.handleDownloadFile()}
+        handleRemoveFile={() => this.handleRemoveFile()}
+      >
         <div
           className={[
             styles.wh100,
@@ -70,11 +109,7 @@ class GhostDrive extends Component {
           >
             <GhostFolders
               folders={this.props.folders}
-              onFolderCheck={name => this.setState({
-                checkedFolder: Object.keys(this.props.folders).find(el => (
-                  this.props.folders[el].name === name
-                ))
-              })}
+              onFolderCheck={name => this.handleCheckFolder(name)}
               onFolderDelete={name => this.handleDeleteFolder(name)}
               activeFolder={this.props.folders[this.state.checkedFolder].name}
             />
@@ -88,6 +123,8 @@ class GhostDrive extends Component {
               }}
               files={_.pickBy(this.props.files, v => v.parentFolder === this.state.checkedFolder)}
               onDrop={(accepted, rejected) => this.handleOnDropFile(accepted, rejected)}
+              onFileCheck={signature => this.handleCheckFile(signature)}
+              activeFile={this.state.checkedFile}
             />
           </div>
         </div>
@@ -104,7 +141,9 @@ GhostDrive.propTypes = {
   files: PropTypes.shape().isRequired,
   getUserData: PropTypes.func.isRequired,
   deleteFolder: PropTypes.func.isRequired,
-  uploadFiles: PropTypes.func.isRequired
+  uploadFiles: PropTypes.func.isRequired,
+  downloadFile: PropTypes.func.isRequired,
+  removeFile: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -122,6 +161,13 @@ const mapDispatchToProps = dispatch => ({
   ),
   uploadFiles: (userData, files, storageNodes, raftNode) => (
     dispatch(actionTypes.uploadFiles(userData, files, storageNodes, raftNode))
+  ),
+  downloadFile: (signature, userData, raftNode) => (
+    dispatch(actionTypes.downloadFile(signature, userData, raftNode))
+  ),
+  saveDownloadedFile: signature => dispatch(actionTypes.saveDownloadedFile(signature)),
+  removeFile: (signature, userData, raftNode) => (
+    dispatch(actionTypes.removeFile(signature, userData, raftNode))
   )
 });
 

@@ -47,6 +47,11 @@ const initialState = {
   },
   files: {},
   notes: {},
+  downloadedFile: {
+    signature: '',
+    base64File: '',
+    downloaded: true
+  },
   error: null,
   loading: false
 };
@@ -116,6 +121,37 @@ const uploadFilesSuccess = (state, action) => (updateObject(state, {
   loading: false
 }));
 
+const downloadFileSuccess = (state, action) => (updateObject(state, {
+  downloadedFile: {
+    signature: action.signature,
+    base64File: action.base64File,
+    downloaded: false
+  },
+  loading: false
+}));
+
+const saveDownloadedFile = (state, action) => {
+  if (state.downloadedFile.signature !== action.signature) {
+    return updateObject(state, {
+      downloadedFile: {
+        ...state.downloadedFile,
+        downloaded: true
+      }
+    });
+  }
+  return updateObject(state, {
+    downloadedFile: {
+      ...state.downloadedFile,
+      downloaded: false
+    }
+  });
+};
+
+const removeFileSuccess = (state, action) => (updateObject(state, {
+  files: _.pickBy(state.files, (v, k) => k !== action.signature),
+  loading: false
+}));
+
 const reducer = (state = initialState, action) => {
   if (action) {
     switch (action.type) {
@@ -129,6 +165,11 @@ const reducer = (state = initialState, action) => {
       case actionTypes.DELETE_FOLDER_SUCCESS: return deleteFolderSuccess(state, action);
       case actionTypes.UPLOAD_FILES_START: return actionStart(state, action);
       case actionTypes.UPLOAD_FILES_SUCCESS: return uploadFilesSuccess(state, action);
+      case actionTypes.DOWNLOAD_FILE_START: return actionStart(state, action);
+      case actionTypes.DOWNLOAD_FILE_SUCCESS: return downloadFileSuccess(state, action);
+      case actionTypes.SAVE_DOWNLOADED_FILE: return saveDownloadedFile(state, action);
+      case actionTypes.REMOVE_FILE_START: return actionStart(state, action);
+      case actionTypes.REMOVE_FILE_SUCCESS: return removeFileSuccess(state, action);
       // case actionTypes.GET_NOTES_START: return actionStart(state, action);
       // case actionTypes.GET_NOTES_SUCCESS: return getNotes(state, action);
       // case actionTypes.EDIT_NOTE_LIST_START: return actionStart(state, action);

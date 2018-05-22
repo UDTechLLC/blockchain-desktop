@@ -229,78 +229,144 @@ const filesListeners = mainWindow => {
       });
   });
   //  on file download listener
-  ipcMain.on('file:compile', (event, { userData, filename, raftNode }) => (
-    axios.get(`${raftNode}/${userData.cpk}`)
-      .then(response => {
-        const fileList = {
-          ...JSON.parse(response.data[userData.cpk])
-        };
-        const pointer = cF.aesEncrypt(filename, userData.csk);
-        const encryptedData = fileList[pointer.encryptedHex];
-        const decryptedData = cF.aesDecrypt(encryptedData, userData.csk);
-        const fileDataObj = JSON.parse(decryptedData.strData);
-        const shardsReq = fileDataObj.shardsAddresses.map((shardAddress, index) => {
-          const fname = cF.aesEncrypt(filename, userData.csk).encryptedHex;
-          return axios.get(`${shardAddress}/files/${fname}.${index}`);
-        });
-        return new Promise(resolve => (
-          setTimeout(() => (
-            axios.all(shardsReq)
-              .then(ress => resolve(ress))
-              .catch(error => dialog.showErrorBox('Error', error.response.data))
-          ), 100)
+  // ipcMain.on('file:compile', (event, { userData, filename, raftNode }) => (
+  //   axios.get(`${raftNode}/${userData.cpk}`)
+  //     .then(response => {
+  //       const fileList = {
+  //         ...JSON.parse(response.data[userData.cpk])
+  //       };
+  //       const pointer = cF.aesEncrypt(filename, userData.csk);
+  //       const encryptedData = fileList[pointer.encryptedHex];
+  //       const decryptedData = cF.aesDecrypt(encryptedData, userData.csk);
+  //       const fileDataObj = JSON.parse(decryptedData.strData);
+  //       const shardsReq = fileDataObj.shardsAddresses.map((shardAddress, index) => {
+  //         const fname = cF.aesEncrypt(filename, userData.csk).encryptedHex;
+  //         return axios.get(`${shardAddress}/files/${fname}.${index}`);
+  //       });
+  //       return new Promise(resolve => (
+  //         setTimeout(() => (
+  //           axios.all(shardsReq)
+  //             .then(ress => resolve(ress))
+  //             .catch(error => dialog.showErrorBox('Error', error.response.data))
+  //         ), 100)
+  //       ));
+  //     })
+  //     .then(responses => {
+  //       const shards = responses.map(res => cF.aesDecrypt(res.data, userData.csk).strData);
+  //       const base64File = shards.join('');
+  //       // eslint-disable-next-line promise/always-return
+  //       if (base64File) {
+  //         mainWindow.webContents.send('file:receive', base64File);
+  //       }
+  //     })
+  //     .catch(error => dialog.showErrorBox('Error', error.response.data))
+  // ));
+  ipcMain.on('file:download', (event, { signature, userData, raftNode }) => {
+    const filesKey = `${userData.cpk}_fls`;
+    return axios.get(`${raftNode}/key/${filesKey}`)
+      .then(({ data }) => {
+        const fileList = cF.decryptDataFromRaft(data, filesKey, userData.csk);
+        const fileData = fileList[signature];
+        const shardsReq = fileData.shardsAddresses.map((shardAddress, index) => (
+          axios.get(`${shardAddress}/files/${cF.aesEncrypt(signature, userData.csk).encryptedHex}.${index}`)
         ));
+        return Promise.all(shardsReq);
       })
       .then(responses => {
         const shards = responses.map(res => cF.aesDecrypt(res.data, userData.csk).strData);
         const base64File = shards.join('');
-        // eslint-disable-next-line promise/always-return
         if (base64File) {
-          mainWindow.webContents.send('file:receive', base64File);
+          return mainWindow.webContents.send('file:download-complete', base64File);
         }
+        return dialog.showErrorBox('Error on file:download', 'Empty file');
       })
-      .catch(error => dialog.showErrorBox('Error', error.response.data))
-  ));
+      .catch(({ response }) => {
+        const error = response && response.data ? response.data : 'Unexpected error on file:download COMPILE + GET';
+        console.log(error);
+        return dialog.showErrorBox('Error on file:download', error);
+      });
+  });
   //  on file remove listener
-  ipcMain.on('file:remove', (event, { userData, filename, raftNode }) => (
-    axios.get(`${raftNode}/${userData.cpk}`)
-    //  user raft object
-    // eslint-disable-next-line promise/always-return
-      .then(response => {
-        let updateObj = {
-          ...response.data
-        };
-        //  aes name
-        const encName = cF.aesEncrypt(filename, userData.csk).encryptedHex;
-        const userObj = JSON.parse(updateObj[userData.cpk]);
-        const decData = JSON.parse(cF.aesDecrypt(userObj[encName], userData.csk).strData);
-        const removeReqs = decData.shardsAddresses.map((req, i) => axios.delete(`${req}/files/${encName}.${i}`));
-        return new Promise(resolve => (
-          setTimeout(() => (
-            axios.all(removeReqs)
-              .then(() => {
-                delete userObj[encName];
-                updateObj = {
-                  ...updateObj,
-                  [userData.cpk]: JSON.stringify(userObj)
-                };
-                return updateObj;
-              })
-              .then(uObj => resolve(uObj))
-              .catch(error => dialog.showErrorBox('Error', error.response.data))
-          ), 100)
-        ))
-          .then(uObj => new Promise((resolve, reject) => (
-            setTimeout(() => (
-              axios.post(`${raftNode}/${userData.cpk}`, uObj)
-                .then(() => resolve(mainWindow.webContents.send('file:removed')))
-                .catch(error => reject(error.response))
-            ), 100)
-          )))
-          .catch(error => dialog.showErrorBox('Error', error.response.data));
+  // ipcMain.on('file:remove', (event, { userData, filename, raftNode }) => (
+  //   axios.get(`${raftNode}/${userData.cpk}`)
+  //   //  user raft object
+  //   // eslint-disable-next-line promise/always-return
+  //     .then(response => {
+  //       let updateObj = {
+  //         ...response.data
+  //       };
+  //       //  aes name
+  //       const encName = cF.aesEncrypt(filename, userData.csk).encryptedHex;
+  //       const userObj = JSON.parse(updateObj[userData.cpk]);
+  //       const decData = JSON.parse(cF.aesDecrypt(userObj[encName], userData.csk).strData);
+  //       const removeReqs = decData.shardsAddresses.map((req, i) => axios.delete(`${req}/files/${encName}.${i}`));
+  //       return new Promise(resolve => (
+  //         setTimeout(() => (
+  //           axios.all(removeReqs)
+  //             .then(() => {
+  //               delete userObj[encName];
+  //               updateObj = {
+  //                 ...updateObj,
+  //                 [userData.cpk]: JSON.stringify(userObj)
+  //               };
+  //               return updateObj;
+  //             })
+  //             .then(uObj => resolve(uObj))
+  //             .catch(error => dialog.showErrorBox('Error', error.response.data))
+  //         ), 100)
+  //       ))
+  //         .then(uObj => new Promise((resolve, reject) => (
+  //           setTimeout(() => (
+  //             axios.post(`${raftNode}/${userData.cpk}`, uObj)
+  //               .then(() => resolve(mainWindow.webContents.send('file:removed')))
+  //               .catch(error => reject(error.response))
+  //           ), 100)
+  //         )))
+  //         .catch(error => dialog.showErrorBox('Error', error.response.data));
+  //     })
+  //     .catch(error => dialog.showErrorBox('Error', error.response.data))
+  // ));
+  ipcMain.on('file:remove', (event, { signature, userData, raftNode }) => {
+    const filesKey = `${userData.cpk}_fls`;
+    return axios.get(`${raftNode}/key/${filesKey}`)
+      .then(({ data }) => {
+        const fileList = cF.decryptDataFromRaft(data, filesKey, userData.csk);
+        const fileData = fileList[signature];
+        const shardsReq = fileData.shardsAddresses.map((shardAddress, index) => (
+          axios.delete(`${shardAddress}/files/${cF.aesEncrypt(signature, userData.csk).encryptedHex}.${index}`)
+        ));
+        return Promise.all(shardsReq)
+          .then(() => {
+            const updFileList = fileList;
+            delete updFileList[signature];
+            const updData = {
+              [filesKey]: cF.aesEncrypt(JSON.stringify(updFileList), userData.csk).encryptedHex
+            };
+            const config = {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            };
+            return axios.post(`${raftNode}/key`, updData, config)
+              .then(() => mainWindow.webContents.send('file:remove-success'))
+              .catch(({ response }) => {
+                const error = response && response.data ? response.data.data : 'Unexpected error on folder:remove POST';
+                console.log(error);
+                return dialog.showErrorBox('Error on folder:remove', error);
+              });
+          })
+          .catch(({ response }) => {
+            const error = response && response.data ? response.data.data : 'Unexpected error on file:remove DELETE';
+            console.log(error);
+            return dialog.showErrorBox('Error on file:remove', error);
+          });
       })
-      .catch(error => dialog.showErrorBox('Error', error.response.data))
-  ));
+      .catch(({ response }) => {
+        const error = response && response.data ? response.data.data : 'Unexpected error on file:remove GET';
+        console.log(error);
+        return dialog.showErrorBox('Error on file:remove', error);
+      });
+  });
 };
 
 export default filesListeners;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './Manipulation.css';
 import commonCss from '../../../assets/css/common.css';
@@ -6,7 +7,7 @@ import commonCss from '../../../assets/css/common.css';
 // and component classes - uppercase: styles.Class
 const styles = { ...commonCss, ...css };
 
-const manipulation = () => (
+const manipulation = props => (
   <div
     className={[
       styles.wh100,
@@ -14,8 +15,24 @@ const manipulation = () => (
       styles.Manipulation
     ].join(' ')}
   >
-    manipulation block
+    <button
+      type="button"
+      onClick={() => props.handleDownloadFile()}
+    >
+      download
+    </button>
+    <button
+      type="button"
+      onClick={() => props.handleRemoveFile()}
+    >
+      delete
+    </button>
   </div>
 );
+
+manipulation.propTypes = {
+  handleDownloadFile: PropTypes.func.isRequired,
+  handleRemoveFile: PropTypes.func.isRequired
+};
 
 export default manipulation;

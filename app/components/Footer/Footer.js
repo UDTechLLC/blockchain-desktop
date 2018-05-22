@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { gbytes2Tbytes } from '../../utils/commonFunctions';
+import { bytes2Gbytes } from '../../utils/commonFunctions';
 
 import css from './Footer.css';
 import commonCss from '../../assets/css/common.css';
@@ -10,7 +10,7 @@ const styles = { ...commonCss, ...css };
 
 class Footer extends Component {
   state = {
-    total: 1024,
+    total: 1024 * 1024 * 1024,
     used: 800,
     available: 123,
     masternodes: 0
@@ -31,7 +31,7 @@ class Footer extends Component {
             styles.flexAllCenter
           ].join(' ')}
         >
-          {gbytes2Tbytes(this.state.total)} TB
+          {bytes2Gbytes(this.state.total)} GB
         </div>
         <div
           className={[

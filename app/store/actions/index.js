@@ -20,5 +20,8 @@ export {
   getUserData,
   createNewFolder,
   deleteFolder,
-  uploadFiles
+  uploadFiles,
+  downloadFile,
+  saveDownloadedFile,
+  removeFile
 } from './raft';
