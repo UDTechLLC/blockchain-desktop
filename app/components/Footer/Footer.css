@@ -18,3 +18,10 @@
   margin-left: 7px;
   white-space: nowrap;
 }
+
+.PoweredBy {
+  font-size: 0.8rem;
+  color: white;
+  text-align: center;
+  line-height: 1.2;
+}

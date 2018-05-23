@@ -10,6 +10,13 @@
   position: relative;
 }
 
+.LogoImg {
+  height: 40px;
+  width: 26.4px;
+  margin: 0 18px 0 0;
+  position: relative;
+}
+
 .Logo > img:first-of-type {
   height: 40px;
   margin-right: 18px;
@@ -21,7 +28,7 @@
   margin-right: 7px;
 }
 
-.Logo > div {
+.Logo > div:not(.LogoImg) {
   color: #2f96ba;
   font-size: 10px;
   font-weight: 300;

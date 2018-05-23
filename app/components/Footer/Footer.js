@@ -26,7 +26,17 @@ class Footer extends Component {
       >
         <div
           className={[
-            styles.flex3,
+            styles.flex1,
+            styles.wh100,
+            styles.flexAllCenter,
+            styles.PoweredBy
+          ].join(' ')}
+        >
+          Powered by WizeBit Blockchain
+        </div>
+        <div
+          className={[
+            styles.flex4,
             styles.wh100,
             styles.flexAllCenter
           ].join(' ')}
@@ -35,7 +45,7 @@ class Footer extends Component {
         </div>
         <div
           className={[
-            styles.flex1,
+            styles.flex3,
             styles.wh100,
             styles.flexAllCenter
           ].join(' ')}

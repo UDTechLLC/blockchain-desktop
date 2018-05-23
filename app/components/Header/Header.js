@@ -2,10 +2,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+
 import UiNavLink from '../UI/NavLink/NavLink';
+import Loading from '../Animations/Loading/Loading';
 
 import {
-  logoGhost,
+  // logoGhost,
   loop,
   logout,
   settings,
@@ -96,8 +98,11 @@ class Header extends Component {
               styles.Logo
             ].join(' ')}
           >
-            <img src={logoGhost} alt="Ghostdrive" />
+            {/* <img src={logoGhost} alt="Ghostdrive" /> */}
             {/* <img src={logoTitle} alt="Ghostdrive" /> */}
+            <div className={styles.LogoImg}>
+              <Loading color="white" />
+            </div>
             <div
               className={[
                 styles.orangeBar,
