@@ -76,6 +76,10 @@
   justify-content: center;
 }
 
+.justifyEnd {
+  justify-content: flex-end;
+}
+
 .flexAlignCenter {
   box-sizing: border-box;
   display: flex;

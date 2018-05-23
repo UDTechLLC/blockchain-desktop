@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { saveAs } from 'file-saver';
 
 import * as actionTypes from '../../store/actions';
 import PageWithInfoPanel from '../PageWithInfoPanel/PageWithInfoPanel';
 import GhostFolders from '../../components/PagesSections/GhostDrive/GhostFolders/GhostFolders';
 import GhostFiles from '../../components/PagesSections/GhostDrive/GhostFiles/GhostFiles';
+import b64toBlob from '../../utils/b64toBlob';
 
 import css from './GhostDrive.css';
 import commonCss from '../../assets/css/common.css';
@@ -17,26 +19,33 @@ const styles = { ...commonCss, ...css };
 class GhostDrive extends Component {
   state = {
     checkedFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5',
-    checkedFile: ''
+    checkedFile: '',
+    showRemoveButton: false
   };
   componentWillMount() {
+    //  get all raft data on auth
     this.props.getUserData(this.props.userData, this.props.raftNode);
   }
+  //  if user checks one of folders
   handleCheckFolder = name => (
     this.setState({
       checkedFolder: Object.keys(this.props.folders).find(el => (
         this.props.folders[el].name === name
       )),
-      checkedFile: ''
+      checkedFile: '',
+      showRemoveButton: false
     })
   );
+  //  if user checks one of files
   handleCheckFile = signature => (
     this.setState({
       checkedFile: Object.keys(this.props.files).find(el => (
         this.props.files[el].signature === signature
-      ))
+      )),
+      showRemoveButton: false
     })
   );
+  //  delete checked folder
   handleDeleteFolder = name => {
     this.setState({ checkedFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5' }, () => {
       const folderId = Object.keys(this.props.folders).find(el => (
@@ -45,6 +54,7 @@ class GhostDrive extends Component {
       this.props.deleteFolder(folderId, this.props.userData, this.props.raftNode);
     });
   };
+  //  upload file
   handleOnDropFile = (accepted, rejected) => {
     if (rejected.length) {
       console.log(rejected);
@@ -72,6 +82,7 @@ class GhostDrive extends Component {
       ))
       .catch(error => console.log(error));
   };
+  //  triggers through redux action electron listener "file:download" that'll save file in RAM
   handleDownloadFile = () => {
     if (!this.state.checkedFile) {
       return false;
@@ -82,21 +93,43 @@ class GhostDrive extends Component {
       this.props.raftNode
     );
   };
+  //  get downloaded file from RAM
+  handleSaveDownloadedFile = () => {
+    const blob = b64toBlob(this.props.downloadedFile.base64File);
+    const filesaver = saveAs(blob, this.props.downloadedFile.name);
+    filesaver.onwriteend = () => this.props.saveDownloadedFile();
+    return filesaver;
+  };
+  //  toggles confirmation button visibility
+  toggleShowRemoveButton = () => {
+    if (!this.state.checkedFile) {
+      return false;
+    }
+    return this.setState({ showRemoveButton: !this.state.showRemoveButton });
+  };
+  //  handles checked file remove
   handleRemoveFile = () => {
     if (!this.state.checkedFile) {
       return false;
     }
-    return this.props.removeFile(
+    this.props.removeFile(
       this.state.checkedFile,
       this.props.userData,
       this.props.raftNode
     );
+    return this.setState({ showRemoveButton: false });
   };
   render() {
+    if (!this.props.downloadedFile.downloaded) {
+      this.handleSaveDownloadedFile();
+    }
     return (
       <PageWithInfoPanel
+        disableManipulationButtons={!this.state.checkedFile}
         handleDownloadFile={() => this.handleDownloadFile()}
         handleRemoveFile={() => this.handleRemoveFile()}
+        showRemoveButton={this.state.showRemoveButton}
+        toggleShowRemoveButton={() => this.toggleShowRemoveButton()}
       >
         <div
           className={[
@@ -136,14 +169,16 @@ class GhostDrive extends Component {
 GhostDrive.propTypes = {
   userData: PropTypes.shape().isRequired,
   raftNode: PropTypes.string.isRequired,
-  storageNodes: PropTypes.arrayOf().isRequired,
+  storageNodes: PropTypes.arrayOf(PropTypes.string).isRequired,
   folders: PropTypes.shape().isRequired,
   files: PropTypes.shape().isRequired,
   getUserData: PropTypes.func.isRequired,
   deleteFolder: PropTypes.func.isRequired,
   uploadFiles: PropTypes.func.isRequired,
   downloadFile: PropTypes.func.isRequired,
-  removeFile: PropTypes.func.isRequired
+  removeFile: PropTypes.func.isRequired,
+  downloadedFile: PropTypes.shape().isRequired,
+  saveDownloadedFile: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -151,7 +186,8 @@ const mapStateToProps = state => ({
   raftNode: state.digest.digestInfo.raftNodes[0],
   storageNodes: state.digest.digestInfo.storageNodes,
   folders: state.raft.folders,
-  files: state.raft.files
+  files: state.raft.files,
+  downloadedFile: state.raft.downloadedFile
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -165,7 +201,7 @@ const mapDispatchToProps = dispatch => ({
   downloadFile: (signature, userData, raftNode) => (
     dispatch(actionTypes.downloadFile(signature, userData, raftNode))
   ),
-  saveDownloadedFile: signature => dispatch(actionTypes.saveDownloadedFile(signature)),
+  saveDownloadedFile: () => dispatch(actionTypes.saveDownloadedFile()),
   removeFile: (signature, userData, raftNode) => (
     dispatch(actionTypes.removeFile(signature, userData, raftNode))
   )

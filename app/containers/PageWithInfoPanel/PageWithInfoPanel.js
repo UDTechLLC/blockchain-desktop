@@ -70,8 +70,11 @@ class PageWithInfoPanel extends Component {
             rightColumn={this.props.rightColumn}
             handleTogglePanel={() => this.handleTogglePanel()}
             hide={this.state.hide}
-            handleUploadFile={() => this.props.handleDownloadFile()}
+            disableManipulationButtons={this.props.disableManipulationButtons}
+            handleDownloadFile={() => this.props.handleDownloadFile()}
             handleRemoveFile={() => this.props.handleRemoveFile()}
+            showRemoveButton={this.props.showRemoveButton}
+            toggleShowRemoveButton={() => this.props.toggleShowRemoveButton()}
           />
         </div>
       </div>
@@ -86,8 +89,11 @@ PageWithInfoPanel.propTypes = {
   ]).isRequired,
   leftColumn: PropTypes.arrayOf(PropTypes.string),
   rightColumn: PropTypes.arrayOf(PropTypes.string),
+  disableManipulationButtons: PropTypes.bool,
   handleDownloadFile: PropTypes.func,
-  handleRemoveFile: PropTypes.func
+  handleRemoveFile: PropTypes.func,
+  showRemoveButton: PropTypes.bool,
+  toggleShowRemoveButton: PropTypes.func
 };
 
 PageWithInfoPanel.defaultProps = {
@@ -99,8 +105,11 @@ PageWithInfoPanel.defaultProps = {
     'SecurityLayer',
     'Manipulation'
   ],
+  disableManipulationButtons: false,
   handleDownloadFile: null,
-  handleRemoveFile: null
+  handleRemoveFile: null,
+  showRemoveButton: false,
+  toggleShowRemoveButton: null
 };
 
 export default PageWithInfoPanel;

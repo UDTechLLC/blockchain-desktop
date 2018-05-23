@@ -112,9 +112,8 @@ export const downloadFile = (signature, userData, raftNode) => dispatch => {
   ));
 };
 
-export const saveDownloadedFile = signature => ({
-  type: actionTypes.SAVE_DOWNLOADED_FILE,
-  signature
+export const saveDownloadedFile = () => ({
+  type: actionTypes.SAVE_DOWNLOADED_FILE
 });
 
 //  delete file

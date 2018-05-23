@@ -1,4 +1,4 @@
-const _  = require('lodash');
+import _ from 'lodash';
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../utils/utility';
 
@@ -49,6 +49,7 @@ const initialState = {
   notes: {},
   downloadedFile: {
     signature: '',
+    name: '',
     base64File: '',
     downloaded: true
   },
@@ -125,27 +126,18 @@ const downloadFileSuccess = (state, action) => (updateObject(state, {
   downloadedFile: {
     signature: action.signature,
     base64File: action.base64File,
+    name: state.files[action.signature].name,
     downloaded: false
   },
   loading: false
 }));
 
-const saveDownloadedFile = (state, action) => {
-  if (state.downloadedFile.signature !== action.signature) {
-    return updateObject(state, {
-      downloadedFile: {
-        ...state.downloadedFile,
-        downloaded: true
-      }
-    });
+const saveDownloadedFile = state => (updateObject(state, {
+  downloadedFile: {
+    ...state.downloadedFile,
+    downloaded: !state.downloadedFile.downloaded
   }
-  return updateObject(state, {
-    downloadedFile: {
-      ...state.downloadedFile,
-      downloaded: false
-    }
-  });
-};
+}));
 
 const removeFileSuccess = (state, action) => (updateObject(state, {
   files: _.pickBy(state.files, (v, k) => k !== action.signature),

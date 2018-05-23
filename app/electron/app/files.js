@@ -276,7 +276,7 @@ const filesListeners = mainWindow => {
         const shards = responses.map(res => cF.aesDecrypt(res.data, userData.csk).strData);
         const base64File = shards.join('');
         if (base64File) {
-          return mainWindow.webContents.send('file:download-complete', base64File);
+          return mainWindow.webContents.send('file:download-success', base64File);
         }
         return dialog.showErrorBox('Error on file:download', 'Empty file');
       })

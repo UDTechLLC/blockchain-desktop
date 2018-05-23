@@ -35,10 +35,14 @@ const ghostFolders = props => (
 );
 
 ghostFolders.propTypes = {
-  folders: PropTypes.shape(PropTypes.shape()).isRequired,
+  folders: PropTypes.shape(),
   onFolderCheck: PropTypes.func.isRequired,
   activeFolder: PropTypes.string.isRequired,
   onFolderDelete: PropTypes.func.isRequired
+};
+
+ghostFolders.defaultProps = {
+  folders: {}
 };
 
 export default ghostFolders;

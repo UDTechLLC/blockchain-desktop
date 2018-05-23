@@ -34,8 +34,11 @@ const infoPanel = props => {
         block = (
           <Manipulation
             key={Math.random()}
+            disableManipulationButtons={props.disableManipulationButtons}
             handleDownloadFile={() => props.handleDownloadFile()}
             handleRemoveFile={() => props.handleRemoveFile()}
+            showRemoveButton={props.showRemoveButton}
+            toggleShowRemoveButton={() => props.toggleShowRemoveButton()}
           />
         );
         break;
@@ -79,8 +82,11 @@ infoPanel.propTypes = {
   rightColumn: PropTypes.arrayOf(PropTypes.string),
   handleTogglePanel: PropTypes.func.isRequired,
   hide: PropTypes.bool,
+  disableManipulationButtons: PropTypes.bool,
   handleDownloadFile: PropTypes.func,
-  handleRemoveFile: PropTypes.func
+  handleRemoveFile: PropTypes.func,
+  showRemoveButton: PropTypes.bool,
+  toggleShowRemoveButton: PropTypes.func
 };
 
 infoPanel.defaultProps = {
@@ -93,8 +99,11 @@ infoPanel.defaultProps = {
     'SecurityLayer',
     'Manipulation'
   ],
+  disableManipulationButtons: false,
   handleDownloadFile: null,
-  handleRemoveFile: null
+  handleRemoveFile: null,
+  showRemoveButton: false,
+  toggleShowRemoveButton: null
 };
 
 export default infoPanel;

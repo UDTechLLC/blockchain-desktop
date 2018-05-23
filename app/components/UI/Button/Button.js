@@ -7,50 +7,47 @@ import commonCss from '../../../assets/css/common.css';
 // and component classes - uppercase: styles.Class
 const styles = { ...commonCss, ...css };
 
-const button = (props) => (
-  <div
-    className={[
-      styles.flexColumnAllCenter,
-      styles.h100,
-    ].join(' ')}
-  >
-    <button
-      disabled={props.disabled}
-      className={
-        props.btnType.length === 0
-          ? [
-            styles.h100,
-            styles.lightBlueBg,
-            styles.blue,
-            styles.Button
-          ].join(' ')
-          : [
-            styles.h100,
-            styles.lightBlueBg,
-            styles.blue,
-            styles.Button,
-            ...styles[props.btnType]
-          ].join(' ')
-      }
-      onClick={props.onClick}
+const button = (props) => {
+  const btnStyles = [
+    styles.h100,
+    styles.lightBlueBg,
+    styles.blue,
+    styles.Button
+  ];
+  return (
+    <div
+      className={[
+        styles.flexColumnAllCenter,
+        styles.wh100,
+      ].join(' ')}
     >
-      <div>
-        {props.children}
-      </div>
-    </button>
-  </div>
-);
+      <button
+        disabled={props.disabled}
+        className={
+          !props.btnStyles || !props.btnStyles.length
+            ? [...btnStyles].join(' ')
+            : [...btnStyles, ...props.btnStyles.map(style => styles[style])].join(' ')
+        }
+        onClick={props.onClick}
+      >
+        <div>
+          {props.children}
+        </div>
+      </button>
+    </div>
+  );
+};
 
 button.propTypes = {
   children: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
-  btnType: PropTypes.string,
+  btnStyles: PropTypes.arrayOf(PropTypes.string),
   onClick: PropTypes.func
 };
 
 button.defaultProps = {
   disabled: false,
-  btnType: '',
+  btnStyles: [],
   onClick: null
 };
 

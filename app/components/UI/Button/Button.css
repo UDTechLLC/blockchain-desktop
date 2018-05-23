@@ -20,7 +20,6 @@
 .Button:active {
   color: white;
   border-color: white;
-
 }
 
 .Button:hover > div,
@@ -35,4 +34,15 @@
 
 .Button:disabled:hover {
   background-color: #999;
+}
+
+.Button.Transparent {
+  background-color: transparent;
+}
+
+.Button.InsideFlex {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
 }
