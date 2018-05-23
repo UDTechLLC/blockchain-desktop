@@ -36,7 +36,7 @@ const initialState = {
     '175aeb081e74c9116ac7f6677c874ff6963ce1f5': {
       parentFolder: null,
       name: 'root',
-      date: 0,
+      timestamp: 0,
       securityLayers: {
         _2fa: false,
         pin: false,
@@ -114,6 +114,7 @@ const createNewFolderSuccess = (state, action) => (updateObject(state, {
 
 const deleteFolderSuccess = (state, action) => (updateObject(state, {
   folders: _.pickBy(state.folders, (v, k) => k !== action.folderId),
+  files: _.pickBy(state.files, v => v.parentFolder !== action.folderId),
   loading: false
 }));
 

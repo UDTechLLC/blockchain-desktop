@@ -9,7 +9,7 @@
 }
 
 .InnerWrapper > div:first-of-type {
-  width: calc(((100% - 151px) * 0.4) + 77px);
+  width: calc(((100% - 151px) * 0.3) + 77px);
   box-sizing: border-box;
   position: relative;
 }
@@ -27,7 +27,7 @@
 }
 
 .InnerWrapper > div:last-of-type {
-  width: calc((100% - 151px) * 0.6 + 75px);
+  width: calc((100% - 151px) * 0.7 + 75px);
 }
 
 .LeftColumn {

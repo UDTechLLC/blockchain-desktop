@@ -9,3 +9,9 @@
 .Bottom {
   position: relative;
 }
+
+@media (max-width: 1600px) {
+  .Manipulation {
+    flex: 5;
+  }
+}

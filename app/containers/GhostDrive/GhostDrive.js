@@ -47,12 +47,11 @@ class GhostDrive extends Component {
   );
   //  delete checked folder
   handleDeleteFolder = name => {
-    this.setState({ checkedFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5' }, () => {
-      const folderId = Object.keys(this.props.folders).find(el => (
-        this.props.folders[el].name === name
-      ));
-      this.props.deleteFolder(folderId, this.props.userData, this.props.raftNode);
-    });
+    const folderId = Object.keys(this.props.folders).find(el => (
+      this.props.folders[el].name === name
+    ));
+    this.props.deleteFolder(folderId, this.props.userData, this.props.raftNode);
+    this.setState({ checkedFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5' });
   };
   //  upload file
   handleOnDropFile = (accepted, rejected) => {
@@ -120,6 +119,7 @@ class GhostDrive extends Component {
     return this.setState({ showRemoveButton: false });
   };
   render() {
+    console.log(this.props.folders);
     if (!this.props.downloadedFile.downloaded) {
       this.handleSaveDownloadedFile();
     }
@@ -137,9 +137,7 @@ class GhostDrive extends Component {
             styles.flex
           ].join(' ')}
         >
-          <div
-            className={styles.flex1}
-          >
+          <div className={styles.flex1}>
             <GhostFolders
               folders={this.props.folders}
               onFolderCheck={name => this.handleCheckFolder(name)}
@@ -147,9 +145,7 @@ class GhostDrive extends Component {
               activeFolder={this.props.folders[this.state.checkedFolder].name}
             />
           </div>
-          <div
-            className={styles.flex3}
-          >
+          <div className={styles.flex3}>
             <GhostFiles
               folderInfo={{
                 [this.state.checkedFolder]: this.props.folders[this.state.checkedFolder]

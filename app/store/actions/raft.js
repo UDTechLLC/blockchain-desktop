@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron';
-
+import _ from 'lodash';
 import * as actionTypes from './actionTypes';
 
 //  get settings
@@ -33,9 +33,9 @@ const getUserDataSuccess = data => ({
 
 export const getUserData = (userData, raftNode) => dispatch => {
   dispatch(getUserDataStart(userData, raftNode));
-  ipcRenderer.once('user-data:get-complete', (event, data) => (
-    dispatch(getUserDataSuccess(data))
-  ));
+  ipcRenderer.once('user-data:get-complete', (event, data) => {
+    return dispatch(getUserDataSuccess(data));
+  });
 };
 
 //  create new folder

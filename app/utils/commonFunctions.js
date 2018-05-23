@@ -1,5 +1,11 @@
+import _ from 'lodash';
 import { MONTH_ARRAY } from './const';
 
+/**
+ * transform bytes to kbytes
+ * @param bytes {number}
+ * @return {Number || null}
+ */
 export const bytes2Kbytes = bytes => {
   const a = bytes % 1024 > 0
     ? (bytes - (bytes % 1024)) / 1024
@@ -7,6 +13,11 @@ export const bytes2Kbytes = bytes => {
   return a > 0 ? a : null;
 };
 
+/**
+ * transform bytes to mbytes
+ * @param bytes {number}
+ * @return {Number || null}
+ */
 export const bytes2Mbytes = bytes => {
   const a = bytes % (1024 * 1024) > 0
     ? (bytes - (bytes % (1024 * 1024))) / (1024 * 1024)
@@ -14,6 +25,11 @@ export const bytes2Mbytes = bytes => {
   return a > 0 ? a : null;
 };
 
+/**
+ * transform bytes to gbytes
+ * @param bytes {number}
+ * @return {Number || null}
+ */
 export const bytes2Gbytes = bytes => {
   const a = bytes % (1024 * 1024 * 1024) > 0
     ? (bytes - (bytes % (1024 * 1024 * 1024))) / (1024 * 1024 * 1024)
@@ -21,6 +37,11 @@ export const bytes2Gbytes = bytes => {
   return a > 0 ? a : null;
 };
 
+/**
+ * transform bytes to tbytes
+ * @param bytes {number}
+ * @return {Number || null}
+ */
 export const bytes2Tbytes = bytes => {
   const a = bytes % (1024 * 1024 * 1024 * 1024) > 0
     ? (bytes - (bytes % (1024 * 1024 * 1024 * 1024))) / (1024 * 1024 * 1024 * 1024)
@@ -28,6 +49,11 @@ export const bytes2Tbytes = bytes => {
   return a > 0 ? a : null;
 };
 
+/**
+ * transform bytes to mbytes
+ * @param bytes {number}
+ * @return {String}
+ */
 export const bytes2HumanReadableSize = bytes => {
   const tb = bytes2Tbytes(bytes) && bytes2Tbytes(bytes) > 0
     ? `${bytes2Tbytes(bytes)} Tb` : null;
@@ -40,6 +66,11 @@ export const bytes2HumanReadableSize = bytes => {
   return (tb || null) + (gb || null) + (mb || null) + (kb || null);
 };
 
+/**
+ * transform timestamp to human readable date
+ * @param timestamp {number}
+ * @return {String}
+ */
 export const timestamp2date = timestamp => {
   const date = new Date(timestamp * 1000);
   const month = MONTH_ARRAY[date.getMonth()];
@@ -47,3 +78,17 @@ export const timestamp2date = timestamp => {
   const year = date.getFullYear();
   return `${month.substr(0, 3)} ${day}, ${year}`;
 };
+
+/**
+ * sort obj desc or asc by key
+ * @param object {object}
+ * @param key {string}
+ * @param order {string}
+ * @return {Object}
+ */
+export const objOrderBy = (object, key = 'timestamp', order = 'desc') => (
+  _.chain(object)
+    .toPairs()
+    .orderBy(o => o[1][key], [order])
+    .fromPairs()
+);

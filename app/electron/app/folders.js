@@ -25,7 +25,7 @@ const foldersListeners = mainWindow => {
           [hashKey]: {
             parentFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5',
             name: newFolderName,
-            date: Math.round(+new Date() / 1000),
+            timestamp: Math.round(+new Date() / 1000),
             securityLayers: {
               _2fa: false,
               pin: false,
@@ -77,14 +77,13 @@ const foldersListeners = mainWindow => {
     return Promise.all(reqs)
       .then(responses => ({
         folders: cF.decryptDataFromRaft(responses[0].data, foldersKey, userData.csk),
-        files: cF.decryptDataFromRaft(responses[1].data, foldersKey, userData.csk)
+        files: cF.decryptDataFromRaft(responses[1].data, filesKey, userData.csk)
       }))
       .then(({ folders, files }) => {
         //  delete folder from raft list
-        // console.log(`folders ${JSON.stringify(folders)}`);
         const newFolders = folders;
         delete newFolders[folderId];
-        // console.log(`newFolders ${JSON.stringify(newFolders)}`);
+        // check if folder had files
         const deleteFilesArray = _.pickBy(files, v => v.parentFolder === folderId);
         //  if folder was empty
         if (!Object.keys(deleteFilesArray).length) {
@@ -106,42 +105,50 @@ const foldersListeners = mainWindow => {
               return dialog.showErrorBox('Error on folder:delete', error);
             });
         }
-        //  else
-
-        // let shardsReqs = [];
-        // // eslint-disable-next-line no-return-assign
-        // Object.keys(deleteFilesArray).forEach(k => shardsReqs = [
-        //   ...shardsReqs,
-        //   ...deleteFilesArray[k].shardsAddresses
-        // ]);
-        // return Promise.all(reqs)
-        //   .then()
-        //   .catch(({ response }) => {
-        //     const error = response && response.data
-        // ? response.data : 'Unexpected error on folder:delete DELETE';
-        //     console.log(error);
-        //     return dialog.showErrorBox('Error on folder:delete', error);
-        //   });
-        // const newFiles = _.pickBy(files, v => v.parentFolder !== folderId);
-        const config = {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        };
-        const data = {
-          [foldersKey]: cF.aesEncrypt(newFolders, userData.csk).encryptedHex,
-          // [filesKey]: cF.a.aesEncrypt(newFiles, userData.csk).encryptedHex,
-        };
-        return axios.post(`${raftNode}/key`, data, config)
-          .then(() => mainWindow.webContents.send('folder:delete-success'))
+        //  else if folder had files
+        let shardsReqs = [];
+        //  delete requests for all shards
+        Object.keys(deleteFilesArray).forEach(signature => {
+          shardsReqs = [
+            ...shardsReqs,
+            ...deleteFilesArray[signature].shardsAddresses.map((shardAddress, index) => (
+              axios.delete(`${shardAddress}/files/${cF.aesEncrypt(signature, userData.csk).encryptedHex}.${index}`)
+            ))
+          ];
+        });
+        return Promise.all(shardsReqs)
+          .then(() => {
+            const updFileList = _.pickBy(files, v => v.parentFolder !== folderId);
+            console.log(JSON.stringify(updFileList));
+            const updData = {
+              [foldersKey]: Object.keys(newFolders).length
+                ? cF.aesEncrypt(JSON.stringify(newFolders), userData.csk).encryptedHex
+                : '',
+              [filesKey]: Object.keys(updFileList).length
+                ? cF.aesEncrypt(JSON.stringify(updFileList), userData.csk).encryptedHex
+                : ''
+            };
+            const config = {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            };
+            return axios.post(`${raftNode}/key`, updData, config)
+              .then(() => mainWindow.webContents.send('folder:delete-success'))
+              .catch(({ response }) => {
+                const error = response && response.data ? response.data.data : 'Unexpected error on folder:remove POST';
+                console.log(error);
+                return dialog.showErrorBox('Error on folder:delete', error);
+              });
+          })
           .catch(({ response }) => {
-            const error = response && response.data ? response.data : 'Unexpected error on folder:delete POST';
+            const error = response && response.data ? response.data.data : 'Unexpected error on folder:delete DELETE';
             console.log(error);
             return dialog.showErrorBox('Error on folder:delete', error);
           });
       })
       .catch(({ response }) => {
-        const error = response && response.data ? response.data : 'Unexpected error on folder:delete GET';
+        const error = response && response.data ? response.data.data : 'Unexpected error on folder:delete GET';
         console.log(error);
         return dialog.showErrorBox('Error on folder:delete', error);
       });
