@@ -1,0 +1,17 @@
+.Manipulation {
+  flex: 3;
+}
+
+.ConfirmationDeleteWrapper {
+  flex-direction: row-reverse;
+}
+
+.Bottom {
+  position: relative;
+}
+
+@media (max-width: 1600px) {
+  .Manipulation {
+    flex: 5;
+  }
+}

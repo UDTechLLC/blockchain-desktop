@@ -1,6 +1,6 @@
 import logoGhost from './logo-ghost.svg';
 import logoTitle from './logo-title.svg';
-import bg from './bg.png';
+import bg from './bg.jpg';
 import arrDown from './v.png';
 import fileImg from './file-img.png';
 import fileImgBlue from './file-img-blue.png';

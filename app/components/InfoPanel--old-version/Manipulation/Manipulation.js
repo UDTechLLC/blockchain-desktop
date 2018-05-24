@@ -21,48 +21,29 @@ const manipulation = props => (
       className={[
         styles.flex1,
         styles.wh100,
-        styles.flexColumn,
-        styles.justifyBetween
+        styles.flexBetweenCenter
       ].join(' ')}
     >
-      <h3 className={styles.orangeHeader}>
-        ADD GHOST TIME
-      </h3>
       <div
         className={[
-          styles.wh100,
-          styles.flexBetweenCenter
+          styles.flex1
         ].join(' ')}
       >
-        <div
-          className={[
-            styles.flex1
-          ].join(' ')}
+        <h3>GHOST TIME</h3>
+      </div>
+      <div
+        className={[
+          styles.flex1,
+          styles.flex,
+          styles.justifyEnd
+        ].join(' ')}
+      >
+        <Button
+          onClick={() => props.handleDownloadFile()}
+          disabled={props.disableManipulationButtons}
         >
-          <div className={styles.Subtitle}>
-            <div>
-              OPTIONAL SECURITY LEVEL
-            </div>
-            <div>
-              CRYPTYC
-            </div>
-          </div>
-        </div>
-        <div
-          className={[
-            styles.flex1,
-            styles.flex,
-            styles.justifyEnd,
-            styles.ButtonWrapper
-          ].join(' ')}
-        >
-          <Button
-            onClick={() => props.handleDownloadFile()}
-            disabled={props.disableManipulationButtons}
-          >
-            download
-          </Button>
-        </div>
+          download
+        </Button>
       </div>
     </div>
     <div

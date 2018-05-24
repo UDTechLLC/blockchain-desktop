@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import classes from './InfoPanel.css';
+
 import InfoPanelWrapper from '../UI/InfoPanelWrapper/InfoPanelWrapper';
 import ProgressBar from './ProgressBar/ProgressBar';
 import NavMenu from './NavMenu/NavMenu';
@@ -13,12 +15,6 @@ import NewBlock from './NewBlock/NewBlock';
 import CreateFolder from './CreateFolder/CreateFolder';
 import NodesMenu from './NodesMenu/NodesMenu';
 import Manipulation from './Manipulation/Manipulation';
-
-import css from './InfoPanel.css';
-import commonCss from '../../assets/css/common.css';
-// global classes names starts with lowercase letter: styles.class
-// and component classes - uppercase: styles.Class
-const styles = { ...commonCss, ...css };
 
 const infoPanel = props => {
   const getBlock = name => {
@@ -56,25 +52,25 @@ const infoPanel = props => {
     }
     return block;
   };
-  const content = (
-    <div
-      className={[
-        styles.wh100,
-        styles.flexBetweenCenter,
-        styles.Content
-      ].join(' ')}
-    >
-      {props.columns.map(block => getBlock(block))}
+  const leftColumn = (
+    <div className={classes.LeftColumn}>
+      {props.leftColumn.map(block => getBlock(block))}
+    </div>
+  );
+  const rightColumn = (
+    <div className={classes.RightColumn}>
+      {props.rightColumn.map(block => getBlock(block))}
     </div>
   );
   return (
-    <div className={styles.InfoPanel}>
+    <div className={classes.InfoPanel}>
       <InfoPanelWrapper
         action={() => props.handleTogglePanel()}
         hide={props.hide}
       >
-        <div className={styles.InnerWrapper}>
-          {content}
+        <div className={classes.InnerWrapper}>
+          {leftColumn}
+          {rightColumn}
         </div>
       </InfoPanelWrapper>
     </div>
@@ -82,7 +78,8 @@ const infoPanel = props => {
 };
 
 infoPanel.propTypes = {
-  columns: PropTypes.arrayOf(PropTypes.string),
+  leftColumn: PropTypes.arrayOf(PropTypes.string),
+  rightColumn: PropTypes.arrayOf(PropTypes.string),
   handleTogglePanel: PropTypes.func.isRequired,
   hide: PropTypes.bool,
   disableManipulationButtons: PropTypes.bool,
@@ -94,7 +91,11 @@ infoPanel.propTypes = {
 
 infoPanel.defaultProps = {
   hide: false,
-  columns: [
+  leftColumn: [
+    'CreateFolder',
+    'NodesMenu'
+  ],
+  rightColumn: [
     'SecurityLayer',
     'Manipulation'
   ],

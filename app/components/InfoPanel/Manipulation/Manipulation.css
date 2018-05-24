@@ -1,5 +1,6 @@
 .Manipulation {
-  flex: 3;
+  flex: 6;
+  padding: 25px;
 }
 
 .ConfirmationDeleteWrapper {
@@ -8,6 +9,38 @@
 
 .Bottom {
   position: relative;
+}
+
+.ButtonWrapper > div {
+  align-items: flex-end;
+}
+
+/* */
+.Subtitle > div:first-of-type {
+  color: #2f96ba;
+  font-size: 8px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.Subtitle > div:last-of-type {
+  color: #fff;
+  font-size: 6px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.Subtitle > div:last-of-type::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 3px;
+  background-color: #96ba33;
+  margin-right: 3px;
+}
+
+.Subtitle {
+  margin-bottom: 7px;
 }
 
 @media (max-width: 1600px) {

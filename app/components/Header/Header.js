@@ -7,7 +7,7 @@ import UiNavLink from '../UI/NavLink/NavLink';
 import Loading from '../Animations/Loading/Loading';
 
 import {
-  // logoGhost,
+  logoGhost,
   loop,
   logout,
   settings,
@@ -98,11 +98,15 @@ class Header extends Component {
               styles.Logo
             ].join(' ')}
           >
-            {/* <img src={logoGhost} alt="Ghostdrive" /> */}
-            {/* <img src={logoTitle} alt="Ghostdrive" /> */}
-            <div className={styles.LogoImg}>
-              <Loading color="white" />
-            </div>
+            {
+              !this.props.loading
+                ? <img src={logoGhost} alt="Ghostdrive" />
+                : (
+                  <div className={styles.LogoImg}>
+                    <Loading color="white" />
+                  </div>
+                )
+            }
             <div
               className={[
                 styles.orangeBar,
@@ -155,7 +159,8 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-  isAuth: PropTypes.bool.isRequired
+  isAuth: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired
 };
 
 export default Header;

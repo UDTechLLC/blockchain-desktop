@@ -66,8 +66,7 @@ class PageWithInfoPanel extends Component {
           }
         >
           <InfoPanel
-            leftColumn={this.props.leftColumn}
-            rightColumn={this.props.rightColumn}
+            columns={this.props.columns}
             handleTogglePanel={() => this.handleTogglePanel()}
             hide={this.state.hide}
             disableManipulationButtons={this.props.disableManipulationButtons}
@@ -87,8 +86,7 @@ PageWithInfoPanel.propTypes = {
     PropTypes.string,
     PropTypes.node
   ]).isRequired,
-  leftColumn: PropTypes.arrayOf(PropTypes.string),
-  rightColumn: PropTypes.arrayOf(PropTypes.string),
+  columns: PropTypes.arrayOf(PropTypes.string),
   disableManipulationButtons: PropTypes.bool,
   handleDownloadFile: PropTypes.func,
   handleRemoveFile: PropTypes.func,
@@ -97,11 +95,7 @@ PageWithInfoPanel.propTypes = {
 };
 
 PageWithInfoPanel.defaultProps = {
-  leftColumn: [
-    'CreateFolder',
-    'NodesMenu'
-  ],
-  rightColumn: [
+  columns: [
     'SecurityLayer',
     'Manipulation'
   ],

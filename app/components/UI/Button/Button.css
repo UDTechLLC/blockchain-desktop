@@ -6,10 +6,12 @@
   text-transform: uppercase;
   letter-spacing: 0.71px;
   font-size: 1.4rem;
-  padding: 16px 60px;
+  padding: 16px;
   box-sizing: border-box;
   transition: color 0.2s linear;
   min-height: 50px;
+  min-width: 226px;
+  text-align: center;
 }
 
 .Button > div {
@@ -22,10 +24,10 @@
   border-color: white;
 }
 
-.Button:hover > div,
-.Button:active > div {
-  transform: scale(1.2);
-}
+/*.Button:hover > div,*/
+/*.Button:active > div {*/
+  /*transform: scale(1.2);*/
+/*}*/
 
 .Button:disabled {
   color: #ccc;

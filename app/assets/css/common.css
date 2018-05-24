@@ -256,6 +256,14 @@
   pointer-events: none;
 }
 
+.orangeHeader {
+  color: #e34530;
+  font-size: 16px;
+  font-weight: 300;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+}
+
 /* media queries */
 @media (max-width: 1333px) {
   .container {
