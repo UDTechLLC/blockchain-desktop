@@ -5,7 +5,7 @@ const axios = require('axios');
 const bitcoin = require('bitcoinjs-lib');
 const fs = require('fs');
 const pbkdf2 = require('pbkdf2');
-
+const { dialog } = require('electron');
 
 /**
  * unmount fs buckets
@@ -203,6 +203,23 @@ const decryptDataFromRaft = (data, key, password) => (
     : {}
 );
 
+/**
+ * Standard catch of rest error
+ * @param mainWindow
+ * @param response {object}
+ * @param listenerName {string}
+ * @param reqType {string}
+ * @return {listener}
+ */
+const catchRestError = (mainWindow, response, listenerName, reqType = 'POST') => {
+  const error = response && response.data
+    ? (response.data.data || response.data)
+    : `Unexpected error on ${listenerName} ${reqType}`;
+  console.log(error);
+  dialog.showErrorBox(`Error on ${listenerName}`, error);
+  return mainWindow.webContents.send(`${listenerName}-failed`);
+};
+
 module.exports = {
   unmountFs,
   stringToBytes,
@@ -213,5 +230,6 @@ module.exports = {
   fileCrushing,
   getHash,
   // encryptDataForRaft,
-  decryptDataFromRaft
+  decryptDataFromRaft,
+  catchRestError
 };

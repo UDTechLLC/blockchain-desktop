@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../utils/utility';
+import { ROOT_HASH } from '../../utils/const';
 
 const initialState = {
   settings: {
@@ -33,7 +34,7 @@ const initialState = {
     }
   },
   folders: {
-    '175aeb081e74c9116ac7f6677c874ff6963ce1f5': {
+    [ROOT_HASH]: {
       parentFolder: null,
       name: 'root',
       timestamp: 0,
@@ -78,6 +79,10 @@ const initialState = {
 
 const actionStart = state => (updateObject(state, {
   loading: true
+}));
+
+const actionFailed = state => (updateObject(state, {
+  loading: false
 }));
 
 const getAppSettingsSuccess = (state, action) => (updateObject(state, {
@@ -150,19 +155,26 @@ const reducer = (state = initialState, action) => {
     switch (action.type) {
       case actionTypes.GET_APP_SETTINGS_START: return actionStart(state, action);
       case actionTypes.GET_APP_SETTINGS_SUCCESS: return getAppSettingsSuccess(state, action);
+      case actionTypes.GET_APP_SETTINGS_FAIL: return actionFailed(state, action);
       case actionTypes.GET_USER_DATA_START: return actionStart(state, action);
       case actionTypes.GET_USER_DATA_SUCCESS: return getUserDataSuccess(state, action);
+      case actionTypes.GET_USER_DATA_FAIL: return actionFailed(state, action);
       case actionTypes.CREATE_NEW_FOLDER_START: return actionStart(state, action);
       case actionTypes.CREATE_NEW_FOLDER_SUCCESS: return createNewFolderSuccess(state, action);
+      case actionTypes.CREATE_NEW_FOLDER_FAIL: return actionFailed(state, action);
       case actionTypes.DELETE_FOLDER_START: return actionStart(state, action);
       case actionTypes.DELETE_FOLDER_SUCCESS: return deleteFolderSuccess(state, action);
+      case actionTypes.DELETE_FOLDER_FAIL: return actionFailed(state, action);
       case actionTypes.UPLOAD_FILES_START: return actionStart(state, action);
       case actionTypes.UPLOAD_FILES_SUCCESS: return uploadFilesSuccess(state, action);
+      case actionTypes.UPLOAD_FILES_FAIL: return actionFailed(state, action);
       case actionTypes.DOWNLOAD_FILE_START: return actionStart(state, action);
       case actionTypes.DOWNLOAD_FILE_SUCCESS: return downloadFileSuccess(state, action);
+      case actionTypes.DOWNLOAD_FILE_FAIL: return actionFailed(state, action);
       case actionTypes.SAVE_DOWNLOADED_FILE: return saveDownloadedFile(state, action);
       case actionTypes.REMOVE_FILE_START: return actionStart(state, action);
       case actionTypes.REMOVE_FILE_SUCCESS: return removeFileSuccess(state, action);
+      case actionTypes.REMOVE_FILE_FAIL: return actionFailed(state, action);
       // case actionTypes.GET_NOTES_START: return actionStart(state, action);
       // case actionTypes.GET_NOTES_SUCCESS: return getNotes(state, action);
       // case actionTypes.EDIT_NOTE_LIST_START: return actionStart(state, action);

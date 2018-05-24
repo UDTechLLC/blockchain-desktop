@@ -1,5 +1,4 @@
 import { ipcRenderer } from 'electron';
-import _ from 'lodash';
 import * as actionTypes from './actionTypes';
 
 //  get settings
@@ -13,11 +12,16 @@ const getAppSettingsSuccess = settings => ({
   settings
 });
 
+const getAppSettingsFail = () => ({
+  type: actionTypes.GET_APP_SETTINGS_FAIL
+});
+
 export const getAppSettings = (userData, raftNode) => dispatch => {
   dispatch(getAppSettingsStart(userData, raftNode));
   ipcRenderer.once('app-settings:get-complete', (event, settings) => (
     dispatch(getAppSettingsSuccess(settings))
   ));
+  ipcRenderer.once('app-settings:get-failed', () => dispatch(getAppSettingsFail()));
 };
 
 //  get all user data
@@ -31,11 +35,16 @@ const getUserDataSuccess = data => ({
   data
 });
 
+const getUserDataFail = () => ({
+  type: actionTypes.GET_USER_DATA_FAIL
+});
+
 export const getUserData = (userData, raftNode) => dispatch => {
   dispatch(getUserDataStart(userData, raftNode));
-  ipcRenderer.once('user-data:get-complete', (event, data) => {
-    return dispatch(getUserDataSuccess(data));
-  });
+  ipcRenderer.once('user-data:get-complete', (event, data) => (
+    dispatch(getUserDataSuccess(data))
+  ));
+  ipcRenderer.once('user-data:get-failed', () => dispatch(getUserDataFail()));
 };
 
 //  create new folder
@@ -49,11 +58,16 @@ const createNewFolderSuccess = newFolder => ({
   newFolder
 });
 
+const createNewFolderFail = () => ({
+  type: actionTypes.CREATE_NEW_FOLDER_FAIL
+});
+
 export const createNewFolder = (newFolderName, userData, raftNode) => dispatch => {
   dispatch(createNewFolderStart(newFolderName, userData, raftNode));
   ipcRenderer.once('folder:create-success', (event, newFolder) => (
     dispatch(createNewFolderSuccess(newFolder))
   ));
+  ipcRenderer.once('folder:create-failed', () => dispatch(createNewFolderFail()));
 };
 
 //  delete folder
@@ -67,9 +81,14 @@ const deleteFolderSuccess = folderId => ({
   folderId
 });
 
+const deleteFolderFail = () => ({
+  type: actionTypes.DELETE_FOLDER_FAIL
+});
+
 export const deleteFolder = (folderId, userData, raftNode) => dispatch => {
   dispatch(deleteFolderStart(folderId, userData, raftNode));
   ipcRenderer.once('folder:delete-success', () => dispatch(deleteFolderSuccess(folderId)));
+  ipcRenderer.once('folder:delete-failed', () => dispatch(deleteFolderFail()));
 };
 
 //  upload new files
@@ -88,9 +107,14 @@ const uploadFilesSuccess = filesList => ({
   filesList
 });
 
+const uploadFilesFail = () => ({
+  type: actionTypes.UPLOAD_FILES_FAIL
+});
+
 export const uploadFiles = (userData, files, storageNodes, raftNode) => dispatch => {
   dispatch(uploadFilesStart(userData, files, storageNodes, raftNode));
   ipcRenderer.once('files:upload-success', (event, filesList) => dispatch(uploadFilesSuccess(filesList)));
+  ipcRenderer.once('files:upload-failed', () => dispatch(uploadFilesFail()));
 };
 
 //  download file
@@ -105,11 +129,16 @@ const downloadFileSuccess = (signature, base64File) => ({
   base64File
 });
 
+const downloadFileFail = () => ({
+  type: actionTypes.DOWNLOAD_FILE_FAIL
+});
+
 export const downloadFile = (signature, userData, raftNode) => dispatch => {
   dispatch(downloadFileStart(signature, userData, raftNode));
   ipcRenderer.once('file:download-success', (event, base64File) => (
     dispatch(downloadFileSuccess(signature, base64File))
   ));
+  ipcRenderer.once('file:download-failed', () => dispatch(downloadFileFail()));
 };
 
 export const saveDownloadedFile = () => ({
@@ -127,9 +156,14 @@ const removeFileSuccess = signature => ({
   signature
 });
 
+const removeFileFail = () => ({
+  type: actionTypes.REMOVE_FILE_FAIL
+});
+
 export const removeFile = (signature, userData, raftNode) => dispatch => {
   dispatch(removeFileStart(signature, userData, raftNode));
   ipcRenderer.once('file:remove-success', () => dispatch(removeFileSuccess(signature)));
+  ipcRenderer.once('file:remove-failed', () => dispatch(removeFileFail()));
 };
 
 // TODO: Refactoring of notes actions

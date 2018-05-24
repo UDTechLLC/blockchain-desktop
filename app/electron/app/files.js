@@ -210,23 +210,11 @@ const filesListeners = mainWindow => {
             };
             return axios.post(`${raftNode}/key`, data, config)
               .then(() => mainWindow.webContents.send('files:upload-success', filesList))
-              .catch(({ response }) => {
-                const error = response && response.data ? response.data : 'Unexpected error on folder:create POST';
-                console.log(error);
-                return dialog.showErrorBox('Error on folder:create', error);
-              });
+              .catch(({ response }) => cF.catchRestError(mainWindow, response, 'files:upload'));
           })
-          .catch(({ response }) => {
-            const error = response && response.data ? response.data : 'Unexpected error on files:upload PUT';
-            console.log(error);
-            return dialog.showErrorBox('Error on files:upload', error);
-          });
+          .catch(({ response }) => cF.catchRestError(mainWindow, response, 'files:upload', 'PUT'));
       })
-      .catch(({ response }) => {
-        const error = response && response.data ? response.data : 'Unexpected error on files:upload CRUSHING + GET';
-        console.log(error);
-        return dialog.showErrorBox('Error on files:upload', error);
-      });
+      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'files:upload', 'CRUSHING + GET'));
   });
   //  on file download listener
   // ipcMain.on('file:compile', (event, { userData, filename, raftNode }) => (
@@ -278,13 +266,10 @@ const filesListeners = mainWindow => {
         if (base64File) {
           return mainWindow.webContents.send('file:download-success', base64File);
         }
-        return dialog.showErrorBox('Error on file:download', 'Empty file');
+        dialog.showErrorBox('Error on file:download', 'Empty file');
+        return mainWindow.webContents.send('file:download-failed');
       })
-      .catch(({ response }) => {
-        const error = response && response.data ? response.data : 'Unexpected error on file:download COMPILE + GET';
-        console.log(error);
-        return dialog.showErrorBox('Error on file:download', error);
-      });
+      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'file:download', 'COMPILE + GET'));
   });
   //  on file remove listener
   // ipcMain.on('file:remove', (event, { userData, filename, raftNode }) => (
@@ -299,7 +284,9 @@ const filesListeners = mainWindow => {
   //       const encName = cF.aesEncrypt(filename, userData.csk).encryptedHex;
   //       const userObj = JSON.parse(updateObj[userData.cpk]);
   //       const decData = JSON.parse(cF.aesDecrypt(userObj[encName], userData.csk).strData);
-  //       const removeReqs = decData.shardsAddresses.map((req, i) => axios.delete(`${req}/files/${encName}.${i}`));
+  //       const removeReqs = decData.shardsAddresses.map((req, i) => (
+  //          axios.delete(`${req}/files/${encName}.${i}`)
+  //        ));
   //       return new Promise(resolve => (
   //         setTimeout(() => (
   //           axios.all(removeReqs)
@@ -349,23 +336,11 @@ const filesListeners = mainWindow => {
             };
             return axios.post(`${raftNode}/key`, updData, config)
               .then(() => mainWindow.webContents.send('file:remove-success'))
-              .catch(({ response }) => {
-                const error = response && response.data ? response.data.data : 'Unexpected error on folder:remove POST';
-                console.log(error);
-                return dialog.showErrorBox('Error on folder:remove', error);
-              });
+              .catch(({ response }) => cF.catchRestError(mainWindow, response, 'file:remove'));
           })
-          .catch(({ response }) => {
-            const error = response && response.data ? response.data.data : 'Unexpected error on file:remove DELETE';
-            console.log(error);
-            return dialog.showErrorBox('Error on file:remove', error);
-          });
+          .catch(({ response }) => cF.catchRestError(mainWindow, response, 'file:remove', 'DELETE'));
       })
-      .catch(({ response }) => {
-        const error = response && response.data ? response.data.data : 'Unexpected error on file:remove GET';
-        console.log(error);
-        return dialog.showErrorBox('Error on file:remove', error);
-      });
+      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'file:remove', 'GET'));
   });
 };
 

@@ -1,7 +1,8 @@
-const _  = require('lodash');
+const _ = require('lodash');
 const axios = require('axios');
 const { ipcMain, dialog } = require('electron');
 const cF = require('../utils/commonFunc');
+const { ROOT_HASH } = require('../../utils/const');
 
 const foldersListeners = mainWindow => {
   ipcMain.on('folder:create', (event, { newFolderName, userData, raftNode }) => {
@@ -15,7 +16,7 @@ const foldersListeners = mainWindow => {
       .then(folders => {
         const hashKey = cF.getHash(`root/${newFolderName}`, '');
         //  reject creation of folder if there is a folder with such name
-        if (folders[hashKey] || hashKey === '175aeb081e74c9116ac7f6677c874ff6963ce1f5') {
+        if (folders[hashKey] || hashKey === ROOT_HASH) {
           const error = `There is a folder with name "${newFolderName}"`;
           console.log(error);
           return dialog.showErrorBox('Error', error);
@@ -23,7 +24,7 @@ const foldersListeners = mainWindow => {
         //  otherwise create new folder object
         const newFolder = {
           [hashKey]: {
-            parentFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5',
+            parentFolder: ROOT_HASH,
             name: newFolderName,
             timestamp: Math.round(+new Date() / 1000),
             securityLayers: {
@@ -48,21 +49,13 @@ const foldersListeners = mainWindow => {
         };
         return axios.post(`${raftNode}/key`, data, config)
           .then(() => mainWindow.webContents.send('folder:create-success', newFolder))
-          .catch(({ response }) => {
-            const error = response && response.data ? response.data : 'Unexpected error on folder:create POST';
-            console.log(error);
-            return dialog.showErrorBox('Error on folder:create', error);
-          });
+          .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:create'));
       })
-      .catch(({ response }) => {
-        const error = response && response.data ? response.data : 'Unexpected error on folder:create GET';
-        console.log(error);
-        return dialog.showErrorBox('Error on folder:create', error);
-      });
+      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:create', 'GET'));
   });
   ipcMain.on('folder:delete', (event, { folderId, userData, raftNode }) => {
     //  cannot delete root folder
-    if (folderId === '175aeb081e74c9116ac7f6677c874ff6963ce1f5') {
+    if (folderId === ROOT_HASH) {
       return dialog.showErrorBox('Error', 'You can`t delete root folder');
     }
     //  keys in raft
@@ -99,11 +92,7 @@ const foldersListeners = mainWindow => {
           };
           return axios.post(`${raftNode}/key`, data, config)
             .then(() => mainWindow.webContents.send('folder:delete-success'))
-            .catch(({ response }) => {
-              const error = response && response.data ? response.data : 'Unexpected error on folder:delete POST';
-              console.log(error);
-              return dialog.showErrorBox('Error on folder:delete', error);
-            });
+            .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:delete'));
         }
         //  else if folder had files
         let shardsReqs = [];
@@ -135,23 +124,11 @@ const foldersListeners = mainWindow => {
             };
             return axios.post(`${raftNode}/key`, updData, config)
               .then(() => mainWindow.webContents.send('folder:delete-success'))
-              .catch(({ response }) => {
-                const error = response && response.data ? response.data.data : 'Unexpected error on folder:remove POST';
-                console.log(error);
-                return dialog.showErrorBox('Error on folder:delete', error);
-              });
+              .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:delete'));
           })
-          .catch(({ response }) => {
-            const error = response && response.data ? response.data.data : 'Unexpected error on folder:delete DELETE';
-            console.log(error);
-            return dialog.showErrorBox('Error on folder:delete', error);
-          });
+          .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:delete', 'DELETE'));
       })
-      .catch(({ response }) => {
-        const error = response && response.data ? response.data.data : 'Unexpected error on folder:delete GET';
-        console.log(error);
-        return dialog.showErrorBox('Error on folder:delete', error);
-      });
+      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:delete', 'GET'));
   });
 };
 

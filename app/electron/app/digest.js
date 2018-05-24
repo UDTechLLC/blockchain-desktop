@@ -29,7 +29,7 @@ const digest = mainWindow => {
         totalNodes: 0,
         suspicious: 0
       };
-      mainWindow.webContents.send('digest:success', data);
+      return mainWindow.webContents.send('digest:success', data);
     } else {
       const reqData = {
         address: userData.address,
@@ -45,9 +45,9 @@ const digest = mainWindow => {
               PrivKey: userData.csk
             })
               .then(({ data }) => mainWindow.webContents.send('digest:success', data))
-              .catch(({ res }) => {
-                console.log(res.data);
-                return dialog.showErrorBox('Error', res.data.message);
+              .catch(({ response }) => {
+                console.log(response.data);
+                return dialog.showErrorBox('Error', response.data.message);
               });
           } else {
             console.log(response.data);

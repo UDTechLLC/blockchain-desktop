@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { ipcMain, dialog } = require('electron');
+const { ipcMain } = require('electron');
 const cF = require('../utils/commonFunc');
 const Folders = require('./folders');
 const Files = require('./files');
@@ -29,11 +29,7 @@ const raft = mainWindow => {
         // console.log(JSON.stringify(data));
         return mainWindow.webContents.send('user-data:get-complete', data);
       })
-      .catch(({ response }) => {
-        const error = response && response.data ? response.data : 'unexpected error on user-data:get';
-        console.log(error);
-        return dialog.showErrorBox('Error on user-data:get', error);
-      });
+      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'user-data:get', 'GET'));
   });
   //  folders listeners
   Folders(mainWindow);

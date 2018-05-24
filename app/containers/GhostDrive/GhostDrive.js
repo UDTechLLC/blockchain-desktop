@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import { saveAs } from 'file-saver';
 
+import { ROOT_HASH } from '../../utils/const';
 import * as actionTypes from '../../store/actions';
 import PageWithInfoPanel from '../PageWithInfoPanel/PageWithInfoPanel';
 import GhostFolders from '../../components/PagesSections/GhostDrive/GhostFolders/GhostFolders';
@@ -18,7 +19,7 @@ const styles = { ...commonCss, ...css };
 
 class GhostDrive extends Component {
   state = {
-    checkedFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5',
+    checkedFolder: ROOT_HASH,
     checkedFile: '',
     showRemoveButton: false
   };
@@ -51,7 +52,7 @@ class GhostDrive extends Component {
       this.props.folders[el].name === name
     ));
     this.props.deleteFolder(folderId, this.props.userData, this.props.raftNode);
-    this.setState({ checkedFolder: '175aeb081e74c9116ac7f6677c874ff6963ce1f5' });
+    this.setState({ checkedFolder: ROOT_HASH });
   };
   //  upload file
   handleOnDropFile = (accepted, rejected) => {
