@@ -1,10 +1,33 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
+import PropTypes from 'prop-types';
 
-import classes from './Backdrop.css';
+import css from './Backdrop.css';
 
-const backdrop = (props) => (
-    props.show ? <div className={ props.transparent ? [classes.Transparent, classes.Backdrop].join(' ') : classes.Backdrop }
-        onClick={props.clicked}></div> : null
+const backdrop = props => (
+  props.show
+    ? (
+      <div
+        role="button"
+        tabIndex={-1}
+        className={[
+          css.Backdrop,
+          !props.transparent ? null : css.Transparent
+        ].join(' ')}
+        onClick={() => props.onClick()}
+      />
+    )
+    : null
 );
+
+backdrop.propTypes = {
+  show: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+  transparent: PropTypes.bool
+};
+
+backdrop.defaultProps = {
+  transparent: false
+};
 
 export default backdrop;
