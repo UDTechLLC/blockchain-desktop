@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { timestamp2date, bytes2HumanReadableSize } from '../../../../../utils/commonFunctions';
-import { /* xFileRed,  xFileBlue */ } from '../../../../../assets/img/img';
+import { xFileBlue } from '../../../../../assets/img/img';
 import css from './FileItem.css';
 import commonCss from '../../../../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
@@ -16,30 +16,54 @@ const fileItem = props => {
     <div
       role="button"
       tabIndex={0}
-      className={
-        !props.isActive
-          ? styles.FileItem
-          : [
-            styles.FileItem,
-            styles.Active
-          ].join(' ')
-      }
+      className={[
+        styles.FileItem,
+        !props.isActive ? null : styles.Active
+      ].join(' ')}
       onClick={() => props.onFileCheck(props.file.signature)}
     >
       <div
         className={[
           styles.absolute100,
-          styles.flexAllCenter
+          styles.flexColumn
         ].join(' ')}
+        style={{ backgroundImage: `url(${xFileBlue})` }}
       >
-        {extension} <br />
-        {
-          bytes2HumanReadableSize(props.file.size)
-          ? bytes2HumanReadableSize(props.file.size)
-          : null
-        } <br />
-        {props.file.name} <br />
-        {timestamp2date(props.file.timestamp)}
+        <div
+          className={[
+            styles.flex1
+          ].join(' ')}
+        >
+          {extension}
+        </div>
+        <div
+          className={[
+            styles.flex3,
+            styles.flexAllCenter
+          ].join(' ')}
+        >
+          {
+            bytes2HumanReadableSize(props.file.size)
+              ? bytes2HumanReadableSize(props.file.size)
+              : null
+          }
+        </div>
+        <div
+          className={[
+            styles.flex1,
+            styles.flexAllCenter
+          ].join(' ')}
+        >
+          {props.file.name}
+        </div>
+        <div
+          className={[
+            styles.flex1,
+            styles.flexAllCenter
+          ].join(' ')}
+        >
+          {timestamp2date(props.file.timestamp)}
+        </div>
       </div>
     </div>
   );
