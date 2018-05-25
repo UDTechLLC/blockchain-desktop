@@ -44,7 +44,7 @@ const fileItem = props => {
         >
           {
             bytes2HumanReadableSize(props.file.size)
-              ? bytes2HumanReadableSize(props.file.size)
+              ? bytes2HumanReadableSize(props.file.size).substr(1)
               : null
           }
         </div>
