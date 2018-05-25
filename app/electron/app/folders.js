@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const axios = require('axios');
 const { ipcMain, dialog } = require('electron');
+const uuidv4 = require('uuid/v4');
 const cF = require('../utils/commonFunc');
 const { ROOT_HASH } = require('../../utils/const');
 
@@ -14,7 +15,7 @@ const foldersListeners = mainWindow => {
       .then(({ data }) => cF.decryptDataFromRaft(data, foldersKey, userData.csk))
       //  add new one
       .then(folders => {
-        const hashKey = cF.getHash(`root/${newFolderName}`, '');
+        const hashKey = uuidv4();
         //  reject creation of folder if there is a folder with such name
         if (folders[hashKey] || hashKey === ROOT_HASH) {
           const error = `There is a folder with name "${newFolderName}"`;
@@ -25,6 +26,7 @@ const foldersListeners = mainWindow => {
         const newFolder = {
           [hashKey]: {
             parentFolder: ROOT_HASH,
+            id: hashKey,
             name: newFolderName,
             timestamp: Math.round(+new Date() / 1000),
             securityLayers: {
@@ -53,10 +55,45 @@ const foldersListeners = mainWindow => {
       })
       .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:create', 'GET'));
   });
+  ipcMain.on('folder:edit', (event, { signature, newName, userData, raftNode }) => {
+    //  cannot delete root folder
+    if (signature === ROOT_HASH) {
+      dialog.showErrorBox('Error', 'You can`t rename root folder');
+      return mainWindow.webContents.send('folder:edit-failed');
+    }
+    //  key in raft
+    const foldersKey = `${userData.cpk}_flds`;
+    return axios.get(`${raftNode}/key/${foldersKey}`)
+      .then(({ data }) => {
+        const folders = cF.decryptDataFromRaft(data, foldersKey, userData.csk);
+        const newFolders = {
+          ...folders,
+          [signature]: {
+            ...folders[signature],
+            name: newName
+          }
+        };
+        const config = {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        };
+        const updData = {
+          [foldersKey]: Object.keys(newFolders).length
+            ? cF.aesEncrypt(JSON.stringify(newFolders), userData.csk).encryptedHex
+            : '',
+        };
+        return axios.post(`${raftNode}/key`, updData, config)
+          .then(() => mainWindow.webContents.send('folder:edit-success'))
+          .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:edit'));
+      })
+      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:edit', 'GET'));
+  });
   ipcMain.on('folder:delete', (event, { folderId, userData, raftNode }) => {
     //  cannot delete root folder
     if (folderId === ROOT_HASH) {
-      return dialog.showErrorBox('Error', 'You can`t delete root folder');
+      dialog.showErrorBox('Error', 'You can`t delete root folder');
+      return mainWindow.webContents.send('folder:delete-failed');
     }
     //  keys in raft
     const foldersKey = `${userData.cpk}_flds`;

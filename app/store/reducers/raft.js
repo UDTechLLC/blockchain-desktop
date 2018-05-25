@@ -4,6 +4,17 @@ import { updateObject } from '../../utils/utility';
 import { ROOT_HASH } from '../../utils/const';
 // import { objOrderBy } from '../../utils/commonFunctions';
 
+const rootFolderObject = {
+  parentFolder: null,
+  name: 'root',
+  timestamp: 0,
+  securityLayers: {
+    _2fa: false,
+    pin: false,
+    key: false,
+    voice: false
+  }
+};
 const initialState = {
   settings: {
     loginMethod: {
@@ -35,17 +46,7 @@ const initialState = {
     }
   },
   folders: {
-    [ROOT_HASH]: {
-      parentFolder: null,
-      name: 'root',
-      timestamp: 0,
-      securityLayers: {
-        _2fa: false,
-        pin: false,
-        key: false,
-        voice: false
-      }
-    }
+    [ROOT_HASH]: rootFolderObject
   },
   files: {},
   notes: {},
@@ -118,6 +119,17 @@ const createNewFolderSuccess = (state, action) => (updateObject(state, {
   loading: false
 }));
 
+const editFolderSuccess = (state, action) => updateObject(state, {
+  folders: {
+    ...state.folders,
+    [action.signature]: {
+      ...state.folders[action.signature],
+      name: action.newName
+    }
+  },
+  loading: false
+});
+
 const deleteFolderSuccess = (state, action) => (updateObject(state, {
   folders: _.pickBy(state.folders, (v, k) => k !== action.folderId),
   files: _.pickBy(state.files, v => v.parentFolder !== action.folderId),
@@ -163,6 +175,9 @@ const reducer = (state = initialState, action) => {
       case actionTypes.CREATE_NEW_FOLDER_START: return actionStart(state, action);
       case actionTypes.CREATE_NEW_FOLDER_SUCCESS: return createNewFolderSuccess(state, action);
       case actionTypes.CREATE_NEW_FOLDER_FAIL: return actionFailed(state, action);
+      case actionTypes.EDIT_FOLDER_START: return actionStart(state, action);
+      case actionTypes.EDIT_FOLDER_SUCCESS: return editFolderSuccess(state, action);
+      case actionTypes.EDIT_FOLDER_FAIL: return actionFailed(state, action);
       case actionTypes.DELETE_FOLDER_START: return actionStart(state, action);
       case actionTypes.DELETE_FOLDER_SUCCESS: return deleteFolderSuccess(state, action);
       case actionTypes.DELETE_FOLDER_FAIL: return actionFailed(state, action);

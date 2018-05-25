@@ -51,7 +51,8 @@
   display: flex;
 }
 
-.DeleteButtonWrapper {
+.DeleteButtonWrapper,
+.FolderNameWrapper {
   z-index: 10;
 }
 

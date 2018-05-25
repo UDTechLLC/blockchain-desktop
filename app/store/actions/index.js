@@ -19,6 +19,7 @@ export {
   getAppSettings,
   getUserData,
   createNewFolder,
+  editFolder,
   deleteFolder,
   uploadFiles,
   downloadFile,

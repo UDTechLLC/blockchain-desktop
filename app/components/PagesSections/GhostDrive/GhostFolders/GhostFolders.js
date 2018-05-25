@@ -29,6 +29,9 @@ const ghostFolders = props => (
             onFolderCheck={name => props.onFolderCheck(name)}
             isActive={props.folders[key].name === props.activeFolder}
             onDelete={name => props.onFolderDelete(name)}
+            nameThatMayChange={props.nameThatMayChange}
+            onNameThatMayChange={val => props.onNameThatMayChange(val)}
+            onFolderNameEdit={() => props.onFolderNameEdit()}
           />
         ))
       }
@@ -41,7 +44,10 @@ ghostFolders.propTypes = {
   onFolderCheck: PropTypes.func.isRequired,
   activeFolder: PropTypes.string.isRequired,
   onCreateFolder: PropTypes.func.isRequired,
-  onFolderDelete: PropTypes.func.isRequired
+  onFolderDelete: PropTypes.func.isRequired,
+  nameThatMayChange: PropTypes.string.isRequired,
+  onNameThatMayChange: PropTypes.func.isRequired,
+  onFolderNameEdit: PropTypes.func.isRequired
 };
 
 ghostFolders.defaultProps = {

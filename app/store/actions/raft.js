@@ -70,6 +70,35 @@ export const createNewFolder = (newFolderName, userData, raftNode) => dispatch =
   ipcRenderer.once('folder:create-failed', () => dispatch(createNewFolderFail()));
 };
 
+//  edit folder name
+const editFolderStart = (signature, newName, userData, raftNode) => {
+  ipcRenderer.send('folder:edit', {
+    signature,
+    newName,
+    userData,
+    raftNode
+  });
+  return { type: actionTypes.EDIT_FOLDER_START };
+};
+
+const editFolderSuccess = (signature, newName) => ({
+  type: actionTypes.EDIT_FOLDER_SUCCESS,
+  signature,
+  newName
+});
+
+const editFolderFail = () => ({
+  type: actionTypes.EDIT_FOLDER_FAIL
+});
+
+export const editFolder = (signature, newName, userData, raftNode) => dispatch => {
+  dispatch(editFolderStart(signature, newName, userData, raftNode));
+  ipcRenderer.once('folder:edit-success', () => (
+    dispatch(editFolderSuccess(signature, newName))
+  ));
+  ipcRenderer.once('folder:edit-failed', () => dispatch(editFolderFail()));
+};
+
 //  delete folder
 const deleteFolderStart = (folderId, userData, raftNode) => {
   ipcRenderer.send('folder:delete', { folderId, userData, raftNode });

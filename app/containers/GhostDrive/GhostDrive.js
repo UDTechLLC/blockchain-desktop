@@ -20,6 +20,7 @@ const styles = { ...commonCss, ...css };
 class GhostDrive extends Component {
   state = {
     checkedFolder: ROOT_HASH,
+    nameThatMayChange: 'root',
     checkedFile: '',
     showRemoveButton: false
   };
@@ -28,15 +29,17 @@ class GhostDrive extends Component {
     this.props.getUserData(this.props.userData, this.props.raftNode);
   }
   //  if user checks one of folders
-  handleCheckFolder = name => (
-    this.setState({
-      checkedFolder: Object.keys(this.props.folders).find(el => (
-        this.props.folders[el].name === name
-      )),
+  handleCheckFolder = name => {
+    const checkedFolder = Object.keys(this.props.folders).find(el => (
+      this.props.folders[el].name === name
+    ));
+    return this.setState({
+      checkedFolder,
+      nameThatMayChange: this.props.folders[checkedFolder].name,
       checkedFile: '',
       showRemoveButton: false
-    })
-  );
+    });
+  };
   //  create new folder
   handleCreateNewFolder = () => {
     const defaultNameFolders = _.pickBy(this.props.folders, v => v.name.indexOf('New Folder') >= 0);
@@ -45,13 +48,27 @@ class GhostDrive extends Component {
       : ''}`;
     return this.props.createNewFolder(newFolderName, this.props.userData, this.props.raftNode);
   };
+  //  edit folders name
+  handleChangeOnNameThatMayChange = nameThatMayChange => this.setState({ nameThatMayChange });
+  //  submit eddited folder
+  handleFolderNameEdit = () => {
+    if (this.state.nameThatMayChange) {
+      this.props.editFolder(
+        this.state.checkedFolder,
+        this.state.nameThatMayChange,
+        this.props.userData,
+        this.props.raftNode
+      );
+    }
+    this.setState({ checkedFolder: ROOT_HASH, nameThatMayChange: 'root' });
+  };
   //  delete checked folder
   handleDeleteFolder = name => {
     const folderId = Object.keys(this.props.folders).find(el => (
       this.props.folders[el].name === name
     ));
     this.props.deleteFolder(folderId, this.props.userData, this.props.raftNode);
-    this.setState({ checkedFolder: ROOT_HASH });
+    this.setState({ checkedFolder: ROOT_HASH, nameThatMayChange: 'root' });
   };
   //  if user checks one of files
   handleCheckFile = signature => (
@@ -152,6 +169,9 @@ class GhostDrive extends Component {
               onCreateFolder={() => this.handleCreateNewFolder()}
               onFolderDelete={name => this.handleDeleteFolder(name)}
               activeFolder={this.props.folders[this.state.checkedFolder].name}
+              nameThatMayChange={this.state.nameThatMayChange}
+              onNameThatMayChange={val => this.handleChangeOnNameThatMayChange(val)}
+              onFolderNameEdit={() => this.handleFolderNameEdit()}
             />
           </div>
           <div className={styles.flex3}>
@@ -178,6 +198,7 @@ GhostDrive.propTypes = {
   folders: PropTypes.shape().isRequired,
   files: PropTypes.shape().isRequired,
   createNewFolder: PropTypes.func.isRequired,
+  editFolder: PropTypes.func.isRequired,
   getUserData: PropTypes.func.isRequired,
   deleteFolder: PropTypes.func.isRequired,
   uploadFiles: PropTypes.func.isRequired,
@@ -202,7 +223,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(actionTypes.createNewFolder(newFolderName, userData, raftNode))
   ),
   editFolder: (signature, newName, userData, raftNode) => (
-    dispatch(actionTypes.editFodler(signature, newName, userData, raftNode))
+    dispatch(actionTypes.editFolder(signature, newName, userData, raftNode))
   ),
   deleteFolder: (signature, userData, raftNode) => (
     dispatch(actionTypes.deleteFolder(signature, userData, raftNode))

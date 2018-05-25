@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import Aux from '../../../../../hoc/Aux/Aux';
 import Backdrop from '../../../../UI/Backdrop/Backdrop';
+import TextThatOnDCChanged from '../../../../UI/TextThatOnDCChanged/TextThatOnDCChanged';
 
 import { folderI, folderA } from '../../../../../assets/img/img';
 import css from './FodlerItem.css';
@@ -93,10 +94,18 @@ class GhostFolders extends Component {
             <div
               className={[
                 styles.flex1,
-                styles.flexAllCenter
+                styles.w100,
+                styles.flexAllCenter,
+                styles.FolderNameWrapper
               ].join(' ')}
             >
-              {this.props.folder.name}
+              <TextThatOnDCChanged
+                onClick={val => this.props.onFolderCheck(val)}
+                value={!this.props.isActive ? this.props.folder.name : this.props.nameThatMayChange}
+                defaultValue={this.props.folder.name}
+                onValueChange={val => this.props.onNameThatMayChange(val)}
+                onFolderNameEdit={() => this.props.onFolderNameEdit()}
+              />
             </div>
           </div>
           <div
@@ -118,7 +127,10 @@ GhostFolders.propTypes = {
   folder: PropTypes.shape().isRequired,
   onFolderCheck: PropTypes.func.isRequired,
   isActive: PropTypes.bool,
-  onDelete: PropTypes.func.isRequired
+  onDelete: PropTypes.func.isRequired,
+  nameThatMayChange: PropTypes.string.isRequired,
+  onNameThatMayChange: PropTypes.func.isRequired,
+  onFolderNameEdit: PropTypes.func.isRequired
 };
 
 GhostFolders.defaultProps = {
