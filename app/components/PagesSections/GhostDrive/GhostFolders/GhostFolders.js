@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import AddButton from '../../../UI/AddButton/AddButton';
 import FolderItem from './FodlerItem/FodlerItem';
 import WithCustomScrollbar from '../../../../components/UI/WithCustomScrollbar/WithCustomScrollbar';
 
@@ -19,6 +20,7 @@ const ghostFolders = props => (
         styles.GhostFolders
       ].join(' ')}
     >
+      <AddButton onClick={() => props.onCreateFolder()} />
       {
         Object.keys(props.folders).map((key, i) => (
           <FolderItem
@@ -38,6 +40,7 @@ ghostFolders.propTypes = {
   folders: PropTypes.shape(),
   onFolderCheck: PropTypes.func.isRequired,
   activeFolder: PropTypes.string.isRequired,
+  onCreateFolder: PropTypes.func.isRequired,
   onFolderDelete: PropTypes.func.isRequired
 };
 

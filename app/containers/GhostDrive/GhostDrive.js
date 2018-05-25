@@ -37,6 +37,22 @@ class GhostDrive extends Component {
       showRemoveButton: false
     })
   );
+  //  create new folder
+  handleCreateNewFolder = () => {
+    const defaultNameFolders = _.pickBy(this.props.folders, v => v.name.indexOf('New Folder') >= 0);
+    const newFolderName = `New Folder${Object.keys(defaultNameFolders).length
+      ? ` (${Object.keys(defaultNameFolders).length})`
+      : ''}`;
+    return this.props.createNewFolder(newFolderName, this.props.userData, this.props.raftNode);
+  };
+  //  delete checked folder
+  handleDeleteFolder = name => {
+    const folderId = Object.keys(this.props.folders).find(el => (
+      this.props.folders[el].name === name
+    ));
+    this.props.deleteFolder(folderId, this.props.userData, this.props.raftNode);
+    this.setState({ checkedFolder: ROOT_HASH });
+  };
   //  if user checks one of files
   handleCheckFile = signature => (
     this.setState({
@@ -46,14 +62,6 @@ class GhostDrive extends Component {
       showRemoveButton: false
     })
   );
-  //  delete checked folder
-  handleDeleteFolder = name => {
-    const folderId = Object.keys(this.props.folders).find(el => (
-      this.props.folders[el].name === name
-    ));
-    this.props.deleteFolder(folderId, this.props.userData, this.props.raftNode);
-    this.setState({ checkedFolder: ROOT_HASH });
-  };
   //  upload file
   handleOnDropFile = (accepted, rejected) => {
     if (rejected.length) {
@@ -120,7 +128,6 @@ class GhostDrive extends Component {
     return this.setState({ showRemoveButton: false });
   };
   render() {
-    console.log(this.props.folders);
     if (!this.props.downloadedFile.downloaded) {
       this.handleSaveDownloadedFile();
     }
@@ -142,6 +149,7 @@ class GhostDrive extends Component {
             <GhostFolders
               folders={this.props.folders}
               onFolderCheck={name => this.handleCheckFolder(name)}
+              onCreateFolder={() => this.handleCreateNewFolder()}
               onFolderDelete={name => this.handleDeleteFolder(name)}
               activeFolder={this.props.folders[this.state.checkedFolder].name}
             />
@@ -169,6 +177,7 @@ GhostDrive.propTypes = {
   storageNodes: PropTypes.arrayOf(PropTypes.string).isRequired,
   folders: PropTypes.shape().isRequired,
   files: PropTypes.shape().isRequired,
+  createNewFolder: PropTypes.func.isRequired,
   getUserData: PropTypes.func.isRequired,
   deleteFolder: PropTypes.func.isRequired,
   uploadFiles: PropTypes.func.isRequired,
@@ -189,8 +198,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getUserData: (userData, raftNode) => dispatch(actionTypes.getUserData(userData, raftNode)),
-  deleteFolder: (folderId, userData, raftNode) => (
-    dispatch(actionTypes.deleteFolder(folderId, userData, raftNode))
+  createNewFolder: (newFolderName, userData, raftNode) => (
+    dispatch(actionTypes.createNewFolder(newFolderName, userData, raftNode))
+  ),
+  editFolder: (signature, newName, userData, raftNode) => (
+    dispatch(actionTypes.editFodler(signature, newName, userData, raftNode))
+  ),
+  deleteFolder: (signature, userData, raftNode) => (
+    dispatch(actionTypes.deleteFolder(signature, userData, raftNode))
   ),
   uploadFiles: (userData, files, storageNodes, raftNode) => (
     dispatch(actionTypes.uploadFiles(userData, files, storageNodes, raftNode))

@@ -81,13 +81,13 @@ export const timestamp2date = timestamp => {
 
 /**
  * sort obj desc or asc by key
- * @param object {object}
+ * @param obj {object}
  * @param key {string}
  * @param order {string}
  * @return {Object}
  */
-export const objOrderBy = (object, key = 'timestamp', order = 'desc') => (
-  _.chain(object)
+export const objOrderBy = (obj, key = 'timestamp', order = 'desc') => (
+  _.chain(obj)
     .toPairs()
     .orderBy(o => o[1][key], [order])
     .fromPairs()

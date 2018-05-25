@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { folder } from '../../../../../assets/img/img';
+import { folderI, folderA } from '../../../../../assets/img/img';
 import css from './FodlerItem.css';
 import cornersCss from '../../../../../assets/css/corners.css';
 import commonCss from '../../../../../assets/css/common.css';
@@ -18,15 +18,11 @@ const ghostFolders = props => (
     ].join(' ')}
   >
     <div
-      className={
-        !props.isActive
-          ? styles.absolute100
-          : [
-            styles.absolute100,
-            styles.Active
-          ].join(' ')
-      }
-      style={{ backgroundImage: `url(${folder})` }}
+      className={[
+        styles.absolute100,
+        !props.isActive ? null : styles.Active
+      ].join(' ')}
+      style={{ backgroundImage: `url(${!props.isActive ? folderI : folderA})` }}
     >
       <div
         className={[

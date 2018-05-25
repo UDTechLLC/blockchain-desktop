@@ -2,6 +2,7 @@ import _ from 'lodash';
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../utils/utility';
 import { ROOT_HASH } from '../../utils/const';
+// import { objOrderBy } from '../../utils/commonFunctions';
 
 const initialState = {
   settings: {
@@ -95,8 +96,8 @@ const getAppSettingsSuccess = (state, action) => (updateObject(state, {
 
 const getUserDataSuccess = (state, action) => (updateObject(state, {
   folders: {
-    ...state.folders,
-    ...action.data.folders
+    ...action.data.folders,
+    ...state.folders
   },
   files: {
     ...state.files,
@@ -111,8 +112,8 @@ const getUserDataSuccess = (state, action) => (updateObject(state, {
 
 const createNewFolderSuccess = (state, action) => (updateObject(state, {
   folders: {
-    ...state.folders,
-    ...action.newFolder
+    ...action.newFolder,
+    ...state.folders
   },
   loading: false
 }));

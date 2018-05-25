@@ -23,6 +23,8 @@ import loop from './loop-icon.png';
 import logout from './logout-icon.png';
 import settings from './settings-icon.png';
 import wallet from './wallet-icon.png';
+import folderA from './folder-active.png';
+import folderI from './folder-inactive.png';
 
 export default {
   logoGhost,
@@ -49,5 +51,7 @@ export default {
   loop,
   logout,
   settings,
-  wallet
+  wallet,
+  folderA,
+  folderI
 };
