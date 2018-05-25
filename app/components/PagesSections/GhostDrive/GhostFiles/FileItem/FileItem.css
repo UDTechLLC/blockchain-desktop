@@ -32,7 +32,7 @@
   text-transform: uppercase;
 }
 
-.FileItem > div > div {
+.FileItem > div > div:not(:first-of-type) {
   text-align: center;
 }
 
