@@ -32,6 +32,10 @@
   text-transform: uppercase;
 }
 
+.FileItem > div > div {
+  text-align: center;
+}
+
 .FileItem > div > div:first-of-type {
   padding: calc(20% + 3px) 0 0 calc(20% + 7px);
   margin-bottom: -10px;
