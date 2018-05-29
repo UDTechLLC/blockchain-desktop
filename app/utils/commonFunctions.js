@@ -6,12 +6,7 @@ import { MONTH_ARRAY } from './const';
  * @param bytes {number}
  * @return {Number || null}
  */
-export const bytes2Kbytes = bytes => {
-  const a = bytes % 1024 > 0
-    ? (bytes - (bytes % 1024)) / 1024
-    : bytes / 1024;
-  return a > 0 ? a : null;
-};
+export const bytes2Kbytes = bytes => parseFloat(bytes / 1024).toFixed(2);
 
 /**
  * transform bytes to mbytes
@@ -55,15 +50,18 @@ export const bytes2Tbytes = bytes => {
  * @return {String}
  */
 export const bytes2HumanReadableSize = bytes => {
-  const tb = bytes2Tbytes(bytes) && bytes2Tbytes(bytes) > 0
-    ? `${bytes2Tbytes(bytes)} Tb` : null;
-  const gb = bytes2Gbytes(bytes) && bytes2Gbytes(bytes) > 0
-    ? `${bytes2Gbytes(bytes)} Gb` : null;
-  const mb = bytes2Mbytes(bytes) && bytes2Mbytes(bytes) > 0
-    ? `${bytes2Mbytes(bytes)} Mb` : null;
-  const kb = bytes2Kbytes(bytes) && bytes2Kbytes(bytes) > 0
-    ? `${bytes2Kbytes(bytes)} Kb` : null;
-  return (tb || null) + (gb || null) + (mb || null) + (kb || null);
+  let tb;
+  let gb;
+  let mb;
+  let kb;
+  if (bytes2Tbytes(bytes) && bytes2Tbytes(bytes) > 0) {
+    tb = `${bytes2Tbytes(bytes)} Tb`;
+  } else if (bytes2Gbytes(bytes) && bytes2Gbytes(bytes) > 0) {
+    gb = `${bytes2Gbytes(bytes)} Gb`;
+  } else if (bytes2Mbytes(bytes) && bytes2Mbytes(bytes) > 0) {
+    mb = `${bytes2Mbytes(bytes)} Mb`;
+  } else if (bytes2Kbytes(bytes)) { kb = `${bytes2Kbytes(bytes)} Kb`; }
+  return (tb || '') + (gb || '') + (mb || '') + (kb || '');
 };
 
 /**

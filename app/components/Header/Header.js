@@ -5,6 +5,8 @@ import { NavLink } from 'react-router-dom';
 
 import UiNavLink from '../UI/NavLink/NavLink';
 import Loading from '../Animations/Loading/Loading';
+import Graph from '../Graph/Graph';
+import { bytes2HumanReadableSize } from '../../utils/commonFunctions';
 
 import {
   logoGhost,
@@ -75,7 +77,9 @@ class Header extends Component {
         label: logout,
         alt: 'logout'
       },
-    ]
+    ],
+    userFilesSize: 340 * 1024 * 1024,
+    userFilesLimit: 1024 * 1024 * 1024
   };
   render() {
     const leftMenu = this.props.isAuth
@@ -140,13 +144,40 @@ class Header extends Component {
               >
                 {
                   rightMenu.map((item, index) => (
-                    <li key={index}>
-                      <NavLink
-                        to={item.link}
-                      >
-                        <img src={item.label} alt={item.alt} height={18} />
-                      </NavLink>
-                    </li>
+                    <div
+                      key={index}
+                      className={[
+                        styles.flexAllCenter,
+                        styles.h100
+                      ].join(' ')}
+                    >
+                      {
+                        index !== rightMenu.length - 1
+                          ? null
+                          : (
+                            <li
+                              className={[
+                                styles.flexBetweenCenter,
+                                styles.GraphWrapper
+                              ].join(' ')}
+                            >
+                              <Graph
+                                progress={this.state.userFilesSize / this.state.userFilesLimit}
+                              />
+                              <span>
+                                {`${bytes2HumanReadableSize(this.state.userFilesSize)} / ${bytes2HumanReadableSize(this.state.userFilesLimit)}`}
+                              </span>
+                            </li>
+                          )
+                      }
+                      <li>
+                        <NavLink
+                          to={item.link}
+                        >
+                          <img src={item.label} alt={item.alt} height={18} />
+                        </NavLink>
+                      </li>
+                    </div>
                   ))
                 }
               </ul>
