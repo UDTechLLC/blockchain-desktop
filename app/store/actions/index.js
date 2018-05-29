@@ -10,11 +10,11 @@ export {
 } from './commonInfo';
 export { getBalance } from './blockchain';
 export { getDigest } from './digest';
-export {
-  getNotes,
-  editNotesList,
-  deleteNote
-} from './notes';
+// export {
+//   getNotes,
+//   editNotesList,
+//   deleteNote
+// } from './notes';
 export {
   getAppSettings,
   getUserData,
@@ -24,5 +24,8 @@ export {
   uploadFiles,
   downloadFile,
   saveDownloadedFile,
-  removeFile
+  removeFile,
+  createNote,
+  editNote,
+  removeNote
 } from './raft';

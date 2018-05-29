@@ -15,18 +15,18 @@ const foldersListeners = mainWindow => {
       .then(({ data }) => cF.decryptDataFromRaft(data, foldersKey, userData.csk))
       //  add new one
       .then(folders => {
-        const hashKey = uuidv4();
-        //  reject creation of folder if there is a folder with such name
-        if (folders[hashKey] || hashKey === ROOT_HASH) {
-          const error = `There is a folder with name "${newFolderName}"`;
+        const id = uuidv4();
+        //  reject creation of folder if there is a folder with such id
+        if (folders[id] || id === ROOT_HASH) {
+          const error = 'There is a uuidv4 generation error happened!';
           console.log(error);
           return dialog.showErrorBox('Error', error);
         }
         //  otherwise create new folder object
         const newFolder = {
-          [hashKey]: {
+          [id]: {
             parentFolder: ROOT_HASH,
-            id: hashKey,
+            id,
             name: newFolderName,
             timestamp: Math.round(+new Date() / 1000),
             securityLayers: {
@@ -56,7 +56,7 @@ const foldersListeners = mainWindow => {
       .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:create', 'GET'));
   });
   ipcMain.on('folder:edit', (event, { signature, newName, userData, raftNode }) => {
-    //  cannot delete root folder
+    //  cannot edit root folder
     if (signature === ROOT_HASH) {
       dialog.showErrorBox('Error', 'You can`t rename root folder');
       return mainWindow.webContents.send('folder:edit-failed');
@@ -79,9 +79,7 @@ const foldersListeners = mainWindow => {
           }
         };
         const updData = {
-          [foldersKey]: Object.keys(newFolders).length
-            ? cF.aesEncrypt(JSON.stringify(newFolders), userData.csk).encryptedHex
-            : '',
+          [foldersKey]: cF.aesEncrypt(JSON.stringify(newFolders), userData.csk).encryptedHex,
         };
         return axios.post(`${raftNode}/key`, updData, config)
           .then(() => mainWindow.webContents.send('folder:edit-success'))

@@ -9,13 +9,13 @@ import ControlPanel from '../../components/Notes/ControlPanel/ControlPanel';
 import NotesPanel from '../../components/Notes/NotesPanel/NotesPanel';
 // import PageWithInfoPanel from '../PageWithInfoPanel/PageWithInfoPanel.css';
 
-import css from './GhostPad.css';
+import css from './GhostNote.css';
 import commonCss from '../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
 const styles = { ...commonCss, ...css };
 
-class GhostPad extends Component {
+class GhostNote extends Component {
   state = {
     pinCode: '',
     notes: [],
@@ -104,7 +104,7 @@ class GhostPad extends Component {
   }
 }
 
-GhostPad.propTypes = {
+GhostNote.propTypes = {
   notes: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   editNotesList: PropTypes.func.isRequired,
   // deleteNote: PropTypes.func.isRequired,
@@ -125,4 +125,4 @@ const mapDispatchToProps = dispatch => ({
   deleteNote: (id, userData, raftNode) => dispatch(actions.deleteNote(id, userData, raftNode))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(GhostPad);
+export default connect(mapStateToProps, mapDispatchToProps)(GhostNote);

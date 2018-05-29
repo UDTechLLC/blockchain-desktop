@@ -12,7 +12,7 @@ import raftReducer from './store/reducers/raft';
 import commonInfoReducer from './store/reducers/commonInfo';
 import blockchainReducer from './store/reducers/blockchain';
 import digestReducer from './store/reducers/digest';
-import notesReducer from './store/reducers/notes';
+// import notesReducer from './store/reducers/notes';
 
 import './reset.css';
 import './app.global.css';
@@ -26,7 +26,7 @@ const rootReducer = combineReducers({
   commonInfo: commonInfoReducer,
   blockchain: blockchainReducer,
   digest: digestReducer,
-  notes: notesReducer
+  // notes: notesReducer
 });
 
 let composeEnhancers = null || compose;

@@ -55,7 +55,7 @@ const mapStateToProps = state => ({
   balance: state.blockchain.balance,
   bcNodes: state.digest.digestInfo.bcNodes,
   loading: state.auth.loading || state.blockchain.loading || state.commonInfo.loading
-    || state.digest.loading || state.raft.loading || state.notes.loading
+    || state.digest.loading || state.raft.loading
 });
 
 export default connect(mapStateToProps)(Layout);

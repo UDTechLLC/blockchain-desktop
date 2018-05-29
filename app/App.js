@@ -14,7 +14,7 @@ import GhostDrive from './containers/GhostDrive/GhostDrive';
 // import FileUpload from './containers/FileUpload/FileUpload';
 import Wallet from './containers/Wallet/Wallet';
 import Settings from './containers/Settings/Settings';
-import GhostPad from './containers/GhostPad/GhostPad';
+import GhostNote from './containers/GhostNote/GhostNote';
 import Deposit from './containers/Deposit/Deposit';
 // import XFiles from './containers/XFiles/XFiles';
 import Logout from './containers/Homepage/Logout/Logout';
@@ -54,7 +54,7 @@ class App extends Component {
               <Route exact path="/wallet" component={Wallet} key={Math.random()} />
               {/* <Route exact path="/upload" component={FileUpload} key={Math.random()} /> */}
               {/* <Route exact path="/files" component={FilesList} key={Math.random()} /> */}
-              <Route exact path="/ghost-pad" component={GhostPad} key={Math.random()} />
+              <Route exact path="/ghost-pad" component={GhostNote} key={Math.random()} />
               <Route exact path="/deposit" component={Deposit} key={Math.random()} />
               {/* <Route exact path="/x-files" component={XFiles} key={Math.random()} /> */}
               <Route exact path="/logout" component={Logout} key={Math.random()} />

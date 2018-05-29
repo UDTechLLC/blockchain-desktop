@@ -195,37 +195,77 @@ export const removeFile = (signature, userData, raftNode) => dispatch => {
   ipcRenderer.once('file:remove-failed', () => dispatch(removeFileFail()));
 };
 
-// TODO: Refactoring of notes actions
-const editNotesListStart = (notes, userData, raftNode) => {
-  ipcRenderer.send('notes:edit-list', { notes, userData, raftNode });
-  return { type: actionTypes.EDIT_NOTE_LIST_START };
+// create note
+const createNoteStart = (userData, raftNode) => {
+  ipcRenderer.send('note:create', { userData, raftNode });
+  return { type: actionTypes.CREATE_NOTE_START };
 };
 
-const editNotesListSuccess = notes => ({
-  type: actionTypes.EDIT_NOTE_LIST_SUCCESS,
-  notes
+const createNoteSuccess = newNote => ({
+  type: actionTypes.CREATE_NOTE_SUCCESS,
+  newNote
 });
 
-export const editNotesList = (notes, userData, raftNode) => dispatch => {
-  dispatch(editNotesListStart(notes, userData, raftNode));
-  ipcRenderer.once('notes:edit-list-complete', () => (
-    dispatch(editNotesListSuccess(notes))
-  ));
-};
-
-const deleteNoteStart = (id, userData, raftNode) => {
-  ipcRenderer.send('note:delete', { id, userData, raftNode });
-  return { type: actionTypes.DELETE_NOTE_START };
-};
-
-const deleteNoteSuccess = id => ({
-  type: actionTypes.DELETE_NOTE_SUCCESS,
-  id
+const createNoteFail = () => ({
+  type: actionTypes.CREATE_NOTE_FAIL
 });
 
-export const deleteNote = (id, userData, raftNode) => dispatch => {
-  dispatch(deleteNoteStart(id, userData, raftNode));
-  ipcRenderer.once('delete-note:delete-complete', () => (
-    dispatch(deleteNoteSuccess(id))
+export const createNote = (userData, raftNode) => dispatch => {
+  dispatch(createNoteStart(userData, raftNode));
+  ipcRenderer.once('note:create-success', (event, newNote) => (
+    dispatch(createNoteSuccess(newNote))
   ));
+  ipcRenderer.once('note:create-failed', () => dispatch(createNoteFail()));
+};
+
+//  edit note
+const editNoteStart = (signature, noteUpdateData, userData, raftNode) => {
+  ipcRenderer.send('note:edit', {
+    signature,
+    noteUpdateData,
+    userData,
+    raftNode
+  });
+  return { type: actionTypes.EDIT_NOTE_START };
+};
+
+const editNoteSuccess = (signature, noteUpdateData) => ({
+  type: actionTypes.EDIT_NOTE_SUCCESS,
+  signature,
+  noteUpdateData
+});
+
+const editNoteFail = () => ({
+  type: actionTypes.EDIT_NOTE_FAIL
+});
+
+export const editNote = (signature, noteUpdateData, userData, raftNode) => dispatch => {
+  dispatch(editNoteStart(signature, noteUpdateData, userData, raftNode));
+  ipcRenderer.once('note:edit-success', () => (
+    dispatch(editNoteSuccess(signature, noteUpdateData))
+  ));
+  ipcRenderer.once('note:edit-failed', () => dispatch(editNoteFail()));
+};
+
+//  remove note
+const removeNoteStart = (id, userData, raftNode) => {
+  ipcRenderer.send('note:remove', { id, userData, raftNode });
+  return { type: actionTypes.REMOVE_NOTE_START };
+};
+
+const removeNoteSuccess = signature => ({
+  type: actionTypes.REMOVE_NOTE_SUCCESS,
+  signature
+});
+
+const removeNoteFail = () => ({
+  type: actionTypes.REMOVE_NOTE_FAIL
+});
+
+export const removeNote = (signature, userData, raftNode) => dispatch => {
+  dispatch(removeNoteStart(signature, userData, raftNode));
+  ipcRenderer.once('note:remove-success', () => (
+    dispatch(removeNoteSuccess(signature))
+  ));
+  ipcRenderer.once('note:remove-failed', () => dispatch(removeNoteFail()));
 };

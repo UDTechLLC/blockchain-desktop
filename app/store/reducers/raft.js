@@ -60,25 +60,6 @@ const initialState = {
   loading: false
 };
 
-// const actionStart = state => (updateObject(state, {
-//   loading: true
-// }));
-//
-// const getNotes = (state, action) => (updateObject(state, {
-//   notes: action.notes,
-//   loading: false
-// }));
-//
-// const editNotesList = (state, action) => (updateObject(state, {
-//   notes: [...action.notes],
-//   loading: false
-// }));
-//
-// const deleteNote = (state, action) => (updateObject(state, {
-//   notes: state.notes.filter(el => el.id !== action.id),
-//   loading: false
-// }));
-
 const actionStart = state => (updateObject(state, {
   loading: true
 }));
@@ -163,40 +144,79 @@ const removeFileSuccess = (state, action) => (updateObject(state, {
   loading: false
 }));
 
+const createNoteSuccess = (state, action) => (updateObject(state, {
+  notes: {
+    ...action.newNote,
+    ...state.notes
+  },
+  loading: false
+}));
+
+const updateNoteSuccess = (state, action) => (updateObject(state, {
+  notes: {
+    ...state.notes,
+    [action.signature]: {
+      ...state.notes[action.signature],
+      ...action.noteUpdateData
+    }
+  },
+  loading: false
+}));
+
+const removeNoteSuccess = (state, action) => (updateObject(state, {
+  notes: _.pickBy(state.notes, (v, k) => k !== action.signature),
+  loading: false
+}));
+
+
 const reducer = (state = initialState, action) => {
   if (action) {
     switch (action.type) {
+      //  get settings
       case actionTypes.GET_APP_SETTINGS_START: return actionStart(state, action);
       case actionTypes.GET_APP_SETTINGS_SUCCESS: return getAppSettingsSuccess(state, action);
       case actionTypes.GET_APP_SETTINGS_FAIL: return actionFailed(state, action);
+      //  get raft data
       case actionTypes.GET_USER_DATA_START: return actionStart(state, action);
       case actionTypes.GET_USER_DATA_SUCCESS: return getUserDataSuccess(state, action);
       case actionTypes.GET_USER_DATA_FAIL: return actionFailed(state, action);
+      // folders- create
       case actionTypes.CREATE_NEW_FOLDER_START: return actionStart(state, action);
       case actionTypes.CREATE_NEW_FOLDER_SUCCESS: return createNewFolderSuccess(state, action);
       case actionTypes.CREATE_NEW_FOLDER_FAIL: return actionFailed(state, action);
+      //  folders - update
       case actionTypes.EDIT_FOLDER_START: return actionStart(state, action);
       case actionTypes.EDIT_FOLDER_SUCCESS: return editFolderSuccess(state, action);
       case actionTypes.EDIT_FOLDER_FAIL: return actionFailed(state, action);
+      //  folders - delete
       case actionTypes.DELETE_FOLDER_START: return actionStart(state, action);
       case actionTypes.DELETE_FOLDER_SUCCESS: return deleteFolderSuccess(state, action);
       case actionTypes.DELETE_FOLDER_FAIL: return actionFailed(state, action);
+      //  files - create
       case actionTypes.UPLOAD_FILES_START: return actionStart(state, action);
       case actionTypes.UPLOAD_FILES_SUCCESS: return uploadFilesSuccess(state, action);
       case actionTypes.UPLOAD_FILES_FAIL: return actionFailed(state, action);
+      //  files - get
       case actionTypes.DOWNLOAD_FILE_START: return actionStart(state, action);
       case actionTypes.DOWNLOAD_FILE_SUCCESS: return downloadFileSuccess(state, action);
       case actionTypes.DOWNLOAD_FILE_FAIL: return actionFailed(state, action);
       case actionTypes.SAVE_DOWNLOADED_FILE: return saveDownloadedFile(state, action);
+      //  files- remove
       case actionTypes.REMOVE_FILE_START: return actionStart(state, action);
       case actionTypes.REMOVE_FILE_SUCCESS: return removeFileSuccess(state, action);
       case actionTypes.REMOVE_FILE_FAIL: return actionFailed(state, action);
-      // case actionTypes.GET_NOTES_START: return actionStart(state, action);
-      // case actionTypes.GET_NOTES_SUCCESS: return getNotes(state, action);
-      // case actionTypes.EDIT_NOTE_LIST_START: return actionStart(state, action);
-      // case actionTypes.EDIT_NOTE_LIST_SUCCESS: return editNotesList(state, action);
-      // case actionTypes.DELETE_NOTE_START: return actionStart(state, action);
-      // case actionTypes.DELETE_NOTE_SUCCESS: return deleteNote(state, action);
+      //  notes - create
+      case actionTypes.CREATE_NOTE_START: return actionStart(state, action);
+      case actionTypes.CREATE_NOTE_SUCCESS: return createNoteSuccess(state, action);
+      case actionTypes.CREATE_NOTE_FAIL: return actionFailed(state, action);
+      //  notes - update
+      case actionTypes.EDIT_NOTE_START: return actionStart(state, action);
+      case actionTypes.EDIT_NOTE_SUCCESS: return updateNoteSuccess(state, action);
+      case actionTypes.EDIT_NOTE_FAIL: return actionFailed(state, action);
+      //  notes - delete
+      case actionTypes.REMOVE_NOTE_START: return actionStart(state, action);
+      case actionTypes.REMOVE_NOTE_SUCCESS: return removeNoteSuccess(state, action);
+      case actionTypes.REMOVE_NOTE_FAIL: return actionFailed(state, action);
       default: return state;
     }
   }
