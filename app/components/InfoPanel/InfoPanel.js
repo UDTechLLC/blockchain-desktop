@@ -13,6 +13,7 @@ import NewBlock from './NewBlock/NewBlock';
 import CreateFolder from './CreateFolder/CreateFolder';
 import NodesMenu from './NodesMenu/NodesMenu';
 import Manipulation from './Manipulation/Manipulation';
+import NoteManipulation from './NoteManipulation/NoteManipulation';
 
 import css from './InfoPanel.css';
 import commonCss from '../../assets/css/common.css';
@@ -41,6 +42,18 @@ const infoPanel = props => {
             disableManipulationButtons={props.disableManipulationButtons}
             handleDownloadFile={() => props.handleDownloadFile()}
             handleRemoveFile={() => props.handleRemoveFile()}
+            showRemoveButton={props.showRemoveButton}
+            toggleShowRemoveButton={() => props.toggleShowRemoveButton()}
+          />
+        );
+        break;
+      case 'NoteManipulation':
+        block = (
+          <NoteManipulation
+            key={Math.random()}
+            disableManipulationButtons={props.disableManipulationButtons}
+            handleEditNote={() => props.handleEditNote()}
+            handleRemoveNote={() => props.handleRemoveNote()}
             showRemoveButton={props.showRemoveButton}
             toggleShowRemoveButton={() => props.toggleShowRemoveButton()}
           />
@@ -89,7 +102,9 @@ infoPanel.propTypes = {
   handleDownloadFile: PropTypes.func,
   handleRemoveFile: PropTypes.func,
   showRemoveButton: PropTypes.bool,
-  toggleShowRemoveButton: PropTypes.func
+  toggleShowRemoveButton: PropTypes.func,
+  handleEditNote: PropTypes.func,
+  handleRemoveNote: PropTypes.func,
 };
 
 infoPanel.defaultProps = {
@@ -102,7 +117,9 @@ infoPanel.defaultProps = {
   handleDownloadFile: null,
   handleRemoveFile: null,
   showRemoveButton: false,
-  toggleShowRemoveButton: null
+  toggleShowRemoveButton: null,
+  handleEditNote: null,
+  handleRemoveNote: null
 };
 
 export default infoPanel;

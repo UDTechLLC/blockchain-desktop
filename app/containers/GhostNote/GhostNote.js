@@ -40,9 +40,29 @@ class GhostNote extends Component {
       }
     });
   };
+  handleEditNote = () => {
+    const noteUpdateData = {
+      ...this.state.activeNote.name,
+      ...this.state.activeNote.text
+    };
+    this.props.editNote(
+      this.state.activeNote.id,
+      noteUpdateData,
+      this.props.userData,
+      this.props.raftNode
+    );
+  };
+  handleRemoveNote = () => {
+    //  TODO: Remove Note function
+  };
   render() {
     return (
-      <PageWithInfoPanel>
+      <PageWithInfoPanel
+        columns={[
+          'SecurityLayer',
+          'NoteManipulation'
+        ]}
+      >
         <div
           className={[
             styles.wh100,
@@ -74,8 +94,8 @@ GhostNote.propTypes = {
   userData: PropTypes.shape().isRequired,
   raftNode: PropTypes.string.isRequired,
   createNote: PropTypes.func.isRequired,
-  // editNote: PropTypes.func.isRequired,
-  // deleteNote: PropTypes.func.isRequired
+  editNote: PropTypes.func.isRequired,
+  deleteNote: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -86,12 +106,12 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   createNote: (userData, raftNode) => dispatch(actions.createNote(userData, raftNode)),
-  // editNote: (signature, noteUpdateData, userData, raftNode) => (
-  //   dispatch(actions.editNote(signature, noteUpdateData, userData, raftNode))
-  // ),
-  // removeNote: (signature, userData, raftNode) => (
-  //   dispatch(actions.removeNote(signature, userData, raftNode))
-  // )
+  editNote: (signature, noteUpdateData, userData, raftNode) => (
+    dispatch(actions.editNote(signature, noteUpdateData, userData, raftNode))
+  ),
+  removeNote: (signature, userData, raftNode) => (
+    dispatch(actions.removeNote(signature, userData, raftNode))
+  )
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GhostNote);
