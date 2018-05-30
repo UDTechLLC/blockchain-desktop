@@ -248,8 +248,8 @@ export const editNote = (signature, noteUpdateData, userData, raftNode) => dispa
 };
 
 //  remove note
-const removeNoteStart = (id, userData, raftNode) => {
-  ipcRenderer.send('note:remove', { id, userData, raftNode });
+const removeNoteStart = (signature, userData, raftNode) => {
+  ipcRenderer.send('note:remove', { signature, userData, raftNode });
   return { type: actionTypes.REMOVE_NOTE_START };
 };
 

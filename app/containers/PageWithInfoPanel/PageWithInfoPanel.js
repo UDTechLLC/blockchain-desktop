@@ -74,6 +74,8 @@ class PageWithInfoPanel extends Component {
             handleRemoveFile={() => this.props.handleRemoveFile()}
             showRemoveButton={this.props.showRemoveButton}
             toggleShowRemoveButton={() => this.props.toggleShowRemoveButton()}
+            handleEditNote={() => this.props.handleEditNote()}
+            handleRemoveNote={() => this.props.handleRemoveNote()}
           />
         </div>
       </div>
@@ -91,7 +93,9 @@ PageWithInfoPanel.propTypes = {
   handleDownloadFile: PropTypes.func,
   handleRemoveFile: PropTypes.func,
   showRemoveButton: PropTypes.bool,
-  toggleShowRemoveButton: PropTypes.func
+  toggleShowRemoveButton: PropTypes.func,
+  handleEditNote: PropTypes.func,
+  handleRemoveNote: PropTypes.func
 };
 
 PageWithInfoPanel.defaultProps = {
@@ -103,7 +107,9 @@ PageWithInfoPanel.defaultProps = {
   handleDownloadFile: null,
   handleRemoveFile: null,
   showRemoveButton: false,
-  toggleShowRemoveButton: null
+  toggleShowRemoveButton: null,
+  handleEditNote: null,
+  handleRemoveNote: null
 };
 
 export default PageWithInfoPanel;

@@ -15,7 +15,8 @@ const styles = { ...commonCss, ...css };
 
 class GhostNote extends Component {
   state = {
-    activeNote: {}
+    activeNote: {},
+    showRemoveButton: false
   };
   componentWillMount() {
     const firstKey = Object.keys(this.props.notes)[0];
@@ -23,7 +24,12 @@ class GhostNote extends Component {
       activeNote: this.props.notes[firstKey]
     });
   }
-  handleNoteCheck = signature => this.setState({ activeNote: this.props.notes[signature] });
+  handleNoteCheck = signature => {
+    this.setState({
+      activeNote: this.props.notes[signature],
+      showRemoveButton: false
+    });
+  };
   handleCreateNote = () => this.props.createNote(this.props.userData, this.props.raftNode);
   handleNoteTextChange = text => {
     let name = 'Add Title';
@@ -42,8 +48,8 @@ class GhostNote extends Component {
   };
   handleEditNote = () => {
     const noteUpdateData = {
-      ...this.state.activeNote.name,
-      ...this.state.activeNote.text
+      name: this.state.activeNote.name,
+      text: this.state.activeNote.text
     };
     this.props.editNote(
       this.state.activeNote.id,
@@ -51,9 +57,16 @@ class GhostNote extends Component {
       this.props.userData,
       this.props.raftNode
     );
+    this.setState({ showRemoveButton: false });
   };
   handleRemoveNote = () => {
-    //  TODO: Remove Note function
+    this.props.removeNote(this.state.activeNote.id, this.props.userData, this.props.raftNode);
+    this.setState({ activeNote: {}, showRemoveButton: false });
+  };
+  toggleShowRemoveButton = () => {
+    this.setState({
+      showRemoveButton: !this.state.showRemoveButton
+    });
   };
   render() {
     return (
@@ -62,6 +75,11 @@ class GhostNote extends Component {
           'SecurityLayer',
           'NoteManipulation'
         ]}
+        handleEditNote={() => this.handleEditNote()}
+        handleRemoveNote={() => this.handleRemoveNote()}
+        disableManipulationButtons={!Object.keys(this.state.activeNote)}
+        showRemoveButton={this.state.showRemoveButton}
+        toggleShowRemoveButton={() => this.toggleShowRemoveButton()}
       >
         <div
           className={[
@@ -95,7 +113,7 @@ GhostNote.propTypes = {
   raftNode: PropTypes.string.isRequired,
   createNote: PropTypes.func.isRequired,
   editNote: PropTypes.func.isRequired,
-  deleteNote: PropTypes.func.isRequired
+  removeNote: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

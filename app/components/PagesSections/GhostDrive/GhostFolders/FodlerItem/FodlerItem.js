@@ -95,7 +95,6 @@ class GhostFolders extends Component {
               className={[
                 styles.flex1,
                 styles.w100,
-                styles.flexAllCenter,
                 styles.FolderNameWrapper
               ].join(' ')}
             >

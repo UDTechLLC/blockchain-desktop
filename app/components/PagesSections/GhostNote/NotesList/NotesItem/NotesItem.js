@@ -34,7 +34,6 @@ const notesItem = props => (
       <div
         className={[
           styles.flex1,
-          styles.flexAllCenter,
           styles.w100
         ].join(' ')}
       >

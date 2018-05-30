@@ -137,6 +137,7 @@ const notesListeners = mainWindow => {
     userData,
     raftNode
   }) => {
+    console.log(JSON.stringify(noteUpdateData));
     //  key in raft
     const notesKey = `${userData.cpk}_nts`;
     //  get actual user notes

@@ -38,7 +38,8 @@ class TextThatOnDCChanged extends Component {
               <div
                 className={[
                   styles.wh100,
-                  styles.flexAllCenter
+                  styles.flexAllCenter,
+                  styles.TextWrapper
                 ].join(' ')}
               >
                 {this.props.value}
