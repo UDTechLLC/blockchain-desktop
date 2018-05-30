@@ -9,6 +9,23 @@ import commonCss from '../../assets/css/common.css';
 const styles = { ...commonCss, ...css };
 
 class Settings extends Component {
+  state = {
+    settings: {}
+  };
+  componentWillMount() {
+    this.setState({ settings: this.props.settings });
+  }
+  toggleSetting = (groupKey, key) => {
+    this.setState({
+      settings: {
+        ...this.state.settings,
+        [groupKey]: {
+          ...this.state.settings[groupKey],
+          [key]: !this.state.settings[groupKey][key]
+        }
+      }
+    });
+  };
   render() {
     return (
       <div
@@ -19,7 +36,7 @@ class Settings extends Component {
         ].join(' ')}
       >
         {
-          Object.keys(this.props.settings).map((settingsKey, i) => (
+          Object.keys(this.state.settings).map((settingsKey, i) => (
             <div
               key={i}
               className={[
@@ -39,7 +56,7 @@ class Settings extends Component {
                 ].join(' ')}
               >
                 {
-                  Object.keys(this.props.settings[settingsKey]).map((settingKey, j) => (
+                  Object.keys(this.state.settings[settingsKey]).map((settingKey, j) => (
                     <button
                       key={j}
                       type="button"
@@ -47,7 +64,7 @@ class Settings extends Component {
                         styles.transparentButton,
                         styles.flexBetweenCenter
                       ].join(' ')}
-                      disabled
+                      onClick={() => this.toggleSetting(settingsKey, settingKey)}
                     >
                       <div
                         className={[
@@ -67,7 +84,7 @@ class Settings extends Component {
                           styles.alignEnd
                         ].join(' ')}
                       >
-                        {this.props.settings[settingsKey][settingKey] ? 'on' : 'off'}
+                        {this.state.settings[settingsKey][settingKey] ? 'on' : 'off'}
                       </div>
                     </button>
                   ))
