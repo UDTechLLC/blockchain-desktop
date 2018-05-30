@@ -22,7 +22,8 @@ class GhostDrive extends Component {
     checkedFolder: ROOT_HASH,
     nameThatMayChange: 'root',
     checkedFile: '',
-    showRemoveButton: false
+    showRemoveButton: false,
+    timepickerDate: new Date()
   };
   componentWillMount() {
     //  get all raft data on auth
@@ -144,6 +145,10 @@ class GhostDrive extends Component {
     );
     return this.setState({ showRemoveButton: false });
   };
+  //  set timepicker date
+  handleTimepickerChange = timepickerDate => this.setState({ timepickerDate });
+  //  set file timebomb
+  handleSetTimebomb = () => console.log('timebomb');
   render() {
     if (!this.props.downloadedFile.downloaded) {
       this.handleSaveDownloadedFile();
@@ -151,10 +156,13 @@ class GhostDrive extends Component {
     return (
       <PageWithInfoPanel
         disableManipulationButtons={!this.state.checkedFile}
-        handleDownloadFile={() => this.handleDownloadFile()}
-        handleRemoveFile={() => this.handleRemoveFile()}
         showRemoveButton={this.state.showRemoveButton}
         toggleShowRemoveButton={() => this.toggleShowRemoveButton()}
+        onTopManipulationButtonClick={() => this.handleDownloadFile()}
+        onBottomManipulationButtonClick={() => this.handleRemoveFile()}
+        timepickerDate={this.state.timepickerDate}
+        onTimepickerChange={date => this.handleTimepickerChange(date)}
+        onTimebombSet={() => this.handleSetTimebomb()}
       >
         <div
           className={[

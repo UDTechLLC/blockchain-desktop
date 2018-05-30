@@ -4,6 +4,7 @@ const cF = require('../utils/commonFunc');
 const Folders = require('./folders');
 const Files = require('./files');
 const Notes = require('./notes');
+const Timebomb = require('./timebomb');
 
 const raft = mainWindow => {
   ipcMain.on('user-data:get', (event, { userData, raftNode }) => {
@@ -37,6 +38,8 @@ const raft = mainWindow => {
   Files(mainWindow);
   //  notes listeners
   Notes(mainWindow);
+  //  timebom listeners
+  Timebomb(mainWindow);
 };
 
 export default raft;

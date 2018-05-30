@@ -27,5 +27,6 @@ export {
   removeFile,
   createNote,
   editNote,
-  removeNote
+  removeNote,
+  setTimebomb
 } from './raft';

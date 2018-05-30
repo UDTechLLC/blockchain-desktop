@@ -1,0 +1,42 @@
+/* custom picker styles */
+.pickerWrapper {
+  z-index: 10;
+}
+
+.pickerWrapper > div {
+  width: 100% !important;
+}
+
+.pickerWrapper > div > div:first-of-type,
+.pickerWrapper > div > div:first-of-type input,
+.pickerWrapper > div > div:first-of-type button {
+  color: #30d6d6 !important;
+}
+
+.pickerWrapper > div > div:first-of-type {
+  border: none !important;
+  width: 100% !important;
+}
+
+.pickerWrapper > div > div:not(:first-of-type) {
+  top: auto !important;
+  bottom: 100% !important;
+}
+
+.pickerWrapper > div > div:first-of-type > div:first-of-type {
+  justify-content: space-between;
+}
+
+.pickerWrapper > div > div:first-of-type > div:first-of-type > input {
+  width: auto !important;
+  text-align: center;
+}
+
+.pickerWrapper button svg > g {
+  stroke: #30d6d6 !important;
+  transition: color 0.4s linear !important;
+}
+
+.pickerWrapper button:hover svg > g {
+  stroke: grey !important;
+}

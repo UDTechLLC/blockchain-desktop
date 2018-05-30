@@ -70,12 +70,14 @@ class PageWithInfoPanel extends Component {
             handleTogglePanel={() => this.handleTogglePanel()}
             hide={this.state.hide}
             disableManipulationButtons={this.props.disableManipulationButtons}
-            handleDownloadFile={() => this.props.handleDownloadFile()}
-            handleRemoveFile={() => this.props.handleRemoveFile()}
             showRemoveButton={this.props.showRemoveButton}
             toggleShowRemoveButton={() => this.props.toggleShowRemoveButton()}
-            handleEditNote={() => this.props.handleEditNote()}
-            handleRemoveNote={() => this.props.handleRemoveNote()}
+            onTopManipulationButtonClick={() => this.props.onTopManipulationButtonClick()}
+            onBottomManipulationButtonClick={() => this.props.onBottomManipulationButtonClick()}
+            manipulationFirstButtonText={this.props.manipulationFirstButtonText}
+            timepickerDate={this.props.timepickerDate}
+            onTimepickerChange={date => this.props.onTimepickerChange(date)}
+            onTimebombSet={() => this.props.onTimebombSet()}
           />
         </div>
       </div>
@@ -89,13 +91,21 @@ PageWithInfoPanel.propTypes = {
     PropTypes.node
   ]).isRequired,
   columns: PropTypes.arrayOf(PropTypes.string),
+  //  manipulation section
+  //  buttons
   disableManipulationButtons: PropTypes.bool,
-  handleDownloadFile: PropTypes.func,
-  handleRemoveFile: PropTypes.func,
   showRemoveButton: PropTypes.bool,
   toggleShowRemoveButton: PropTypes.func,
-  handleEditNote: PropTypes.func,
-  handleRemoveNote: PropTypes.func
+  onTopManipulationButtonClick: PropTypes.func,
+  onBottomManipulationButtonClick: PropTypes.func,
+  manipulationFirstButtonText: PropTypes.string,
+  //  timebomb
+  timepickerDate: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  onTimepickerChange: PropTypes.func,
+  onTimebombSet: PropTypes.func
 };
 
 PageWithInfoPanel.defaultProps = {
@@ -104,12 +114,14 @@ PageWithInfoPanel.defaultProps = {
     'Manipulation'
   ],
   disableManipulationButtons: false,
-  handleDownloadFile: null,
-  handleRemoveFile: null,
   showRemoveButton: false,
   toggleShowRemoveButton: null,
-  handleEditNote: null,
-  handleRemoveNote: null
+  onTopManipulationButtonClick: null,
+  onBottomManipulationButtonClick: null,
+  manipulationFirstButtonText: 'download',
+  timepickerDate: new Date(),
+  onTimepickerChange: null,
+  onTimebombSet: null
 };
 
 export default PageWithInfoPanel;

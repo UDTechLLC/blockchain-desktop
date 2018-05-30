@@ -3,14 +3,11 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 @import "~font-awesome/css/font-awesome.css";
+@import "~react-datetime-picker/dist/DateTimePicker.css";
+@import "~react-clock/dist/Clock.css";
 @import url('https://fonts.googleapis.com/css?family=Aldrich');
 
 /*
-@font-face {
-  font-family: Aldrich;
-  src: url("assets/fonts/Aldrich/Aldrich-Regular.ttf") format("truetype");
-}
-
 @font-face {
   font-family: "Digital Counter 7";
   src: url("assets/fonts/digital_counter_7/digital_counter_7.ttf") format("truetype");
@@ -23,10 +20,6 @@
   font-style: italic;
 }
 */
-
-/* @import url('https://fonts.googleapis.com/css?family=Montserrat'); */
-
-/* @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro'); */
 
 html {
   font-size: 10px;

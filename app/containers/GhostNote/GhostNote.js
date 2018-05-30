@@ -16,7 +16,8 @@ const styles = { ...commonCss, ...css };
 class GhostNote extends Component {
   state = {
     activeNote: {},
-    showRemoveButton: false
+    showRemoveButton: false,
+    timepickerDate: new Date()
   };
   componentWillMount() {
     if (this.props.notes && Object.keys(this.props.notes).length) {
@@ -70,18 +71,22 @@ class GhostNote extends Component {
       showRemoveButton: !this.state.showRemoveButton
     });
   };
+  //  set timepicker date
+  handleTimepickerChange = timepickerDate => this.setState({ timepickerDate });
+  //  set file timebomb
+  handleSetTimebomb = () => console.log('timebomb');
   render() {
     return (
       <PageWithInfoPanel
-        columns={[
-          'SecurityLayer',
-          'NoteManipulation'
-        ]}
-        handleEditNote={() => this.handleEditNote()}
-        handleRemoveNote={() => this.handleRemoveNote()}
         disableManipulationButtons={!Object.keys(this.state.activeNote)}
         showRemoveButton={this.state.showRemoveButton}
         toggleShowRemoveButton={() => this.toggleShowRemoveButton()}
+        onTopManipulationButtonClick={() => this.handleEditNote()}
+        onBottomManipulationButtonClick={() => this.handleRemoveNote()}
+        manipulationFirstButtonText="save"
+        timepickerDate={this.state.timepickerDate}
+        onTimepickerChange={date => this.handleTimepickerChange(date)}
+        onTimebombSet={() => this.handleSetTimebomb()}
       >
         <div
           className={[

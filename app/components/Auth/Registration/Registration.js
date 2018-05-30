@@ -8,7 +8,7 @@ const registration = props => (
   <div className={classes.Registration}>
     <div className={classes.Content}>
       <h1>GHOST DRIVE ACCESS POINT</h1>
-      <h2>WIZE AUTHENTICATOR</h2>
+      <h2>Powered by WizeBit Blockchain</h2>
       <div className={classes.Inputs}>
         <input
           type="password"
@@ -33,7 +33,7 @@ const registration = props => (
             <p>private key</p>
           </div>
           <div>
-            <h2>DOWNLOAD YOUR PRIVTE KEY</h2>
+            <h2>DOWNLOAD YOUR PRIVATE KEY</h2>
           </div>
           <div>
             <p>only access to administrator</p>

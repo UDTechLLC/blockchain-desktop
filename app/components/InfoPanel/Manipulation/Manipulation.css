@@ -15,7 +15,6 @@
   align-items: flex-end;
 }
 
-/* */
 .Subtitle > div:first-of-type {
   color: #2f96ba;
   font-size: 8px;
@@ -41,6 +40,15 @@
 
 .Subtitle {
   margin-bottom: 7px;
+}
+
+.TimpickerWrapper {
+  width: 50%;
+}
+
+.TimpickerWrapper.Disabled {
+  pointer-events: none;
+  opacity: 0.3;
 }
 
 @media (max-width: 1600px) {

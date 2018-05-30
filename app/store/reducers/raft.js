@@ -168,6 +168,34 @@ const removeNoteSuccess = (state, action) => (updateObject(state, {
   loading: false
 }));
 
+const setTimebombSuccess = (state, action) => {
+  let result;
+  switch (action.objType) {
+    case 'note':
+      result = (
+        updateObject(state, {
+          notes: {
+            ...state.notes,
+            [action.signature]: action.timestamp
+          },
+          loading: false
+        })
+      );
+      break;
+    default:
+      result = (
+        updateObject(state, {
+          files: {
+            ...state.files,
+            [action.signature]: action.timestamp
+          },
+          loading: false
+        })
+      );
+      break;
+  }
+  return result;
+};
 
 const reducer = (state = initialState, action) => {
   if (action) {
@@ -217,6 +245,10 @@ const reducer = (state = initialState, action) => {
       case actionTypes.REMOVE_NOTE_START: return actionStart(state, action);
       case actionTypes.REMOVE_NOTE_SUCCESS: return removeNoteSuccess(state, action);
       case actionTypes.REMOVE_NOTE_FAIL: return actionFailed(state, action);
+      //  timebomb - set
+      case actionTypes.SET_TIMEBOMB_START: return actionStart(state, action);
+      case actionTypes.SET_TIMEBOMB_SUCCESS: return setTimebombSuccess(state, action);
+      case actionTypes.SET_TIMEBOMB_FAIL: return actionFailed(state, action);
       default: return state;
     }
   }

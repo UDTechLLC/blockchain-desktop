@@ -29,7 +29,6 @@
   left: 0;
   height: 200px;
   transition: height 0.4s linear;
-  overflow: hidden;
 }
 
 .InfoPanel.HidenPanel {

@@ -269,3 +269,34 @@ export const removeNote = (signature, userData, raftNode) => dispatch => {
   ));
   ipcRenderer.once('note:remove-failed', () => dispatch(removeNoteFail()));
 };
+
+//  ghost time (timebomb)
+const setTimebombStart = (objType, signature, date, userData, raftNode) => {
+  ipcRenderer.send('timebomb:set', {
+    objType,
+    signature,
+    date,
+    userData,
+    raftNode
+  });
+  return ({ type: actionTypes.SET_TIMEBOMB_START });
+};
+
+const setTimebombSuccess = (objType, signature, timestamp) => ({
+  type: actionTypes.SET_TIMEBOMB_SUCCESS,
+  objType,
+  signature,
+  timestamp
+});
+
+const setTimebombFail = () => ({
+  type: actionTypes.SET_TIMEBOMB_FAIL
+});
+
+export const setTimebomb = (objType, signature, timestamp, userData, raftNode) => dispatch => {
+  dispatch(setTimebombStart(objType, signature, timestamp, userData, raftNode));
+  ipcRenderer.once('timebomb:set-success', () => (
+    dispatch(setTimebombSuccess(objType, signature, timestamp))
+  ));
+  ipcRenderer.once('timebomb:set-failed', () => dispatch(setTimebombFail()));
+};

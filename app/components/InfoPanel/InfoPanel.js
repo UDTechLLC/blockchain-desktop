@@ -13,7 +13,7 @@ import NewBlock from './NewBlock/NewBlock';
 import CreateFolder from './CreateFolder/CreateFolder';
 import NodesMenu from './NodesMenu/NodesMenu';
 import Manipulation from './Manipulation/Manipulation';
-import NoteManipulation from './NoteManipulation/NoteManipulation';
+// import NoteManipulation from './NoteManipulation/NoteManipulation';
 
 import css from './InfoPanel.css';
 import commonCss from '../../assets/css/common.css';
@@ -40,25 +40,29 @@ const infoPanel = props => {
           <Manipulation
             key={Math.random()}
             disableManipulationButtons={props.disableManipulationButtons}
-            handleDownloadFile={() => props.handleDownloadFile()}
-            handleRemoveFile={() => props.handleRemoveFile()}
             showRemoveButton={props.showRemoveButton}
             toggleShowRemoveButton={() => props.toggleShowRemoveButton()}
+            onTopManipulationButtonClick={() => props.onTopManipulationButtonClick()}
+            onBottomManipulationButtonClick={() => props.onBottomManipulationButtonClick()}
+            manipulationFirstButtonText={props.manipulationFirstButtonText}
+            timepickerDate={props.timepickerDate}
+            onTimepickerChange={date => props.onTimepickerChange(date)}
+            onTimebombSet={() => props.onTimebombSet()}
           />
         );
         break;
-      case 'NoteManipulation':
-        block = (
-          <NoteManipulation
-            key={Math.random()}
-            disableManipulationButtons={props.disableManipulationButtons}
-            handleEditNote={() => props.handleEditNote()}
-            handleRemoveNote={() => props.handleRemoveNote()}
-            showRemoveButton={props.showRemoveButton}
-            toggleShowRemoveButton={() => props.toggleShowRemoveButton()}
-          />
-        );
-        break;
+      // case 'NoteManipulation':
+      //   block = (
+      //     <NoteManipulation
+      //       key={Math.random()}
+      //       disableManipulationButtons={props.disableManipulationButtons}
+      //       handleEditNote={() => props.handleEditNote()}
+      //       handleRemoveNote={() => props.handleRemoveNote()}
+      //       showRemoveButton={props.showRemoveButton}
+      //       toggleShowRemoveButton={() => props.toggleShowRemoveButton()}
+      //     />
+      //   );
+      //   break;
       default:
         block = (
           <div key={Math.random()}>
@@ -98,13 +102,21 @@ infoPanel.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.string),
   handleTogglePanel: PropTypes.func.isRequired,
   hide: PropTypes.bool,
+  //  manipulation section
+  //  buttons
   disableManipulationButtons: PropTypes.bool,
-  handleDownloadFile: PropTypes.func,
-  handleRemoveFile: PropTypes.func,
   showRemoveButton: PropTypes.bool,
   toggleShowRemoveButton: PropTypes.func,
-  handleEditNote: PropTypes.func,
-  handleRemoveNote: PropTypes.func,
+  onTopManipulationButtonClick: PropTypes.func,
+  onBottomManipulationButtonClick: PropTypes.func,
+  manipulationFirstButtonText: PropTypes.string,
+  //  timebomb
+  timepickerDate: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  onTimepickerChange: PropTypes.func,
+  onTimebombSet: PropTypes.func
 };
 
 infoPanel.defaultProps = {
@@ -114,12 +126,14 @@ infoPanel.defaultProps = {
     'Manipulation'
   ],
   disableManipulationButtons: false,
-  handleDownloadFile: null,
-  handleRemoveFile: null,
   showRemoveButton: false,
   toggleShowRemoveButton: null,
-  handleEditNote: null,
-  handleRemoveNote: null
+  onTopManipulationButtonClick: null,
+  onBottomManipulationButtonClick: null,
+  manipulationFirstButtonText: 'download',
+  timepickerDate: new Date(),
+  onTimepickerChange: null,
+  onTimebombSet: null
 };
 
 export default infoPanel;

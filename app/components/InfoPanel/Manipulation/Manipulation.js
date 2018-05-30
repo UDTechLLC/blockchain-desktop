@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import DateTimePicker from 'react-datetime-picker';
 
 import Button from '../../UI/Button/Button';
 
 import css from './Manipulation.css';
+import pickerCss from '../../../assets/css/customTimepicker.css';
 import commonCss from '../../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
-const styles = { ...commonCss, ...css };
+const styles = { ...commonCss, ...pickerCss, ...css };
 
-const manipulation = props => (
+const Manipulation = props => (
   <div
     className={[
       styles.wh100,
@@ -57,10 +59,10 @@ const manipulation = props => (
           ].join(' ')}
         >
           <Button
-            onClick={() => props.handleDownloadFile()}
+            onClick={() => props.onTopManipulationButtonClick()}
             disabled={props.disableManipulationButtons}
           >
-            download
+            {props.firstButtonText}
           </Button>
         </div>
       </div>
@@ -73,8 +75,24 @@ const manipulation = props => (
         styles.Bottom
       ].join(' ')}
     >
-      <div>
-        datepicker
+      <div
+        className={[
+          styles.flexBetweenCenter,
+          styles.pickerWrapper,
+          styles.TimpickerWrapper,
+          props.disableManipulationButtons ? styles.Disabled : null
+        ].join(' ')}
+      >
+        <DateTimePicker
+          onChange={() => props.onTimepickerChange()}
+          value={props.timepickerDate}
+        />
+        <button
+          type="button"
+          onClick={() => props.onTimebombSet()}
+        >
+          set
+        </button>
       </div>
       <div
         className={[
@@ -84,6 +102,9 @@ const manipulation = props => (
           styles.justifyCenter,
           !props.showRemoveButton ? styles.alignEnd : null
         ].join(' ')}
+        style={{
+          zIndex: !props.showRemoveButton ? 1 : 11
+        }}
       >
         <div
           className={[
@@ -106,7 +127,7 @@ const manipulation = props => (
           >
             <Button
               type="button"
-              onClick={() => props.handleRemoveFile()}
+              onClick={() => props.onBottomManipulationButtonClick()}
               disabled={props.disableManipulationButtons}
               btnStyles={props.showRemoveButton ? ['Transparent', 'InsideFlex'] : null}
             >
@@ -119,12 +140,23 @@ const manipulation = props => (
   </div>
 );
 
-manipulation.propTypes = {
+Manipulation.propTypes = {
   disableManipulationButtons: PropTypes.bool.isRequired,
-  handleDownloadFile: PropTypes.func.isRequired,
-  handleRemoveFile: PropTypes.func.isRequired,
   showRemoveButton: PropTypes.bool.isRequired,
-  toggleShowRemoveButton: PropTypes.func.isRequired
+  toggleShowRemoveButton: PropTypes.func.isRequired,
+  timepickerDate: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]).isRequired,
+  onTimepickerChange: PropTypes.func.isRequired,
+  onTimebombSet: PropTypes.func.isRequired,
+  onTopManipulationButtonClick: PropTypes.func.isRequired,
+  onBottomManipulationButtonClick: PropTypes.func.isRequired,
+  firstButtonText: PropTypes.string
 };
 
-export default manipulation;
+Manipulation.defaultProps = {
+  firstButtonText: 'download'
+};
+
+export default Manipulation;
