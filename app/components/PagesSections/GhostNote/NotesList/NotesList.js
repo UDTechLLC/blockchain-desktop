@@ -22,19 +22,21 @@ const notesList = props => (
     >
       <AddButton onClick={() => props.onCreateNote()} />
       {
-        Object.keys(props.notes).map((key, i) => (
-          <NotesItem
-            key={i}
-            note={props.notes[key]}
-            onNoteCheck={signature => props.onNoteCheck(signature)}
-            isActive={props.notes[key].id === props.activeNote.id}
-            changedTitle={
-              props.notes[key].id === props.activeNote.id
-                ? props.activeNote.name
-                : null
-            }
-          />
-        ))
+        props.notes && Object.keys(props.notes).length
+          ? Object.keys(props.notes).map((key, i) => (
+            <NotesItem
+              key={i}
+              note={props.notes[key]}
+              onNoteCheck={signature => props.onNoteCheck(signature)}
+              isActive={props.notes[key].id === props.activeNote.id}
+              changedTitle={
+                props.notes[key].id === props.activeNote.id
+                  ? props.activeNote.name
+                  : null
+              }
+            />
+            ))
+          : null
       }
     </div>
   </WithCustomScrollbar>

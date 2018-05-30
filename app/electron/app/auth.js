@@ -5,7 +5,7 @@ const cF = require('../utils/commonFunc');
 const wallet = require('../utils/wallet');
 
 
-const auth = (mainWindow) => {
+const auth = mainWindow => {
   //  on credentials generate listener
   ipcMain.on('registration:start', (event, password) => {
     //  create user data with wallet service

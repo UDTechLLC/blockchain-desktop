@@ -13,3 +13,8 @@
   resize: none;
   outline: none;
 }
+
+.NoteTextWrapper > textarea:disabled {
+  background-color: rgba(22, 94, 106, 0.1);
+  cursor: not-allowed;
+}

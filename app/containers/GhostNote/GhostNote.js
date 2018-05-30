@@ -19,10 +19,12 @@ class GhostNote extends Component {
     showRemoveButton: false
   };
   componentWillMount() {
-    const firstKey = Object.keys(this.props.notes)[0];
-    this.setState({
-      activeNote: this.props.notes[firstKey]
-    });
+    if (this.props.notes && Object.keys(this.props.notes).length) {
+      const firstKey = Object.keys(this.props.notes)[0];
+      this.setState({
+        activeNote: this.props.notes[firstKey]
+      });
+    }
   }
   handleNoteCheck = signature => {
     this.setState({
@@ -98,6 +100,7 @@ class GhostNote extends Component {
           <div className={styles.flex3}>
             <NoteText
               text={this.state.activeNote.text}
+              disabled={!this.state.activeNote.id}
               onNoteTextChange={(val) => this.handleNoteTextChange(val)}
             />
           </div>
@@ -108,12 +111,16 @@ class GhostNote extends Component {
 }
 
 GhostNote.propTypes = {
-  notes: PropTypes.shape().isRequired,
+  notes: PropTypes.shape(),
   userData: PropTypes.shape().isRequired,
   raftNode: PropTypes.string.isRequired,
   createNote: PropTypes.func.isRequired,
   editNote: PropTypes.func.isRequired,
   removeNote: PropTypes.func.isRequired
+};
+
+GhostNote.defaultProps = {
+  notes: {}
 };
 
 const mapStateToProps = state => ({

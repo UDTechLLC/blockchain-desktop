@@ -19,6 +19,7 @@ const noteText = props => (
         styles.wh100
       ].join(' ')}
       value={props.text}
+      disabled={props.disabled}
       onChange={e => props.onNoteTextChange(e.target.value)}
     />
   </div>
@@ -26,11 +27,13 @@ const noteText = props => (
 
 noteText.propTypes = {
   text: PropTypes.string,
-  onNoteTextChange: PropTypes.func.isRequired
+  onNoteTextChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool
 };
 
 noteText.defaultProps = {
-  text: ''
+  text: '',
+  disabled: false
 };
 
 export default noteText;
