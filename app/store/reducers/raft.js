@@ -176,7 +176,10 @@ const setTimebombSuccess = (state, action) => {
         updateObject(state, {
           notes: {
             ...state.notes,
-            [action.signature]: action.timestamp
+            [action.signature]: {
+              ...state.notes[action.signature],
+              timebomb: action.timestamp
+            }
           },
           loading: false
         })
@@ -187,7 +190,10 @@ const setTimebombSuccess = (state, action) => {
         updateObject(state, {
           files: {
             ...state.files,
-            [action.signature]: action.timestamp
+            [action.signature]: {
+              ...state.files[action.signature],
+              timebomb: action.timestamp
+            }
           },
           loading: false
         })

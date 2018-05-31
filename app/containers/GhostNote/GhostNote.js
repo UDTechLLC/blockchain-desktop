@@ -74,7 +74,17 @@ class GhostNote extends Component {
   //  set timepicker date
   handleTimepickerChange = timepickerDate => this.setState({ timepickerDate });
   //  set file timebomb
-  handleSetTimebomb = () => console.log('timebomb');
+  handleSetTimebomb = () => {
+    const timestamp = +this.state.timepickerDate.getTime() / 1000;
+    this.props.setTimebomb(
+      'note',
+      this.state.activeNote.id,
+      timestamp,
+      this.props.userData,
+      this.props.raftNode
+    );
+    this.setState({ activeNote: {} });
+  };
   render() {
     return (
       <PageWithInfoPanel
@@ -121,7 +131,8 @@ GhostNote.propTypes = {
   raftNode: PropTypes.string.isRequired,
   createNote: PropTypes.func.isRequired,
   editNote: PropTypes.func.isRequired,
-  removeNote: PropTypes.func.isRequired
+  removeNote: PropTypes.func.isRequired,
+  setTimebomb: PropTypes.func.isRequired
 };
 
 GhostNote.defaultProps = {
@@ -141,6 +152,9 @@ const mapDispatchToProps = dispatch => ({
   ),
   removeNote: (signature, userData, raftNode) => (
     dispatch(actions.removeNote(signature, userData, raftNode))
+  ),
+  setTimebomb: (objType, signature, timestamp, userData, raftNode) => (
+    dispatch(actions.setTimebomb(objType, signature, timestamp, userData, raftNode))
   )
 });
 

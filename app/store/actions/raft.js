@@ -271,11 +271,11 @@ export const removeNote = (signature, userData, raftNode) => dispatch => {
 };
 
 //  ghost time (timebomb)
-const setTimebombStart = (objType, signature, date, userData, raftNode) => {
+const setTimebombStart = (objType, signature, timestamp, userData, raftNode) => {
   ipcRenderer.send('timebomb:set', {
     objType,
     signature,
-    date,
+    timestamp,
     userData,
     raftNode
   });

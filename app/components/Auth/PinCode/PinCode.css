@@ -248,6 +248,7 @@
   z-index: 1;
 }
 
+/*
 .ButtonInnerContainer::before {
   content: '';
   display: block;
@@ -259,6 +260,7 @@
   background-color: #3596b7;
   transform: rotate(45deg);
 }
+*/
 
 .FormLine button > div:last-of-type > div:first-of-type {
   top: 0;
@@ -280,6 +282,7 @@
   left: 0;
 }
 
+/*
 .Button:nth-of-type(3n) .FocusBlock::before,
 .Button:nth-of-type(3n) .FocusBlock::after {
   content: "";
@@ -329,6 +332,7 @@
   width: 4px;
   height: 100%;
 }
+*/
 
 .FormLine {
   display: flex;

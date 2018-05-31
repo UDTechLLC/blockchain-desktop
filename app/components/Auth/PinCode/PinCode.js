@@ -112,7 +112,16 @@ class PinCode extends Component {
     clearInterval();
   }
   shuffle = array => {
-    const updatedArray = [...array];
+    const zero = {
+      view: {
+        subtitle: '',
+        title: '0',
+        letters: []
+      },
+      value: 0
+    };
+    const updatedArray = array;
+    updatedArray.pop();
     let currentIndex = array.length;
     let temporaryValue;
     let randomIndex;
@@ -126,6 +135,7 @@ class PinCode extends Component {
       updatedArray[currentIndex] = updatedArray[randomIndex];
       updatedArray[randomIndex] = temporaryValue;
     }
+    updatedArray.push(zero);
     return updatedArray;
   };
   handleButtonClick = val => {

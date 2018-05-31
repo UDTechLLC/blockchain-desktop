@@ -148,7 +148,17 @@ class GhostDrive extends Component {
   //  set timepicker date
   handleTimepickerChange = timepickerDate => this.setState({ timepickerDate });
   //  set file timebomb
-  handleSetTimebomb = () => console.log('timebomb');
+  handleSetTimebomb = () => {
+    const timestamp = +this.state.timepickerDate.getTime() / 1000;
+    this.props.setTimebomb(
+      'file',
+      this.state.checkedFile,
+      timestamp,
+      this.props.userData,
+      this.props.raftNode
+    );
+    this.setState({ checkedFile: '' });
+  };
   render() {
     if (!this.props.downloadedFile.downloaded) {
       this.handleSaveDownloadedFile();
@@ -213,7 +223,8 @@ GhostDrive.propTypes = {
   downloadFile: PropTypes.func.isRequired,
   removeFile: PropTypes.func.isRequired,
   downloadedFile: PropTypes.shape().isRequired,
-  saveDownloadedFile: PropTypes.func.isRequired
+  saveDownloadedFile: PropTypes.func.isRequired,
+  setTimebomb: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -245,6 +256,9 @@ const mapDispatchToProps = dispatch => ({
   saveDownloadedFile: () => dispatch(actionTypes.saveDownloadedFile()),
   removeFile: (signature, userData, raftNode) => (
     dispatch(actionTypes.removeFile(signature, userData, raftNode))
+  ),
+  setTimebomb: (objType, signature, timestamp, userData, raftNode) => (
+    dispatch(actionTypes.setTimebomb(objType, signature, timestamp, userData, raftNode))
   )
 });
 

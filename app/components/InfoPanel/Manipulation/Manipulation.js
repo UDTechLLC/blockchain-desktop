@@ -84,7 +84,7 @@ const Manipulation = props => (
         ].join(' ')}
       >
         <DateTimePicker
-          onChange={() => props.onTimepickerChange()}
+          onChange={props.onTimepickerChange}
           value={props.timepickerDate}
         />
         <button
