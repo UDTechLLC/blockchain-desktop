@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import WithCustomScrollbar from '../../../UI/WithCustomScrollbar/WithCustomScrollbar';
-
 import css from './WalletInfo.css';
 import commonCss from '../../../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
@@ -10,48 +8,47 @@ import commonCss from '../../../../assets/css/common.css';
 const styles = { ...commonCss, ...css };
 
 const walletInfo = props => (
-  <WithCustomScrollbar>
-    <div
-      className={[
-        styles.flex3,
-        styles.flexColumn,
-        styles.justifyCenter,
-        styles.wh100,
-        styles.lightBlueBg,
-        styles.WaletsInfo
-      ].join(' ')}
-    >
-      <p className={styles.flex}>
-        <span className={styles.flex1}>
-          My Wallet Address
-        </span>
-        <span className={styles.flex3}>
-          {props.address}
-        </span>
+  <div
+    className={[
+      styles.flexColumn,
+      styles.justifyCenter,
+      styles.padding15,
+      styles.w100,
+      styles.WaletsInfo
+    ].join(' ')}
+  >
+    <div>
+      <p>
+        My Wallet Address
       </p>
-      <p className={styles.flex}>
-        <span className={styles.flex1}>
-          Public  key
-        </span>
-        <span className={styles.flex3}>
-          {props.cpk}
-        </span>
-      </p>
-      <p className={styles.flex}>
-        <span className={styles.flex1}>
-          Balance
-        </span>
-        <span className={styles.flex3}>
-          { props.balance } GHT
-        </span>
+      <p>
+        {props.address}
       </p>
     </div>
-  </WithCustomScrollbar>
+    {/*
+    <p className={styles.flex}>
+      <span className={styles.flex1}>
+        Public  key
+      </span>
+      <span className={styles.flex3}>
+        {props.cpk}
+      </span>
+    </p>
+    */}
+    <div>
+      <p>
+        Balance
+      </p>
+      <p>
+        { props.balance } GHST
+      </p>
+    </div>
+  </div>
 );
 
 walletInfo.propTypes = {
   address: PropTypes.string.isRequired,
-  cpk: PropTypes.string.isRequired,
+  // cpk: PropTypes.string.isRequired,
   balance: PropTypes.number.isRequired
 };
 

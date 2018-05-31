@@ -6,8 +6,10 @@ import { ipcRenderer } from 'electron';
 
 import * as actions from '../../store/actions';
 
-import CreateTransaction from '../../components/PagesSections/Wallet/CreateTransaction/CreateTransaction';
-import WalletInfo from '../../components/PagesSections/Wallet/WalletInfo/WalletInfo';
+// import CreateTransaction from '../../components/PagesSections/Wallet/CreateTransaction/CreateTransaction';
+// import WalletInfo from '../../components/PagesSections/Wallet/WalletInfo/WalletInfo';
+import PageWithInfoPanel from '../PageWithInfoPanel/PageWithInfoPanel';
+import BlockchainOperations from '../../components/PagesSections/Wallet/BlochchainOperations/BlochchainOperations';
 
 import css from './Wallet.css';
 import commonCss from '../../assets/css/common.css';
@@ -39,7 +41,7 @@ class Wallet extends Component {
     });
   };
   render() {
-    return (
+    {/*
       <div className={[styles.wh100, styles.WalletWrapper].join(' ')}>
         <div className={[styles.wh100, styles.flexBetweenCenter].join(' ')}>
           <div
@@ -71,6 +73,46 @@ class Wallet extends Component {
           </div>
         </div>
       </div>
+      */}
+    return (
+      <PageWithInfoPanel
+        columns={[
+          'SecurityLayer',
+          'SecurityLayer'
+        ]}
+      >
+        <div
+          className={[
+            styles.wh100,
+            styles.flex
+          ].join(' ')}
+        >
+          <div
+            className={[
+              styles.h100,
+              styles.flex1
+            ].join(' ')}
+          >
+            <BlockchainOperations
+              transactionLoading={this.state.transactionLoading}
+              minenow={this.state.minenow}
+              handleOnMineNowCheck={() => this.handleOnMineNowCheck()}
+              handleSubmitTransaction={(to, amount) => this.handleSubmitTransaction(to, amount)}
+              address={this.props.userData.address}
+              // cpk={this.props.userData.cpk}
+              balance={this.props.balance}
+            />
+          </div>
+          <div
+            className={[
+              styles.h100,
+              styles.flex3
+            ].join(' ')}
+          >
+            deposit
+          </div>
+        </div>
+      </PageWithInfoPanel>
     );
   }
 }

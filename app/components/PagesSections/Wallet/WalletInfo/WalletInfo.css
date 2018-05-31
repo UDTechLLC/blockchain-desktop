@@ -1,18 +1,27 @@
-.WaletsInfo {
-  padding: 40px;
-  overflow-x: auto;
+.WaletsInfo div > p {
+  font-size: 1.4rem;
+  color: #2f96ba;
+  margin-bottom: 18px;
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
 }
 
-.WaletsInfo p {
-  margin-bottom: 25px;
-}
-
-.WaletsInfo p > span {
-  font-size: 14px;
-  font-weight: bold;
+.WaletsInfo div > p:not(:nth-of-type(2)) {
   text-transform: uppercase;
 }
 
-.WaletsInfo p > span:nth-of-type(2) {
+.WaletsInfo div > p:nth-of-type(2) {
   color: #30d6d6;
+}
+
+.WaletsInfo div:not(:last-of-type) {
+  margin-bottom: 25px;
+}
+
+@media (max-height: 790px) {
+  .WaletsInfo div:not(:last-of-type),
+  .WaletsInfo div > p {
+    margin-bottom: 15px !important;
+  }
 }

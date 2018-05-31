@@ -72,7 +72,7 @@ class App extends Component {
       </div>
     );
     return (
-      <div style={{ backgroundImage: `url(${bg})` }}>
+      <div style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover' }}>
         {
           this.state.content
             ? (

@@ -10,7 +10,6 @@ const timebomb = mainWindow => {
     userData,
     raftNode
   }) => {
-    console.log(`timestamp ${timestamp}`);
     const key = objType === 'file' ? `${userData.cpk}_fls` : `${userData.cpk}_nts`;
     return axios.get(`${raftNode}/key/${key}`)
       .then(({ data }) => cF.decryptDataFromRaft(data, key, userData.csk))

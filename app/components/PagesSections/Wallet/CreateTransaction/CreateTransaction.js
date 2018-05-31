@@ -95,7 +95,10 @@ class CreateTransaction extends Component {
     }
 
     let form = (
-      <form onSubmit={e => { e.preventDefault(); this.onSubmitForm(); }}>
+      <form
+        className={styles.Form}
+        onSubmit={e => { e.preventDefault(); this.onSubmitForm(); }}
+      >
         {
           formElementsArray.map((formElement, index) => {
             const input = (
@@ -143,7 +146,12 @@ class CreateTransaction extends Component {
           process.env.NODE_ENV !== 'development'
             ? null
             : (
-              <div className={[styles.flexAllCenter, styles.FormGroup].join(' ')}>
+              <div
+                className={[
+                  styles.flexAllCenter,
+                  styles.FormGroup
+                ].join(' ')}
+              >
                 <input
                   id="wallet-minenow"
                   type="checkbox"
@@ -165,9 +173,9 @@ class CreateTransaction extends Component {
 
     return (
       <div className={[styles.wh100, styles.flexColumn].join(' ')}>
-        <div className={styles.Title}>
-          Transaction
-        </div>
+        <h2 className={[styles.orangeHeader, styles.Header].join(' ')}>
+          MY wallet and Transaction
+        </h2>
         <div>
           {form}
         </div>
