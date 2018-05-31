@@ -62,7 +62,7 @@ const Manipulation = props => (
             onClick={() => props.onTopManipulationButtonClick()}
             disabled={props.disableManipulationButtons}
           >
-            {props.firstButtonText}
+            {props.manipulationFirstButtonText}
           </Button>
         </div>
       </div>
@@ -152,11 +152,11 @@ Manipulation.propTypes = {
   onTimebombSet: PropTypes.func.isRequired,
   onTopManipulationButtonClick: PropTypes.func.isRequired,
   onBottomManipulationButtonClick: PropTypes.func.isRequired,
-  firstButtonText: PropTypes.string
+  manipulationFirstButtonText: PropTypes.string
 };
 
 Manipulation.defaultProps = {
-  firstButtonText: 'download'
+  manipulationFirstButtonText: 'download'
 };
 
 export default Manipulation;
