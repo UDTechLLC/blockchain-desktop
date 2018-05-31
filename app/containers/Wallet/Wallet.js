@@ -6,10 +6,9 @@ import { ipcRenderer } from 'electron';
 
 import * as actions from '../../store/actions';
 
-// import CreateTransaction from '../../components/PagesSections/Wallet/CreateTransaction/CreateTransaction';
-// import WalletInfo from '../../components/PagesSections/Wallet/WalletInfo/WalletInfo';
 import PageWithInfoPanel from '../PageWithInfoPanel/PageWithInfoPanel';
 import BlockchainOperations from '../../components/PagesSections/Wallet/BlochchainOperations/BlochchainOperations';
+import DepositWallet from '../../components/PagesSections/DepositWallet/DepositWallet';
 
 import css from './Wallet.css';
 import commonCss from '../../assets/css/common.css';
@@ -20,7 +19,76 @@ const styles = { ...commonCss, ...css };
 class Wallet extends Component {
   state = {
     minenow: true,
-    transactionLoading: false
+    transactionLoading: false,
+    depositPlanSelect: {
+      elementType: 'select',
+      id: 'dp-select',
+      value: '',
+      elementConfig: {
+        type: 'select',
+        options: [
+          {
+            value: 'ghost-gst1',
+            displayValue: 'GHOST GST + 30% BONUS'
+          },
+          {
+            value: 'ghost-gst2',
+            displayValue: 'GHOST GST + 31% BONUS'
+          },
+          {
+            value: 'ghost-gst3',
+            displayValue: 'GHOST GST + 32% BONUS'
+          }
+        ]
+      }
+    },
+    calculator: {
+      data: {
+        elementType: 'text',
+        label: {
+          top: 'DATA',
+          bottom: '1GB - 0.90c'
+        },
+        id: 'calc-data',
+        value: 0,
+        elementConfig: {
+          type: 'text',
+          min: '0',
+          pattern: '[0-9]*',
+          step: '0.0001'
+        }
+      },
+      price: {
+        elementType: 'text',
+        label: {
+          top: 'PRICE',
+          bottom: 'MARKET PRICE - $20'
+        },
+        id: 'calc-price',
+        value: 0,
+        elementConfig: {
+          type: 'text',
+          min: '0',
+          pattern: '[0-9]*',
+          step: '0.0001'
+        }
+      },
+      credit: {
+        elementType: 'text',
+        label: {
+          top: 'CREDIT',
+          bottom: '30% - BONUS'
+        },
+        id: 'calc-credit',
+        value: 0,
+        elementConfig: {
+          type: 'text',
+          min: '0',
+          pattern: '[0-9]*',
+          step: '0.0001'
+        }
+      },
+    }
   };
   handleOnMineNowCheck = () => this.setState({ minenow: !this.state.minenow });
   handleSubmitTransaction = (to, amount) => {
@@ -40,40 +108,24 @@ class Wallet extends Component {
       this.setState({ transactionLoading: false });
     });
   };
+  handleDepositPlanChange = value => this.setState({
+    depositPlanSelect: {
+      ...this.state.depositPlanSelect,
+      value
+    }
+  });
+  handleCalculatorFieldChange = (value, key) => {
+    this.setState({
+      calculator: {
+        ...this.state.calculator,
+        [key]: {
+          ...this.state.calculator[key],
+          value
+        }
+      }
+    });
+  };
   render() {
-    {/*
-      <div className={[styles.wh100, styles.WalletWrapper].join(' ')}>
-        <div className={[styles.wh100, styles.flexBetweenCenter].join(' ')}>
-          <div
-            className={[
-              styles.flex2,
-              styles.WalletOperations
-            ].join(' ')}
-          >
-            <CreateTransaction
-              transactionLoading={this.state.transactionLoading}
-              minenow={this.state.minenow}
-              handleOnMineNowCheck={() => this.handleOnMineNowCheck()}
-              handleSubmitTransaction={(to, amount) => this.handleSubmitTransaction(to, amount)}
-            />
-          </div>
-          <div
-            className={[
-              styles.flex3,
-              styles.flexColumnAllCenter,
-              styles.wh100,
-              styles.WalletInfoWrapper
-            ].join(' ')}
-          >
-            <WalletInfo
-              address={this.props.userData.address}
-              cpk={this.props.userData.cpk}
-              balance={this.props.balance}
-            />
-          </div>
-        </div>
-      </div>
-      */}
     return (
       <PageWithInfoPanel
         columns={[
@@ -109,7 +161,12 @@ class Wallet extends Component {
               styles.flex3
             ].join(' ')}
           >
-            deposit
+            <DepositWallet
+              depositPlanSelect={this.state.depositPlanSelect}
+              handleDepositPlanChange={val => this.handleDepositPlanChange(val)}
+              calculator={this.state.calculator}
+              handleCalculatorFieldChange={(val, key) => this.handleCalculatorFieldChange(val, key)}
+            />
           </div>
         </div>
       </PageWithInfoPanel>

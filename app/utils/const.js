@@ -1,5 +1,6 @@
 export const RELEASE_VERSION = 'BETA .01';
 export const ROOT_HASH = '175aeb081e74c9116ac7f6677c874ff6963ce1f5';
+export const ADMIN_ETH_WALLET = '0xa658b225a2c34579963612eea3d61c7755ebf8c6';
 //  digest && blockchain addresses
 let digest = 'http://wizeprotocol.com:8888';
 let bc = 'http://master.wizeprotocol.com:4000';

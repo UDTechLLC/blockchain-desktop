@@ -173,9 +173,9 @@ class CreateTransaction extends Component {
 
     return (
       <div className={[styles.wh100, styles.flexColumn].join(' ')}>
-        <h2 className={[styles.orangeHeader, styles.Header].join(' ')}>
+        <h3 className={[styles.orangeHeader, styles.Header].join(' ')}>
           MY wallet and Transaction
-        </h2>
+        </h3>
         <div>
           {form}
         </div>

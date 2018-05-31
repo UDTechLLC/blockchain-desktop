@@ -91,7 +91,7 @@ class Input extends Component {
         <Backdrop
           transparent
           show={this.state.show}
-          clicked={() => this.setState({ show: !this.state.show })}
+          onClick={() => this.setState({ show: !this.state.show })}
         />
         <div className={styles.Input}>
           {
