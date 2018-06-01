@@ -46,7 +46,7 @@ const Manipulation = props => (
               OPTIONAL SECURITY LEVEL
             </div>
             <div>
-              CRYPTYC
+              DATA TIME CAPSULE
             </div>
           </div>
         </div>
