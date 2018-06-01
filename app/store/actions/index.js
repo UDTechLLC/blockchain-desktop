@@ -30,3 +30,4 @@ export {
   removeNote,
   setTimebomb
 } from './raft';
+export { setSearchWord } from './search';

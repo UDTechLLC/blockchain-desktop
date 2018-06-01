@@ -7,12 +7,13 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { createHashHistory } from 'history';
 import thunk from 'redux-thunk';
 
-import authReducer from './store/reducers/auth';
-import raftReducer from './store/reducers/raft';
-import commonInfoReducer from './store/reducers/commonInfo';
-import blockchainReducer from './store/reducers/blockchain';
-import digestReducer from './store/reducers/digest';
-// import notesReducer from './store/reducers/notes';
+import auth from './store/reducers/auth';
+import raft from './store/reducers/raft';
+import commonInfo from './store/reducers/commonInfo';
+import blockchain from './store/reducers/blockchain';
+import digest from './store/reducers/digest';
+// import notes from './store/reducers/notes';
+import search from './store/reducers/search';
 
 import './reset.css';
 import './app.global.css';
@@ -21,12 +22,13 @@ import App from './App';
 const history = createHashHistory();
 
 const rootReducer = combineReducers({
-  auth: authReducer,
-  raft: raftReducer,
-  commonInfo: commonInfoReducer,
-  blockchain: blockchainReducer,
-  digest: digestReducer,
-  // notes: notesReducer
+  auth,
+  raft,
+  commonInfo,
+  blockchain,
+  digest,
+  search
+  // notes
 });
 
 let composeEnhancers = null || compose;

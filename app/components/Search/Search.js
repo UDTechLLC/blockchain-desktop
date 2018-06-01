@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import * as actions from '../../store/actions/index';
 
 import { loop } from '../../assets/img/img';
 import css from './Search.css';
@@ -9,11 +12,10 @@ const styles = { ...commonCss, ...css };
 
 class Search extends Component {
   state = {
-    showInput: false,
-    searchText: ''
+    showInput: false
   };
   toggleButton2Input = () => this.setState({ showInput: !this.state.showInput });
-  handleSearchThoughFiles = searchText => this.setState({ searchText });
+  handleSearchThoughFiles = searchText => this.props.setSearchWord(searchText);
   render() {
     const button = (
       <button
@@ -36,7 +38,7 @@ class Search extends Component {
         <input
           type="text"
           placeholder="Search ..."
-          value={this.state.searchText}
+          value={this.props.searchText}
           onChange={e => this.handleSearchThoughFiles(e.target.value)}
           className={[
             styles.lightBlueBg,
@@ -68,4 +70,21 @@ class Search extends Component {
   }
 }
 
-export default Search;
+Search.propTypes = {
+  searchText: PropTypes.string,
+  setSearchWord: PropTypes.func.isRequired
+};
+
+Search.defaultProps = {
+  searchText: ''
+};
+
+const mapStateToProps = state => ({
+  searchText: state.search.searchText
+});
+
+const mapDispatchToProps = dispatch => ({
+  setSearchWord: searchText => dispatch(actions.setSearchWord(searchText))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Search);
