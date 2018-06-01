@@ -6,11 +6,12 @@ import { NavLink } from 'react-router-dom';
 import UiNavLink from '../UI/NavLink/NavLink';
 import Loading from '../Animations/Loading/Loading';
 import Graph from '../Graph/Graph';
+import Search from '../Search/Search';
 import { bytes2HumanReadableSize } from '../../utils/commonFunctions';
 
 import {
   logoGhost,
-  loop,
+  // loop,
   logout,
   settings,
   wallet
@@ -57,11 +58,11 @@ class Header extends Component {
       }
     ],
     iconsMenu: [
-      {
-        link: '/deposit',
-        label: loop,
-        alt: 'logout'
-      },
+      // {
+      //   link: '/deposit',
+      //   label: loop,
+      //   alt: 'logout'
+      // },
       {
         link: '/wallet',
         label: wallet,
@@ -142,6 +143,9 @@ class Header extends Component {
                   styles.IconsMenu
                 ].join(' ')}
               >
+                <li>
+                  <Search />
+                </li>
                 {
                   rightMenu.map((item, index) => (
                     <div

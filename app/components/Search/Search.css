@@ -1,0 +1,28 @@
+.OpenButton,
+.InputWrapper {
+  margin-right: 15px;
+}
+
+.InputWrapper {
+  position: relative;
+}
+
+.Input {
+  height: 18px;
+  padding: 2px 7px;
+  font-size: 1.4rem;
+  line-height: 1;
+  outline: none;
+  border: none;
+}
+
+.Input::placeholder {
+  color: #2f96ba;
+}
+
+.CloseButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
