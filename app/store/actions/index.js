@@ -10,8 +10,24 @@ export {
 } from './commonInfo';
 export { getBalance } from './blockchain';
 export { getDigest } from './digest';
+// export {
+//   getNotes,
+//   editNotesList,
+//   deleteNote
+// } from './notes';
 export {
-  getNotes,
-  editNotesList,
-  deleteNote
-} from './notes';
+  getAppSettings,
+  getUserData,
+  createNewFolder,
+  editFolder,
+  deleteFolder,
+  uploadFiles,
+  downloadFile,
+  saveDownloadedFile,
+  removeFile,
+  createNote,
+  editNote,
+  removeNote,
+  setTimebomb
+} from './raft';
+export { setSearchWord } from './search';

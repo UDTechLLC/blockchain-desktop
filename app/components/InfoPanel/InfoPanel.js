@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import classes from './InfoPanel.css';
-
 import InfoPanelWrapper from '../UI/InfoPanelWrapper/InfoPanelWrapper';
 import ProgressBar from './ProgressBar/ProgressBar';
 import NavMenu from './NavMenu/NavMenu';
@@ -12,6 +10,16 @@ import Data2 from './Data2/Data2';
 import Statistic from './Statistic/Statistic';
 import SecurityLayer from './SecurityLayer/SecurityLayer';
 import NewBlock from './NewBlock/NewBlock';
+import CreateFolder from './CreateFolder/CreateFolder';
+import NodesMenu from './NodesMenu/NodesMenu';
+import Manipulation from './Manipulation/Manipulation';
+// import NoteManipulation from './NoteManipulation/NoteManipulation';
+
+import css from './InfoPanel.css';
+import commonCss from '../../assets/css/common.css';
+// global classes names starts with lowercase letter: styles.class
+// and component classes - uppercase: styles.Class
+const styles = { ...commonCss, ...css };
 
 const infoPanel = props => {
   const getBlock = name => {
@@ -25,6 +33,36 @@ const infoPanel = props => {
       case 'Statistic': block = <Statistic key={Math.random()} />; break;
       case 'SecurityLayer': block = <SecurityLayer key={Math.random()} />; break;
       case 'NewBlock': block = <NewBlock key={Math.random()} />; break;
+      case 'CreateFolder': block = <CreateFolder key={Math.random()} />; break;
+      case 'NodesMenu': block = <NodesMenu key={Math.random()} />; break;
+      case 'Manipulation':
+        block = (
+          <Manipulation
+            key={Math.random()}
+            disableManipulationButtons={props.disableManipulationButtons}
+            showRemoveButton={props.showRemoveButton}
+            toggleShowRemoveButton={() => props.toggleShowRemoveButton()}
+            onTopManipulationButtonClick={() => props.onTopManipulationButtonClick()}
+            onBottomManipulationButtonClick={() => props.onBottomManipulationButtonClick()}
+            manipulationFirstButtonText={props.manipulationFirstButtonText}
+            timepickerDate={props.timepickerDate}
+            onTimepickerChange={date => props.onTimepickerChange(date)}
+            onTimebombSet={() => props.onTimebombSet()}
+          />
+        );
+        break;
+      // case 'NoteManipulation':
+      //   block = (
+      //     <NoteManipulation
+      //       key={Math.random()}
+      //       disableManipulationButtons={props.disableManipulationButtons}
+      //       handleEditNote={() => props.handleEditNote()}
+      //       handleRemoveNote={() => props.handleRemoveNote()}
+      //       showRemoveButton={props.showRemoveButton}
+      //       toggleShowRemoveButton={() => props.toggleShowRemoveButton()}
+      //     />
+      //   );
+      //   break;
       default:
         block = (
           <div key={Math.random()}>
@@ -35,25 +73,25 @@ const infoPanel = props => {
     }
     return block;
   };
-  const leftColumn = (
-    <div className={classes.LeftColumn}>
-      {props.leftColumn.map(block => getBlock(block))}
-    </div>
-  );
-  const rightColumn = (
-    <div className={classes.RightColumn}>
-      {props.rightColumn.map(block => getBlock(block))}
+  const content = (
+    <div
+      className={[
+        styles.wh100,
+        styles.flexBetweenCenter,
+        styles.Content
+      ].join(' ')}
+    >
+      {props.columns.map(block => getBlock(block))}
     </div>
   );
   return (
-    <div className={classes.InfoPanel}>
+    <div className={styles.InfoPanel}>
       <InfoPanelWrapper
         action={() => props.handleTogglePanel()}
         hide={props.hide}
       >
-        <div className={classes.InnerWrapper}>
-          {leftColumn}
-          {rightColumn}
+        <div className={styles.InnerWrapper}>
+          {content}
         </div>
       </InfoPanelWrapper>
     </div>
@@ -61,22 +99,41 @@ const infoPanel = props => {
 };
 
 infoPanel.propTypes = {
-  leftColumn: PropTypes.arrayOf(PropTypes.string),
-  rightColumn: PropTypes.arrayOf(PropTypes.string),
+  columns: PropTypes.arrayOf(PropTypes.string),
   handleTogglePanel: PropTypes.func.isRequired,
-  hide: PropTypes.bool
+  hide: PropTypes.bool,
+  //  manipulation section
+  //  buttons
+  disableManipulationButtons: PropTypes.bool,
+  showRemoveButton: PropTypes.bool,
+  toggleShowRemoveButton: PropTypes.func,
+  onTopManipulationButtonClick: PropTypes.func,
+  onBottomManipulationButtonClick: PropTypes.func,
+  manipulationFirstButtonText: PropTypes.string,
+  //  timebomb
+  timepickerDate: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  onTimepickerChange: PropTypes.func,
+  onTimebombSet: PropTypes.func
 };
 
 infoPanel.defaultProps = {
   hide: false,
-  leftColumn: [
-    'ProgressBar',
-    'NavMenu'
+  columns: [
+    'SecurityLayer',
+    'Manipulation'
   ],
-  rightColumn: [
-    'Data',
-    'Graph'
-  ]
+  disableManipulationButtons: false,
+  showRemoveButton: false,
+  toggleShowRemoveButton: null,
+  onTopManipulationButtonClick: null,
+  onBottomManipulationButtonClick: null,
+  manipulationFirstButtonText: 'download',
+  timepickerDate: new Date(),
+  onTimepickerChange: null,
+  onTimebombSet: null
 };
 
 export default infoPanel;

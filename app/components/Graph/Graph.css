@@ -1,0 +1,19 @@
+.GraphWrapper {
+  margin: 0 15px 0 0;
+}
+
+.ProgressSegment {
+  display: inline-block;
+  height: 15px;
+  width: 1px;
+  background-color: grey;
+  transform: rotate(-45deg);
+}
+
+.ProgressSegment:not(:last-of-type) {
+  margin-right: 2px;
+}
+
+.ProgressSegment.White {
+  background-color: white;
+}

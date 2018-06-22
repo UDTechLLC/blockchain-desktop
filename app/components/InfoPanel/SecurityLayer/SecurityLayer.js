@@ -72,7 +72,7 @@ const securityLayer = () => (
         </div>
         <div className={classes.TextBlock}>
           <div>
-            NEW KEY
+            KEY
           </div>
           <div />
           <div>

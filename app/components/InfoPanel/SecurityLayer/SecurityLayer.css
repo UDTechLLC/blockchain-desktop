@@ -3,8 +3,10 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 45px 70px 0;
+  padding: 25px;
   box-sizing: border-box;
+  flex: 4;
+  justify-content: space-between;
 }
 
 .SecurityLayer h2 {
@@ -44,7 +46,7 @@
 
 .SecurityLayer > ul {
   display: flex;
-  padding: 0 40px;
+  padding: 0 15px;
   margin: 0;
   position: relative;
   box-sizing: border-box;
@@ -52,29 +54,6 @@
   list-style: none;
   height: 100%;
   align-items: center;
-}
-
-.SecurityLayer > ul::before,
-.SecurityLayer > ul::after {
-  display: block;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  height: 100%;
-  font-size: 75px;
-  color: #0a394d;
-  font-weight: 300;
-  padding: 15px 0;
-}
-
-.SecurityLayer > ul::after {
-  content: ']';
-  right: 0;
-}
-
-.SecurityLayer > ul::before {
-  content: '[';
-  left: 0;
 }
 
 .SecurityLayer > ul > li {

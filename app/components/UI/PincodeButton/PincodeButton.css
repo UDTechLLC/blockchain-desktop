@@ -220,6 +220,7 @@
   z-index: 1;
 }
 
+/*
 .ButtonInnerContainer::before {
   content: '';
   display: block;
@@ -281,6 +282,7 @@
   width: 4px;
   height: 100%;
 }
+*/
 
 @media (max-width: 1600px) {
   .SupTitle {

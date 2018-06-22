@@ -3,7 +3,8 @@
 }
 
 .Content {
-  height: calc(100% - 219px);
+  height: calc(100% - 204px);
+  padding: 0 15px;
   overflow: hidden;
   margin-bottom: 19px;
   display: flex;
@@ -21,13 +22,13 @@
 }
 
 .InfoPanel {
+  padding: 0 15px;
   position: absolute;
   right: 0;
   bottom: 0;
   left: 0;
   height: 200px;
   transition: height 0.4s linear;
-  overflow: hidden;
 }
 
 .InfoPanel.HidenPanel {

@@ -1,10 +1,10 @@
 /* eslint-disable indent */
 const { ipcMain } = require('electron');
-const cF = require('../utils/commonFunc');
+const utils = require('../utils/utils');
 
 const filesystem = (mainWindow, cpkGlob, fsUrlGlob) => {
   //  listener, that unmounts fs
-  ipcMain.on('fs:unmount', () => (cpkGlob ? cF.unmountFs(cpkGlob, fsUrlGlob) : null));
+  ipcMain.on('fs:unmount', () => (cpkGlob ? utils.unmountFs(cpkGlob, fsUrlGlob) : null));
   // //  fs mounting
   // ipcMain.on('fs:mount', (event, fsUrl) => {
   //   const origin = cpkGlob;

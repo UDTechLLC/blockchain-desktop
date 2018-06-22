@@ -15,12 +15,13 @@ const InfoPanelWrapper = props => (
       styles.wh100
     ].join(' ')}
   >
-    <div className={styles.Plank}>
+    <div>
       <button
         className={[
           styles.flexAllCenter,
           styles.h100,
-          styles.transparentButton
+          styles.transparentButton,
+          styles.Plank
         ].join(' ')}
         type="button"
         onClick={() => props.action()}

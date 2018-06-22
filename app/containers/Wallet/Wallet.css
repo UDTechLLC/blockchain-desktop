@@ -1,25 +1,9 @@
-.BodyWrapper {
-  display: flex;
-}
-
-.WaleltsInfo {
-  width: 50%;
-  box-sizing: border-box;
-  border: 1px solid #333;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.WaleltsInfo p span {
-  display: block;
-  font-size: 14px;
-  word-wrap: break-word;
+/*
+.WalletWrapper {
+  height: 50%;
 }
 
 .WalletOperations {
-  width: 50%;
   display: block;
   padding: 0 15px;
   box-sizing: border-box;
@@ -34,3 +18,4 @@
     width: calc(100% - 300px);
   }
 }
+*/

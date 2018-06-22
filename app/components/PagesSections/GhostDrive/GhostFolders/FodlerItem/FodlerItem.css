@@ -1,0 +1,70 @@
+.FolderItem {
+  padding-top: calc(100% / 3);
+  position: relative;
+  height: 0;
+}
+
+.FolderItem > div {
+  background-position: center;
+  background-size: 50%;
+  background-repeat: no-repeat;
+  z-index: 2;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.Corners {
+  display: none;
+}
+
+.FolderItem > div.Active {
+  color: #e14737;
+}
+
+.FolderItem > div.Active > .Corners {
+  display: block;
+}
+
+.SecurityLayers {
+  z-index: 0;
+  flex-wrap: wrap;
+  outline: none;
+}
+
+.SecurityLayers > div {
+  width: 50%;
+  display: none;
+  align-items: center;
+}
+
+.SecurityLayers > div:first-of-type,
+.SecurityLayers > div:nth-of-type(3) {
+  justify-content: flex-start;
+}
+
+.SecurityLayers > div:nth-of-type(2),
+.SecurityLayers > div:nth-of-type(4) {
+  justify-content: flex-end;
+}
+
+.FolderItem > div.Active .SecurityLayers > div {
+  display: flex;
+}
+
+.DeleteButtonWrapper,
+.FolderNameWrapper {
+  z-index: 10;
+}
+
+.DeleteButtonWrapper > button {
+  display: none;
+  color: #e14737;
+  font-size: 9px;
+  font-weight: 400;
+  text-transform: uppercase;
+  z-index: 100501;
+}
+
+.FolderItem > div.Active .DeleteButtonWrapper > button {
+  display: block;
+}

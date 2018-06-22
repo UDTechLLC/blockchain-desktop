@@ -18,7 +18,7 @@ const login = props => (
     >
       <div className={styles.Content}>
         <h1>GHOST ACCESS</h1>
-        <h2>WIZE BLOCKCHAIN AUTHENTICATOR</h2>
+        <h2>Powered by WizeBit Blockchain</h2>
         <div
           className={styles.InnerTextWrapper}
         >
@@ -30,7 +30,7 @@ const login = props => (
                   <p>private key</p>
                 </div>
                 <div>
-                  <h2>UPLOAD YOUR PRIVTE KEY</h2>
+                  <h2>UPLOAD YOUR PRIVATE KEY</h2>
                 </div>
                 <div>
                   <p>only access to administrator</p>

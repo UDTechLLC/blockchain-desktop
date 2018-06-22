@@ -1,0 +1,27 @@
+.ComponentWrapper {
+  outline: none;
+}
+
+.TheInput {
+  background-color: transparent;
+  overflow: hidden;
+  border: none;
+  text-align: center;
+  outline: none;
+  font-weight: 400;
+  text-transform: uppercase;
+  z-index: 100500;
+  font-family: 'Aldrich', sans-serif;
+  font-size: 1rem;
+}
+
+.TextWrapper {
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 0 15px;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}

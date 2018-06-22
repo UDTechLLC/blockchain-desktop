@@ -1,6 +1,6 @@
 import logoGhost from './logo-ghost.svg';
 import logoTitle from './logo-title.svg';
-import bg from './bg.png';
+import bg from './bg.jpg';
 import arrDown from './v.png';
 import fileImg from './file-img.png';
 import fileImgBlue from './file-img-blue.png';
@@ -23,6 +23,8 @@ import loop from './loop-icon.png';
 import logout from './logout-icon.png';
 import settings from './settings-icon.png';
 import wallet from './wallet-icon.png';
+import folderA from './folder-active.png';
+import folderI from './folder-inactive.png';
 
 export default {
   logoGhost,
@@ -49,5 +51,7 @@ export default {
   loop,
   logout,
   settings,
-  wallet
+  wallet,
+  folderA,
+  folderI
 };

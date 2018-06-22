@@ -2,11 +2,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+
 import UiNavLink from '../UI/NavLink/NavLink';
+import Loading from '../Animations/Loading/Loading';
+import Graph from '../Graph/Graph';
+import Search from '../Search/Search';
+import { bytes2HumanReadableSize } from '../../utils/commonFunctions';
 
 import {
   logoGhost,
-  loop,
+  // loop,
   logout,
   settings,
   wallet
@@ -32,28 +37,32 @@ class Header extends Component {
     ],
     authorisedMenu: [
       {
-        link: '/files',
-        label: 'Files'
+        link: '/ghost-drive',
+        label: 'Ghost drive'
       },
-      {
-        link: '/upload',
-        label: 'Upload'
-      },
-      {
-        link: '/x-files',
-        label: 'Ghost Files'
-      },
+      // {
+      //   link: '/files',
+      //   label: 'Files'
+      // },
+      // {
+      //   link: '/upload',
+      //   label: 'Upload'
+      // },
+      // {
+      //   link: '/x-files',
+      //   label: 'Ghost Files'
+      // },
       {
         link: '/ghost-pad',
-        label: 'Ghost pad'
+        label: 'Ghost note'
       }
     ],
     iconsMenu: [
-      {
-        link: '/deposit',
-        label: loop,
-        alt: 'logout'
-      },
+      // {
+      //   link: '/deposit',
+      //   label: loop,
+      //   alt: 'logout'
+      // },
       {
         link: '/wallet',
         label: wallet,
@@ -69,7 +78,9 @@ class Header extends Component {
         label: logout,
         alt: 'logout'
       },
-    ]
+    ],
+    userFilesSize: 340 * 1024 * 1024,
+    userFilesLimit: 1024 * 1024 * 1024
   };
   render() {
     const leftMenu = this.props.isAuth
@@ -92,8 +103,15 @@ class Header extends Component {
               styles.Logo
             ].join(' ')}
           >
-            <img src={logoGhost} alt="Ghostdrive" />
-            {/* <img src={logoTitle} alt="Ghostdrive" /> */}
+            {
+              !this.props.loading
+                ? <img src={logoGhost} alt="Ghostdrive" />
+                : (
+                  <div className={styles.LogoImg}>
+                    <Loading color="white" />
+                  </div>
+                )
+            }
             <div
               className={[
                 styles.orangeBar,
@@ -125,15 +143,45 @@ class Header extends Component {
                   styles.IconsMenu
                 ].join(' ')}
               >
+                <li>
+                  <Search />
+                </li>
                 {
                   rightMenu.map((item, index) => (
-                    <li key={index}>
-                      <NavLink
-                        to={item.link}
-                      >
-                        <img src={item.label} alt={item.alt} height={18} />
-                      </NavLink>
-                    </li>
+                    <div
+                      key={index}
+                      className={[
+                        styles.flexAllCenter,
+                        styles.h100
+                      ].join(' ')}
+                    >
+                      {
+                        index !== rightMenu.length - 1
+                          ? null
+                          : (
+                            <li
+                              className={[
+                                styles.flexBetweenCenter,
+                                styles.GraphWrapper
+                              ].join(' ')}
+                            >
+                              <Graph
+                                progress={this.state.userFilesSize / this.state.userFilesLimit}
+                              />
+                              <span>
+                                {`${bytes2HumanReadableSize(this.state.userFilesSize)} / ${bytes2HumanReadableSize(this.state.userFilesLimit)}`}
+                              </span>
+                            </li>
+                          )
+                      }
+                      <li>
+                        <NavLink
+                          to={item.link}
+                        >
+                          <img src={item.label} alt={item.alt} height={18} />
+                        </NavLink>
+                      </li>
+                    </div>
                   ))
                 }
               </ul>
@@ -146,7 +194,8 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-  isAuth: PropTypes.bool.isRequired
+  isAuth: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired
 };
 
 export default Header;

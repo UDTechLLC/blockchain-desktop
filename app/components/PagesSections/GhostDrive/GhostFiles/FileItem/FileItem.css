@@ -1,0 +1,57 @@
+.FileItem {
+  width: calc((100% - (15px * 11)) / 12);
+  height: 0;
+  padding-top: calc((100% - (15px * 11)) / 8);
+  position: relative;
+  margin-bottom: 15px;
+  z-index: 10;
+  outline: none;
+  cursor: pointer;
+}
+
+.FileItem:not(:nth-of-type(12n)) {
+  margin-right: 15px;
+}
+
+.FileItem.Active {
+  background: -moz-linear-gradient(45deg, rgba(22, 94, 106, 0.3) 0%, rgba(22, 94, 106, 0.3) 53%, rgba(22, 94, 106, 0.3) 95%, rgba(22, 94, 106, 0) 96%, rgba(22, 94, 106, 0) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, rgba(22, 94, 106, 0.3)), color-stop(53%, rgba(22, 94, 106, 0.3)), color-stop(95%, rgba(22, 94, 106, 0.3)), color-stop(96%, rgba(22, 94, 106, 0)), color-stop(100%, rgba(22, 94, 106, 0))); /* Chrome, Safari4+ */
+  background: -webkit-linear-gradient(45deg, rgba(22, 94, 106, 0.3) 0%, rgba(22, 94, 106, 0.3) 53%, rgba(22, 94, 106, 0.3) 95%, rgba(22, 94, 106, 0) 96%, rgba(22, 94, 106, 0) 100%); /* Chrome10+, Safari5.1+ */
+  background: -o-linear-gradient(45deg, rgba(22, 94, 106, 0.3) 0%, rgba(22, 94, 106, 0.3) 53%, rgba(22, 94, 106, 0.3) 95%, rgba(22, 94, 106, 0) 96%, rgba(22, 94, 106, 0) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(45deg, rgba(22, 94, 106, 0.3) 0%, rgba(22, 94, 106, 0.3) 53%, rgba(22, 94, 106, 0.3) 95%, rgba(22, 94, 106, 0) 96%, rgba(22, 94, 106, 0) 100%); /* IE10+ */
+  background: linear-gradient(45deg, rgba(22, 94, 106, 0.3) 0%, rgba(22, 94, 106, 0.3) 53%, rgba(22, 94, 106, 0.3) 95%, rgba(22, 94, 106, 0) 96%, rgba(22, 94, 106, 0) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4d165e6a',  endColorstr='#00165e6a', GradientType=1); /* IE6-9 fallback on horizontal gradient */
+}
+
+.FileItem > div {
+  background-position: center 20%;
+  background-size: 60%;
+  background-repeat: no-repeat;
+  z-index: 2;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.FileItem > div > div:not(:first-of-type) {
+  text-align: center;
+}
+
+.FileItem > div > div:first-of-type {
+  padding: calc(20% + 3px) 0 0 calc(20% + 7px);
+  margin-bottom: -10px;
+}
+
+@media (max-width: 1300px) {
+  .FileItem {
+    width: calc((100% - (15px * 5)) / 6);
+    padding-top: calc((100% - (15px * 5)) / 4);
+  }
+
+  .FileItem:not(:nth-of-type(11n)) {
+    margin-right: 0;
+  }
+
+  .FileItem:not(:nth-of-type(6n)) {
+    margin-right: 15px;
+  }
+}

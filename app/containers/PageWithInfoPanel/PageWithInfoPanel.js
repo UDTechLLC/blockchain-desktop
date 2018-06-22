@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import WithCustomScrollbar from '../../components/UI/WithCustomScrollbar/WithCustomScrollbar';
 import InfoPanel from '../../components/InfoPanel/InfoPanel';
 
 import css from './PageWithInfoPanel.css';
@@ -54,9 +53,7 @@ class PageWithInfoPanel extends Component {
               ].join(' ')
           }
         >
-          <WithCustomScrollbar>
-            {this.props.children}
-          </WithCustomScrollbar>
+          {this.props.children}
         </div>
         <div
           className={
@@ -69,10 +66,18 @@ class PageWithInfoPanel extends Component {
           }
         >
           <InfoPanel
-            leftColumn={this.props.leftColumn}
-            rightColumn={this.props.rightColumn}
+            columns={this.props.columns}
             handleTogglePanel={() => this.handleTogglePanel()}
             hide={this.state.hide}
+            disableManipulationButtons={this.props.disableManipulationButtons}
+            showRemoveButton={this.props.showRemoveButton}
+            toggleShowRemoveButton={() => this.props.toggleShowRemoveButton()}
+            onTopManipulationButtonClick={() => this.props.onTopManipulationButtonClick()}
+            onBottomManipulationButtonClick={() => this.props.onBottomManipulationButtonClick()}
+            manipulationFirstButtonText={this.props.manipulationFirstButtonText}
+            timepickerDate={this.props.timepickerDate}
+            onTimepickerChange={date => this.props.onTimepickerChange(date)}
+            onTimebombSet={() => this.props.onTimebombSet()}
           />
         </div>
       </div>
@@ -85,19 +90,38 @@ PageWithInfoPanel.propTypes = {
     PropTypes.string,
     PropTypes.node
   ]).isRequired,
-  leftColumn: PropTypes.arrayOf(PropTypes.string),
-  rightColumn: PropTypes.arrayOf(PropTypes.string)
+  columns: PropTypes.arrayOf(PropTypes.string),
+  //  manipulation section
+  //  buttons
+  disableManipulationButtons: PropTypes.bool,
+  showRemoveButton: PropTypes.bool,
+  toggleShowRemoveButton: PropTypes.func,
+  onTopManipulationButtonClick: PropTypes.func,
+  onBottomManipulationButtonClick: PropTypes.func,
+  manipulationFirstButtonText: PropTypes.string,
+  //  timebomb
+  timepickerDate: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  onTimepickerChange: PropTypes.func,
+  onTimebombSet: PropTypes.func
 };
 
 PageWithInfoPanel.defaultProps = {
-  leftColumn: [
-    'ProgressBar',
-    'NavMenu'
+  columns: [
+    'SecurityLayer',
+    'Manipulation'
   ],
-  rightColumn: [
-    'Data',
-    'Graph'
-  ]
+  disableManipulationButtons: false,
+  showRemoveButton: false,
+  toggleShowRemoveButton: null,
+  onTopManipulationButtonClick: null,
+  onBottomManipulationButtonClick: null,
+  manipulationFirstButtonText: 'download',
+  timepickerDate: new Date(),
+  onTimepickerChange: null,
+  onTimebombSet: null
 };
 
 export default PageWithInfoPanel;

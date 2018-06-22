@@ -9,12 +9,12 @@
   box-sizing: border-box;
   line-height: 6px;
   font-size: 24px;
-  cursor: default;
   z-index: 100500;
+  cursor: pointer;
 }
 
-.Plank > button > i {
-  margin-top: -50%;
+.Plank > i {
+  margin-top: -5px;
 }
 
 .Info {
@@ -28,7 +28,7 @@
   transition: all 0.4s linear;
 }
 
-.Plank > button > i.ArrowUp {
+.Plank > i.ArrowUp {
   margin-top: 1px;
 }
 

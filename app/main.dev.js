@@ -15,16 +15,17 @@ const fs = require('fs');
 const path = require('path');
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 
-const cF = require('./electron/utils/commonFunc');
+const utils = require('./electron/utils/utils');
 
 const MenuBuilder = require('./menu');
 const CommonListeners = require('./electron/app/common');
 const Digest = require('./electron/app/digest');
 const Auth = require('./electron/app/auth');
 const FS = require('./electron/app/filesystem');
-const FilesListeners = require('./electron/app/files');
+const Raft = require('./electron/app/raft');
+// const FilesListeners = require('./electron/app/files');
 const BlockChain = require('./electron/app/blockchain');
-const GhostPad = require('./electron/app/ghost-pad');
+// const GhostPad = require('./electron/app/notes');
 
 let configFolder = `${process.cwd()}/.wizeconfig`;
 if (process.platform === 'darwin') {
@@ -91,7 +92,7 @@ app.on('ready', async () => {
   });
   mainWindow.on('closed', () => {
     if (cpkGlob) {
-      cF.unmountFs(cpkGlob, fsUrlGlob, app.quit);
+      utils.unmountFs(cpkGlob, fsUrlGlob, app.quit);
     } else {
       app.quit();
     }
@@ -111,16 +112,18 @@ app.on('ready', async () => {
   CommonListeners(mainWindow, configFolder);
   //  digest
   Digest(mainWindow);
+  //  raft
+  Raft(mainWindow);
   //  file system listeners
   FS(mainWindow, cpkGlob, fsUrlGlob);
   //  auth
   Auth(mainWindow, configFolder, cpkGlob);
-  //  files listeners
-  FilesListeners(mainWindow);
+  // //  files listeners
+  // FilesListeners(mainWindow);
   //  blockchain listeners
   BlockChain(mainWindow);
-  //  notes listeners
-  GhostPad(mainWindow);
+  // //  notes listeners
+  // GhostPad(mainWindow);
 });
 
 // this listeners is here because of redefining cpkGlob and fsUrlGlob
@@ -169,13 +172,13 @@ ipcMain.on('fs:mount', (event, fsUrl) => {
   return Promise.all(reqAllState)
     .then(responses => {
       //  find out what nodes are not mounted
-      const reqMount = cF.cleanArray(responses.map((response, i) => (
+      const reqMount = utils.cleanArray(responses.map((response, i) => (
         !response.data.mounted
           ? reqAllMount[i]
           : null
       )));
       // not created
-      const urlsCreate = cF.cleanArray(responses.map((response, i) => (
+      const urlsCreate = utils.cleanArray(responses.map((response, i) => (
         !response.data.created
           ? threeUrls[i]
           : null
@@ -228,9 +231,10 @@ ipcMain.on('auth:start', (event, { password, filePath }) => {
     }
     encryptedHex = data;
     if (!encryptedHex) {
-      return dialog.showErrorBox('Error', 'There is no credentials file');
+      dialog.showErrorBox('Error', 'There is no credentials file');
+      return;
     }
-    const decrypt = cF.aesDecrypt(encryptedHex, password, 'hex');
+    const decrypt = utils.aesDecrypt(encryptedHex, password, 'hex');
 
     //  send cpk of user to main func
     cpkGlob = JSON.parse(decrypt.strData).cpk;

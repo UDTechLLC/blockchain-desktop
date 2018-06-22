@@ -1,0 +1,20 @@
+.AddButton {
+  position: relative;
+  height: 0;
+}
+
+.AddButton > div {
+  background-position: center;
+  background-size: 50%;
+  background-repeat: no-repeat;
+  z-index: 2;
+  font-weight: 400;
+  text-transform: uppercase;
+  padding: calc(25% + 10px);
+}
+
+@media (max-width: 1300px) {
+  .AddButton > div {
+    font-size: 1rem;
+  }
+}

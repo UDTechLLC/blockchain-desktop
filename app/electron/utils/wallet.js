@@ -1,5 +1,5 @@
-const cF = require('./commonFunc');
-//  crypto
+const utils = require('./utils');
+//  crypt
 const bs58 = require('bs58');
 const bitcoin = require('bitcoinjs-lib');
 const EC = require('elliptic').ec;
@@ -31,8 +31,7 @@ const newCredentials = () => {
  * @returns {string}
  */
 const getAddress = publicKey => {
-  // FIXME: getHash to this module?
-  const pubKeyHash = Buffer.from(cF.getHash(publicKey), 'hex');
+  const pubKeyHash = Buffer.from(utils.getHash(publicKey), 'hex');
   const versionedPayload = Buffer.concat([version, pubKeyHash]);
   const checksum = checkSum(versionedPayload);
   const fullPayload = Buffer.concat([versionedPayload, checksum]);

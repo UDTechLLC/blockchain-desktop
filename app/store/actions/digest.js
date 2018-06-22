@@ -2,7 +2,7 @@ import { ipcRenderer } from 'electron';
 
 import * as actionTypes from './actionTypes';
 
-import { getBalance, getNotes } from './index';
+import { getBalance } from './index';
 
 const getDigestStart = (userData, password) => {
   ipcRenderer.send('digest:get', { userData, password });
@@ -24,7 +24,6 @@ export const getDigest = (userData, password) => dispatch => {
   ipcRenderer.once('digest:success', (event, data) => {
     console.log(data);
     dispatch(getDigestSuccess(data));
-    dispatch(getNotes(userData, data.raftNodes[0]));
     const fsNodes = data.storageNodes.map(item => `${item}/buckets`);
     const bcNode = `${data.bcNodes[0]}`;
     dispatch(getBalance(userData.address, bcNode));

@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 const { ipcMain } = require('electron');
 
-const cF = require('../utils/commonFunc');
+const utils = require('../utils/utils');
 const wallet = require('../utils/wallet');
 
 
@@ -13,9 +13,11 @@ const auth = mainWindow => {
     const strData = JSON.stringify(userData);
     const encryptedData = cF.aesEncrypt(strData, password, 'hex').encryptedHex;
     return mainWindow.webContents.send('registration:complete', encryptedData);
+    const encryptedData = utils.aesEncrypt(strData, password, 'hex').encryptedHex;
+    return mainWindow.webContents.send('registration:complete', encryptedData);
     //  save to file
-    // if (cF.ensureDirectoryExistence(configFolder)) {
-    //   const aes = cF.aesEncrypt(strData, password, 'hex');
+    // if (utils.ensureDirectoryExistence(configFolder)) {
+    //   const aes = utils.aesEncrypt(strData, password, 'hex');
     //   fs.readdir(configFolder, (error, files) => {
     //     if (error) {
     //       dialog.showErrorBox('Error', error);
@@ -25,7 +27,7 @@ const auth = mainWindow => {
     //         ? file
     //         : null
     //     ));
-    //     const credArr = cF.cleanArray(credFiles);
+    //     const credArr = utils.cleanArray(credFiles);
     //     fs.writeFile(`${configFolder}/credentials-${credArr.length}.bak`, aes.encryptedHex, err => {
     //       if (err) {
     //         dialog.showErrorBox('Error', err);
@@ -53,7 +55,7 @@ const auth = mainWindow => {
   //       dialog.showErrorBox('Error', 'There is no credentials file');
   //       return;
   //     }
-  //     const decrypt = cF.aesDecrypt(encryptedHex, password, 'hex');
+  //     const decrypt = utils.aesDecrypt(encryptedHex, password, 'hex');
   //
   //     //  send cpk of user to main func
   //     cpkGlob = JSON.parse(decrypt.strData).cpk;
@@ -64,9 +66,9 @@ const auth = mainWindow => {
   // });
 
   // decrypt credentials with password
-  ipcMain.on('credentials:decrypt', (event, { string, password }) => {
-    const credentials = cF.aesDecrypt(string, password, 'hex').strData;
-    return mainWindow.webContents.send('credentials:decrypt-complete', credentials);
+  ipcMain.on('crypto:decrypt-credentials', (event, { string, password }) => {
+    const credentials = utils.aesDecrypt(string, password, 'hex').strData;
+    return mainWindow.webContents.send('crypto:decrypted-credentials', credentials);
   });
 };
 

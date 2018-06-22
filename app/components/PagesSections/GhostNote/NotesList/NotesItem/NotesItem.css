@@ -1,0 +1,36 @@
+.NotesItem {
+  padding-top: calc(100% / 3);
+  position: relative;
+  height: 0;
+}
+
+.NotesItem > div:not(.Corners) {
+  background-position: center;
+  background-size: 50%;
+  background-repeat: no-repeat;
+  z-index: 2;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.NotesItem > div:not(.Corners) > div:last-of-type {
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-right: 5px;
+  text-overflow: ellipsis;
+}
+
+.Corners {
+  display: none;
+}
+
+.NotesItem > div.Active {
+  color: #e14737;
+}
+
+.NotesItem > div.Active ~ .Corners {
+  display: block;
+}
