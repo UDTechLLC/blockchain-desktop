@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { ipcMain } = require('electron');
-const cF = require('../utils/commonFunc');
+const utils = require('../utils/utils');
 const Folders = require('./folders');
 const Files = require('./files');
 const Notes = require('./notes');
@@ -8,7 +8,7 @@ const Timebomb = require('./timebomb');
 
 const raft = mainWindow => {
   ipcMain.on('user-data:get', (event, { userData, raftNode }) => {
-    // console.log(cF.getHash('root', ''));
+    // console.log(utils.getHash('root', ''));
     //  keys in raft
     const foldersKey = `${userData.cpk}_flds`;
     const filesKey = `${userData.cpk}_fls`;
@@ -23,14 +23,14 @@ const raft = mainWindow => {
     return Promise.all(reqs)
       .then(responses => {
         const data = {
-          folders: cF.decryptDataFromRaft(responses[0].data, foldersKey, userData.csk),
-          files: cF.decryptDataFromRaft(responses[1].data, filesKey, userData.csk),
-          notes: cF.decryptDataFromRaft(responses[2].data, notesKey, userData.csk)
+          folders: utils.decryptDataFromRaft(responses[0].data, foldersKey, userData.csk),
+          files: utils.decryptDataFromRaft(responses[1].data, filesKey, userData.csk),
+          notes: utils.decryptDataFromRaft(responses[2].data, notesKey, userData.csk)
         };
         // console.log(JSON.stringify(data));
         return mainWindow.webContents.send('user-data:get-complete', data);
       })
-      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'user-data:get', 'GET'));
+      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'user-data:get', 'GET'));
   });
   //  folders listeners
   Folders(mainWindow);

@@ -15,7 +15,7 @@ const fs = require('fs');
 const path = require('path');
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 
-const cF = require('./electron/utils/commonFunc');
+const utils = require('./electron/utils/utils');
 
 const MenuBuilder = require('./menu');
 const CommonListeners = require('./electron/app/common');
@@ -92,7 +92,7 @@ app.on('ready', async () => {
   });
   mainWindow.on('closed', () => {
     if (cpkGlob) {
-      cF.unmountFs(cpkGlob, fsUrlGlob, app.quit);
+      utils.unmountFs(cpkGlob, fsUrlGlob, app.quit);
     } else {
       app.quit();
     }
@@ -172,13 +172,13 @@ ipcMain.on('fs:mount', (event, fsUrl) => {
   return Promise.all(reqAllState)
     .then(responses => {
       //  find out what nodes are not mounted
-      const reqMount = cF.cleanArray(responses.map((response, i) => (
+      const reqMount = utils.cleanArray(responses.map((response, i) => (
         !response.data.mounted
           ? reqAllMount[i]
           : null
       )));
       // not created
-      const urlsCreate = cF.cleanArray(responses.map((response, i) => (
+      const urlsCreate = utils.cleanArray(responses.map((response, i) => (
         !response.data.created
           ? threeUrls[i]
           : null
@@ -234,7 +234,7 @@ ipcMain.on('auth:start', (event, { password, filePath }) => {
       dialog.showErrorBox('Error', 'There is no credentials file');
       return;
     }
-    const decrypt = cF.aesDecrypt(encryptedHex, password, 'hex');
+    const decrypt = utils.aesDecrypt(encryptedHex, password, 'hex');
 
     //  send cpk of user to main func
     cpkGlob = JSON.parse(decrypt.strData).cpk;

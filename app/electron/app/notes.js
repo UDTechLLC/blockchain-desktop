@@ -2,14 +2,14 @@ const _ = require('lodash');
 const axios = require('axios');
 const { ipcMain, dialog } = require('electron');
 const uuidv4 = require('uuid/v4');
-const cF = require('../utils/commonFunc');
+const utils = require('../utils/utils');
 
 const notesListeners = mainWindow => {
   // ipcMain.on('get-notes:start', (event, { userData, raftNode }) => {
   //   const key = `${userData.cpk}_gpd`;
   //   return axios.get(`${raftNode}/key/${key}`)
   //     .then(({ data }) => {
-  //       const notes = data[key] ? JSON.parse(cF.aesDecrypt(data[key], userData.csk).strData) : [];
+  //       const notes = data[key] ? JSON.parse(utils.aesDecrypt(data[key], userData.csk).strData) : [];
   //       return mainWindow.webContents.send('get-notes:complete', notes);
   //     })
   //     .catch(({ response }) => {
@@ -20,7 +20,7 @@ const notesListeners = mainWindow => {
   //
   // ipcMain.on('edit-notes-list:start', (event, { notes, userData, raftNode }) => {
   //   const key = `${userData.cpk}_gpd`;
-  //   const prepData = cF.aesEncrypt(JSON.stringify(notes), userData.csk).encryptedHex;
+  //   const prepData = utils.aesEncrypt(JSON.stringify(notes), userData.csk).encryptedHex;
   //   return axios.post(`${raftNode}/key`, { [key]: prepData })
   //     .then(() => mainWindow.webContents.send('edit-notes-list:complete'))
   //     .catch(({ response }) => {
@@ -30,11 +30,11 @@ const notesListeners = mainWindow => {
   //   // return axios.get(`${raftNode}/key/${key}`)
   //   //   .then(({ data }) => (
   //   //     data[key]
-  //   //       ? cF.aesDecrypt(data[key], userData.csk).strData
+  //   //       ? utils.aesDecrypt(data[key], userData.csk).strData
   //   //       : JSON.stringify([])
   //   //   ))
   //   //   .then(rawData => (
-  //   //     cF.aesEncrypt(JSON.stringify([
+  //   //     utils.aesEncrypt(JSON.stringify([
   //   //       note,
   //   //       ...JSON.parse(rawData)
   //   //     ]), userData.csk).encryptedHex
@@ -60,13 +60,13 @@ const notesListeners = mainWindow => {
   //   return axios.get(`${raftNode}/key/${key}`)
   //     .then(({ data }) => (
   //       data[key]
-  //         ? cF.aesDecrypt(data[key], userData.csk).strData
+  //         ? utils.aesDecrypt(data[key], userData.csk).strData
   //         : JSON.stringify([])
   //     ))
   //     .then(rawData => {
   //       const filteredData = JSON.parse(rawData).filter(el => el.id !== id);
   //       const strData = JSON.stringify(filteredData);
-  //       return cF.aesEncrypt(strData, userData.csk).encryptedHex;
+  //       return utils.aesEncrypt(strData, userData.csk).encryptedHex;
   //     })
   //     .then(prepData => (
   //       new Promise((resolve, reject) => {
@@ -88,7 +88,7 @@ const notesListeners = mainWindow => {
     const notesKey = `${userData.cpk}_nts`;
     //  get actual user notes
     return axios.get(`${raftNode}/key/${notesKey}`)
-      .then(({ data }) => cF.decryptDataFromRaft(data, notesKey, userData.csk))
+      .then(({ data }) => utils.decryptDataFromRaft(data, notesKey, userData.csk))
       //  add new one
       .then(notes => {
         const id = uuidv4();
@@ -123,13 +123,13 @@ const notesListeners = mainWindow => {
           }
         };
         const data = {
-          [notesKey]: cF.aesEncrypt(updatedObj, userData.csk).encryptedHex
+          [notesKey]: utils.aesEncrypt(updatedObj, userData.csk).encryptedHex
         };
         return axios.post(`${raftNode}/key`, data, config)
           .then(() => mainWindow.webContents.send('note:create-success', newNote))
-          .catch(({ response }) => cF.catchRestError(mainWindow, response, 'note:create'));
+          .catch(({ response }) => utils.catchRestError(mainWindow, response, 'note:create'));
       })
-      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'note:create', 'GET'));
+      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'note:create', 'GET'));
   });
   ipcMain.on('note:edit', (event, {
     signature,
@@ -137,12 +137,11 @@ const notesListeners = mainWindow => {
     userData,
     raftNode
   }) => {
-    console.log(JSON.stringify(noteUpdateData));
     //  key in raft
     const notesKey = `${userData.cpk}_nts`;
     //  get actual user notes
     return axios.get(`${raftNode}/key/${notesKey}`)
-      .then(({ data }) => cF.decryptDataFromRaft(data, notesKey, userData.csk))
+      .then(({ data }) => utils.decryptDataFromRaft(data, notesKey, userData.csk))
       .then(notes => {
         const newNotes = {
           ...notes,
@@ -157,20 +156,20 @@ const notesListeners = mainWindow => {
           }
         };
         const updData = {
-          [notesKey]: cF.aesEncrypt(JSON.stringify(newNotes), userData.csk).encryptedHex,
+          [notesKey]: utils.aesEncrypt(JSON.stringify(newNotes), userData.csk).encryptedHex,
         };
         return axios.post(`${raftNode}/key`, updData, config)
           .then(() => mainWindow.webContents.send('note:edit-success'))
-          .catch(({ response }) => cF.catchRestError(mainWindow, response, 'note:edit'));
+          .catch(({ response }) => utils.catchRestError(mainWindow, response, 'note:edit'));
       })
-      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'note:edit', 'GET'));
+      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'note:edit', 'GET'));
   });
   ipcMain.on('note:remove', (event, { signature, userData, raftNode }) => {
     //  key in raft
     const notesKey = `${userData.cpk}_nts`;
     //  get actual user notes
     return axios.get(`${raftNode}/key/${notesKey}`)
-      .then(({ data }) => cF.decryptDataFromRaft(data, notesKey, userData.csk))
+      .then(({ data }) => utils.decryptDataFromRaft(data, notesKey, userData.csk))
       .then(notes => {
         const newNotes = _.pickBy(notes, v => v.id !== signature);
         const config = {
@@ -179,13 +178,13 @@ const notesListeners = mainWindow => {
           }
         };
         const updData = {
-          [notesKey]: cF.aesEncrypt(JSON.stringify(newNotes), userData.csk).encryptedHex,
+          [notesKey]: utils.aesEncrypt(JSON.stringify(newNotes), userData.csk).encryptedHex,
         };
         return axios.post(`${raftNode}/key`, updData, config)
           .then(() => mainWindow.webContents.send('note:remove-success'))
-          .catch(({ response }) => cF.catchRestError(mainWindow, response, 'note:remove'));
+          .catch(({ response }) => utils.catchRestError(mainWindow, response, 'note:remove'));
       })
-      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'note:remove', 'GET'));
+      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'note:remove', 'GET'));
   });
 };
 

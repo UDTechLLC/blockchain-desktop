@@ -1,5 +1,5 @@
 const axios = require('axios');
-const cF = require('../utils/commonFunc');
+const utils = require('../utils/utils');
 const { ipcMain } = require('electron');
 
 const timebomb = mainWindow => {
@@ -12,7 +12,7 @@ const timebomb = mainWindow => {
   }) => {
     const key = objType === 'file' ? `${userData.cpk}_fls` : `${userData.cpk}_nts`;
     return axios.get(`${raftNode}/key/${key}`)
-      .then(({ data }) => cF.decryptDataFromRaft(data, key, userData.csk))
+      .then(({ data }) => utils.decryptDataFromRaft(data, key, userData.csk))
       //  add new one
       .then(theData => {
         const newData = JSON.stringify({
@@ -28,13 +28,13 @@ const timebomb = mainWindow => {
           }
         };
         const data = {
-          [key]: cF.aesEncrypt(newData, userData.csk).encryptedHex
+          [key]: utils.aesEncrypt(newData, userData.csk).encryptedHex
         };
         return axios.post(`${raftNode}/key`, data, config)
           .then(() => mainWindow.webContents.send('timebomb:set-success'))
-          .catch(({ response }) => cF.catchRestError(mainWindow, response, 'timebomb:set'));
+          .catch(({ response }) => utils.catchRestError(mainWindow, response, 'timebomb:set'));
       })
-      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'timebomb:set', 'GET'));
+      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'timebomb:set', 'GET'));
   });
 };
 

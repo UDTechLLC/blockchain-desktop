@@ -2,7 +2,7 @@ const _ = require('lodash');
 const axios = require('axios');
 const { ipcMain, dialog } = require('electron');
 const uuidv4 = require('uuid/v4');
-const cF = require('../utils/commonFunc');
+const utils = require('../utils/utils');
 const { ROOT_HASH } = require('../../utils/const');
 
 const foldersListeners = mainWindow => {
@@ -12,7 +12,7 @@ const foldersListeners = mainWindow => {
     //  get actual user folders
     return axios.get(`${raftNode}/key/${foldersKey}`)
     //  decrypt users folders
-      .then(({ data }) => cF.decryptDataFromRaft(data, foldersKey, userData.csk))
+      .then(({ data }) => utils.decryptDataFromRaft(data, foldersKey, userData.csk))
       //  add new one
       .then(folders => {
         const id = uuidv4();
@@ -47,13 +47,13 @@ const foldersListeners = mainWindow => {
           }
         };
         const data = {
-          [foldersKey]: cF.aesEncrypt(updatedObj, userData.csk).encryptedHex
+          [foldersKey]: utils.aesEncrypt(updatedObj, userData.csk).encryptedHex
         };
         return axios.post(`${raftNode}/key`, data, config)
           .then(() => mainWindow.webContents.send('folder:create-success', newFolder))
-          .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:create'));
+          .catch(({ response }) => utils.catchRestError(mainWindow, response, 'folder:create'));
       })
-      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:create', 'GET'));
+      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'folder:create', 'GET'));
   });
   ipcMain.on('folder:edit', (event, { signature, newName, userData, raftNode }) => {
     //  cannot edit root folder
@@ -65,7 +65,7 @@ const foldersListeners = mainWindow => {
     const foldersKey = `${userData.cpk}_flds`;
     return axios.get(`${raftNode}/key/${foldersKey}`)
       .then(({ data }) => {
-        const folders = cF.decryptDataFromRaft(data, foldersKey, userData.csk);
+        const folders = utils.decryptDataFromRaft(data, foldersKey, userData.csk);
         const newFolders = {
           ...folders,
           [signature]: {
@@ -79,13 +79,13 @@ const foldersListeners = mainWindow => {
           }
         };
         const updData = {
-          [foldersKey]: cF.aesEncrypt(JSON.stringify(newFolders), userData.csk).encryptedHex,
+          [foldersKey]: utils.aesEncrypt(JSON.stringify(newFolders), userData.csk).encryptedHex,
         };
         return axios.post(`${raftNode}/key`, updData, config)
           .then(() => mainWindow.webContents.send('folder:edit-success'))
-          .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:edit'));
+          .catch(({ response }) => utils.catchRestError(mainWindow, response, 'folder:edit'));
       })
-      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:edit', 'GET'));
+      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'folder:edit', 'GET'));
   });
   ipcMain.on('folder:delete', (event, { folderId, userData, raftNode }) => {
     //  cannot delete root folder
@@ -104,8 +104,8 @@ const foldersListeners = mainWindow => {
     //  requests to get all user folders and files
     return Promise.all(reqs)
       .then(responses => ({
-        folders: cF.decryptDataFromRaft(responses[0].data, foldersKey, userData.csk),
-        files: cF.decryptDataFromRaft(responses[1].data, filesKey, userData.csk)
+        folders: utils.decryptDataFromRaft(responses[0].data, foldersKey, userData.csk),
+        files: utils.decryptDataFromRaft(responses[1].data, filesKey, userData.csk)
       }))
       .then(({ folders, files }) => {
         //  delete folder from raft list
@@ -122,12 +122,12 @@ const foldersListeners = mainWindow => {
           };
           const data = {
             [foldersKey]: Object.keys(newFolders).length
-              ? cF.aesEncrypt(JSON.stringify(newFolders), userData.csk).encryptedHex
+              ? utils.aesEncrypt(JSON.stringify(newFolders), userData.csk).encryptedHex
               : '',
           };
           return axios.post(`${raftNode}/key`, data, config)
             .then(() => mainWindow.webContents.send('folder:delete-success'))
-            .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:delete'));
+            .catch(({ response }) => utils.catchRestError(mainWindow, response, 'folder:delete'));
         }
         //  else if folder had files
         let shardsReqs = [];
@@ -136,7 +136,7 @@ const foldersListeners = mainWindow => {
           shardsReqs = [
             ...shardsReqs,
             ...deleteFilesArray[signature].shardsAddresses.map((shardAddress, index) => (
-              axios.delete(`${shardAddress}/files/${cF.aesEncrypt(signature, userData.csk).encryptedHex}.${index}`)
+              axios.delete(`${shardAddress}/files/${utils.aesEncrypt(signature, userData.csk).encryptedHex}.${index}`)
             ))
           ];
         });
@@ -146,10 +146,10 @@ const foldersListeners = mainWindow => {
             console.log(JSON.stringify(updFileList));
             const updData = {
               [foldersKey]: Object.keys(newFolders).length
-                ? cF.aesEncrypt(JSON.stringify(newFolders), userData.csk).encryptedHex
+                ? utils.aesEncrypt(JSON.stringify(newFolders), userData.csk).encryptedHex
                 : '',
               [filesKey]: Object.keys(updFileList).length
-                ? cF.aesEncrypt(JSON.stringify(updFileList), userData.csk).encryptedHex
+                ? utils.aesEncrypt(JSON.stringify(updFileList), userData.csk).encryptedHex
                 : ''
             };
             const config = {
@@ -159,11 +159,11 @@ const foldersListeners = mainWindow => {
             };
             return axios.post(`${raftNode}/key`, updData, config)
               .then(() => mainWindow.webContents.send('folder:delete-success'))
-              .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:delete'));
+              .catch(({ response }) => utils.catchRestError(mainWindow, response, 'folder:delete'));
           })
-          .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:delete', 'DELETE'));
+          .catch(({ response }) => utils.catchRestError(mainWindow, response, 'folder:delete', 'DELETE'));
       })
-      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'folder:delete', 'GET'));
+      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'folder:delete', 'GET'));
   });
 };
 

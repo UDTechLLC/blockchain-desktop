@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const axios = require('axios');
 const bitcoin = require('bitcoinjs-lib');
-const cF = require('../utils/commonFunc');
+const utils = require('../utils/utils');
 const { ipcMain, dialog } = require('electron');
 
 const filesListeners = mainWindow => {
@@ -15,9 +15,9 @@ const filesListeners = mainWindow => {
   //         const encryptedData = JSON.parse(response.data[userData.cpk]);
   //         const rawFileNames = Object.keys(encryptedData).map(key => {
   //           if (key.length > 3) {
-  //             const name = cF.aesDecrypt(key, userData.csk).strData;
+  //             const name = utils.aesDecrypt(key, userData.csk).strData;
   //             // eslint-disable-next-line max-len
-  //             const { size, timestamp } = JSON.parse(cF.aesDecrypt(encryptedData[key], userData.csk).strData);
+  //             const { size, timestamp } = JSON.parse(utils.aesDecrypt(encryptedData[key], userData.csk).strData);
   //             return {
   //               name,
   //               size,
@@ -26,7 +26,7 @@ const filesListeners = mainWindow => {
   //           }
   //           return null;
   //         });
-  //         filesList = cF.cleanArray(rawFileNames);
+  //         filesList = utils.cleanArray(rawFileNames);
   //       }
   //       mainWindow.webContents.send('file:your-list', filesList);
   //     })
@@ -60,8 +60,8 @@ const filesListeners = mainWindow => {
   //     });
   //   };
   //   const filesPromise = _.map(files, file => new Promise(resolve => {
-  //     const rawShards = cF.fileCrushing(file);
-  //     const shards = rawShards.map(shard => cF.aesEncrypt(shard, userData.csk).encryptedHex);
+  //     const rawShards = utils.fileCrushing(file);
+  //     const shards = rawShards.map(shard => utils.aesEncrypt(shard, userData.csk).encryptedHex);
   //     resolve({ file, shards });
   //   }));
   //   return Promise.all(filesPromise)
@@ -92,16 +92,16 @@ const filesListeners = mainWindow => {
   //         const requests = fileCred.shardsAddresses.map((url, index) => {
   //           const data = {
   //             data: {
-  //               name: `${cF.aesEncrypt(fileCred.filename, userData.csk).encryptedHex}.${index}`,
+  //               name: `${utils.aesEncrypt(fileCred.filename, userData.csk).encryptedHex}.${index}`,
   //               content: fileCred.shards[index]
   //             }
   //           };
   //           return { url: `${url}/put`, data };
   //         });
   //         //  aes name
-  //         const filename = cF.aesEncrypt(fileCred.filename, userData.csk).encryptedHex;
+  //         const filename = utils.aesEncrypt(fileCred.filename, userData.csk).encryptedHex;
   //         //  aes info
-  //         const fileInfo = cF.aesEncrypt(JSON.stringify(fileCred.fileInfo), userData.csk)
+  //         const fileInfo = utils.aesEncrypt(JSON.stringify(fileCred.fileInfo), userData.csk)
   //           .encryptedHex;
   //         return {
   //           requests,
@@ -135,8 +135,8 @@ const filesListeners = mainWindow => {
     const filesKey = `${userData.cpk}_fls`;
     const threeStorageNodes = storageNodes.slice(0, 3);
     const filesPromises = _.map(files, file => new Promise(resolve => {
-      const rawShards = cF.fileCrushing(file);
-      const shards = rawShards.map(shard => cF.aesEncrypt(shard, userData.csk).encryptedHex);
+      const rawShards = utils.fileCrushing(file);
+      const shards = rawShards.map(shard => utils.aesEncrypt(shard, userData.csk).encryptedHex);
       resolve({ file, shards });
     }));
     //  crush (shred) user files && get users files list
@@ -147,7 +147,7 @@ const filesListeners = mainWindow => {
       .then(responses => {
         //  get user files
         const rawFileList = responses[0].data;
-        let filesList = cF.decryptDataFromRaft(rawFileList, filesKey, userData.csk);
+        let filesList = utils.decryptDataFromRaft(rawFileList, filesKey, userData.csk);
         let storageRequests = [];
         //  update files list with new files info && create array of requests to save shards
         const filesPromisesResult = responses.slice(1);
@@ -162,7 +162,7 @@ const filesListeners = mainWindow => {
           const shardsRequests = shardsAddresses.map((url, index) => {
             const data = {
               data: {
-                name: `${cF.aesEncrypt(signature, userData.csk).encryptedHex}.${index}`,
+                name: `${utils.aesEncrypt(signature, userData.csk).encryptedHex}.${index}`,
                 content: shards[index]
               }
             };
@@ -201,7 +201,7 @@ const filesListeners = mainWindow => {
         return Promise.all(storageRequests)
           .then(() => {
             const data = {
-              [filesKey]: cF.aesEncrypt(filesListStr, userData.csk).encryptedHex
+              [filesKey]: utils.aesEncrypt(filesListStr, userData.csk).encryptedHex
             };
             const config = {
               headers: {
@@ -210,11 +210,11 @@ const filesListeners = mainWindow => {
             };
             return axios.post(`${raftNode}/key`, data, config)
               .then(() => mainWindow.webContents.send('files:upload-success', filesList))
-              .catch(({ response }) => cF.catchRestError(mainWindow, response, 'files:upload'));
+              .catch(({ response }) => utils.catchRestError(mainWindow, response, 'files:upload'));
           })
-          .catch(({ response }) => cF.catchRestError(mainWindow, response, 'files:upload', 'PUT'));
+          .catch(({ response }) => utils.catchRestError(mainWindow, response, 'files:upload', 'PUT'));
       })
-      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'files:upload', 'CRUSHING + GET'));
+      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'files:upload', 'CRUSHING + GET'));
   });
   //  on file download listener
   // ipcMain.on('file:compile', (event, { userData, filename, raftNode }) => (
@@ -223,12 +223,12 @@ const filesListeners = mainWindow => {
   //       const fileList = {
   //         ...JSON.parse(response.data[userData.cpk])
   //       };
-  //       const pointer = cF.aesEncrypt(filename, userData.csk);
+  //       const pointer = utils.aesEncrypt(filename, userData.csk);
   //       const encryptedData = fileList[pointer.encryptedHex];
-  //       const decryptedData = cF.aesDecrypt(encryptedData, userData.csk);
+  //       const decryptedData = utils.aesDecrypt(encryptedData, userData.csk);
   //       const fileDataObj = JSON.parse(decryptedData.strData);
   //       const shardsReq = fileDataObj.shardsAddresses.map((shardAddress, index) => {
-  //         const fname = cF.aesEncrypt(filename, userData.csk).encryptedHex;
+  //         const fname = utils.aesEncrypt(filename, userData.csk).encryptedHex;
   //         return axios.get(`${shardAddress}/files/${fname}.${index}`);
   //       });
   //       return new Promise(resolve => (
@@ -240,7 +240,7 @@ const filesListeners = mainWindow => {
   //       ));
   //     })
   //     .then(responses => {
-  //       const shards = responses.map(res => cF.aesDecrypt(res.data, userData.csk).strData);
+  //       const shards = responses.map(res => utils.aesDecrypt(res.data, userData.csk).strData);
   //       const base64File = shards.join('');
   //       // eslint-disable-next-line promise/always-return
   //       if (base64File) {
@@ -253,15 +253,15 @@ const filesListeners = mainWindow => {
     const filesKey = `${userData.cpk}_fls`;
     return axios.get(`${raftNode}/key/${filesKey}`)
       .then(({ data }) => {
-        const fileList = cF.decryptDataFromRaft(data, filesKey, userData.csk);
+        const fileList = utils.decryptDataFromRaft(data, filesKey, userData.csk);
         const fileData = fileList[signature];
         const shardsReq = fileData.shardsAddresses.map((shardAddress, index) => (
-          axios.get(`${shardAddress}/files/${cF.aesEncrypt(signature, userData.csk).encryptedHex}.${index}`)
+          axios.get(`${shardAddress}/files/${utils.aesEncrypt(signature, userData.csk).encryptedHex}.${index}`)
         ));
         return Promise.all(shardsReq);
       })
       .then(responses => {
-        const shards = responses.map(res => cF.aesDecrypt(res.data, userData.csk).strData);
+        const shards = responses.map(res => utils.aesDecrypt(res.data, userData.csk).strData);
         const base64File = shards.join('');
         if (base64File) {
           return mainWindow.webContents.send('file:download-success', base64File);
@@ -269,7 +269,7 @@ const filesListeners = mainWindow => {
         dialog.showErrorBox('Error on file:download', 'Empty file');
         return mainWindow.webContents.send('file:download-failed');
       })
-      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'file:download', 'COMPILE + GET'));
+      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'file:download', 'COMPILE + GET'));
   });
   //  on file remove listener
   // ipcMain.on('file:remove', (event, { userData, filename, raftNode }) => (
@@ -281,9 +281,9 @@ const filesListeners = mainWindow => {
   //         ...response.data
   //       };
   //       //  aes name
-  //       const encName = cF.aesEncrypt(filename, userData.csk).encryptedHex;
+  //       const encName = utils.aesEncrypt(filename, userData.csk).encryptedHex;
   //       const userObj = JSON.parse(updateObj[userData.cpk]);
-  //       const decData = JSON.parse(cF.aesDecrypt(userObj[encName], userData.csk).strData);
+  //       const decData = JSON.parse(utils.aesDecrypt(userObj[encName], userData.csk).strData);
   //       const removeReqs = decData.shardsAddresses.map((req, i) => (
   //          axios.delete(`${req}/files/${encName}.${i}`)
   //        ));
@@ -317,17 +317,17 @@ const filesListeners = mainWindow => {
     const filesKey = `${userData.cpk}_fls`;
     return axios.get(`${raftNode}/key/${filesKey}`)
       .then(({ data }) => {
-        const fileList = cF.decryptDataFromRaft(data, filesKey, userData.csk);
+        const fileList = utils.decryptDataFromRaft(data, filesKey, userData.csk);
         const fileData = fileList[signature];
         const shardsReq = fileData.shardsAddresses.map((shardAddress, index) => (
-          axios.delete(`${shardAddress}/files/${cF.aesEncrypt(signature, userData.csk).encryptedHex}.${index}`)
+          axios.delete(`${shardAddress}/files/${utils.aesEncrypt(signature, userData.csk).encryptedHex}.${index}`)
         ));
         return Promise.all(shardsReq)
           .then(() => {
             const updFileList = fileList;
             delete updFileList[signature];
             const updData = {
-              [filesKey]: cF.aesEncrypt(JSON.stringify(updFileList), userData.csk).encryptedHex
+              [filesKey]: utils.aesEncrypt(JSON.stringify(updFileList), userData.csk).encryptedHex
             };
             const config = {
               headers: {
@@ -336,11 +336,11 @@ const filesListeners = mainWindow => {
             };
             return axios.post(`${raftNode}/key`, updData, config)
               .then(() => mainWindow.webContents.send('file:remove-success'))
-              .catch(({ response }) => cF.catchRestError(mainWindow, response, 'file:remove'));
+              .catch(({ response }) => utils.catchRestError(mainWindow, response, 'file:remove'));
           })
-          .catch(({ response }) => cF.catchRestError(mainWindow, response, 'file:remove', 'DELETE'));
+          .catch(({ response }) => utils.catchRestError(mainWindow, response, 'file:remove', 'DELETE'));
       })
-      .catch(({ response }) => cF.catchRestError(mainWindow, response, 'file:remove', 'GET'));
+      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'file:remove', 'GET'));
   });
 };
 

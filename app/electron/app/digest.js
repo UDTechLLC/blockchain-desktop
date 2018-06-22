@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { ipcMain, dialog } = require('electron');
 
-const cF = require('../utils/commonFunc');
+const utils = require('../utils/utils');
 const { DIGEST_URL } = require('../../utils/const');
 
 const digest = mainWindow => {
@@ -34,7 +34,7 @@ const digest = mainWindow => {
       const reqData = {
         address: userData.address,
         pubKey: userData.cpk,
-        AES: cF.getHash(password)
+        AES: utils.getHash(password)
       };
       return axios.post(`${DIGEST_URL}/hello/application`, reqData)
         .then(({ data }) => mainWindow.webContents.send('digest:success', data))
@@ -59,7 +59,7 @@ const digest = mainWindow => {
   //   const reqData = {
   //     address: userData.address,
   //     pubKey: userData.cpk,
-  //     AES: cF.getHash(password)
+  //     AES: utils.getHash(password)
   //   };
   //   return axios.post(`${DIGEST_URL}/hello/application`, reqData)
   //     .then(({ data }) => mainWindow.webContents.send('digest:success', data))
