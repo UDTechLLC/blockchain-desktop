@@ -4,7 +4,6 @@ const { ipcMain } = require('electron');
 const utils = require('../utils/utils');
 const wallet = require('../utils/wallet');
 
-
 const auth = mainWindow => {
   //  on credentials generate listener
   ipcMain.on('registration:start', (event, password) => {
@@ -71,3 +70,22 @@ const auth = mainWindow => {
 };
 
 export default auth;
+
+// class Auth {
+//   constructor(mainWindow, configFolder, cpkGlob) {
+//     this.mainWindow = mainWindow;
+//     this.configFolder = configFolder;
+//     this.cpkGlob = cpkGlob;
+//     ipcMain.on('registration:start', (event, password) => this.regUser(password));
+//   }
+//   regUser = password => {
+//     console.log('here we go');
+//     //  create user data with wallet service
+//     const userData = wallet.newCredentials();
+//     const strData = JSON.stringify(userData);
+//     const encryptedData = utils.aesEncrypt(strData, password, 'hex').encryptedHex;
+//     return this.mainWindow.webContents.send('registration:complete', encryptedData);
+//   }
+// }
+//
+// export default Auth;
