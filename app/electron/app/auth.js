@@ -11,8 +11,6 @@ const auth = mainWindow => {
     //  create user data with wallet service
     const userData = wallet.newCredentials();
     const strData = JSON.stringify(userData);
-    const encryptedData = cF.aesEncrypt(strData, password, 'hex').encryptedHex;
-    return mainWindow.webContents.send('registration:complete', encryptedData);
     const encryptedData = utils.aesEncrypt(strData, password, 'hex').encryptedHex;
     return mainWindow.webContents.send('registration:complete', encryptedData);
     //  save to file
