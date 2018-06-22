@@ -142,28 +142,6 @@ class CreateTransaction extends Component {
             return input;
           })
         }
-        {
-          process.env.NODE_ENV !== 'development'
-            ? null
-            : (
-              <div
-                className={[
-                  styles.flexAllCenter,
-                  styles.FormGroup
-                ].join(' ')}
-              >
-                <input
-                  id="wallet-minenow"
-                  type="checkbox"
-                  checked={this.props.minenow}
-                  style={{ marginRight: 15 }}
-                  onChange={() => this.props.handleOnMineNowCheck()}
-                />
-                {/* eslint-disable-next-line jsx-a11y/label-has-for */}
-                <label htmlFor="wallet-minenow">Minenow</label>
-              </div>
-            )
-        }
       </form>
     );
 
@@ -185,8 +163,6 @@ class CreateTransaction extends Component {
 }
 
 CreateTransaction.propTypes = {
-  minenow: PropTypes.bool.isRequired,
-  handleOnMineNowCheck: PropTypes.func.isRequired,
   handleSubmitTransaction: PropTypes.func.isRequired,
   transactionLoading: PropTypes.bool.isRequired
 };

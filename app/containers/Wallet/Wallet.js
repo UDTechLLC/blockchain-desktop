@@ -18,7 +18,6 @@ const styles = { ...commonCss, ...css };
 
 class Wallet extends Component {
   state = {
-    minenow: true,
     transactionLoading: false,
     depositPlanSelect: {
       elementType: 'select',
@@ -90,17 +89,14 @@ class Wallet extends Component {
       },
     }
   };
-  handleOnMineNowCheck = () => this.setState({ minenow: !this.state.minenow });
   handleSubmitTransaction = (to, amount) => {
     this.setState({ transactionLoading: true });
     const userData = this.props.userData;
-    const minenow = this.state.minenow;
     const bcNode = `${this.props.bcNodes[0]}`;
     ipcRenderer.send('transaction:create', {
       userData,
       to,
       amount,
-      minenow,
       bcNode
     });
     ipcRenderer.once('transaction:done', () => {
@@ -147,8 +143,6 @@ class Wallet extends Component {
           >
             <BlockchainOperations
               transactionLoading={this.state.transactionLoading}
-              minenow={this.state.minenow}
-              handleOnMineNowCheck={() => this.handleOnMineNowCheck()}
               handleSubmitTransaction={(to, amount) => this.handleSubmitTransaction(to, amount)}
               address={this.props.userData.address}
               // cpk={this.props.userData.cpk}

@@ -27,8 +27,6 @@ const blockchainOperations = props => (
       >
         <CreateTransaction
           transactionLoading={props.transactionLoading}
-          minenow={props.minenow}
-          handleOnMineNowCheck={() => props.handleOnMineNowCheck()}
           handleSubmitTransaction={(to, amount) => props.handleSubmitTransaction(to, amount)}
         />
       </div>
@@ -49,8 +47,6 @@ const blockchainOperations = props => (
 );
 
 blockchainOperations.propTypes = {
-  minenow: PropTypes.bool.isRequired,
-  handleOnMineNowCheck: PropTypes.func.isRequired,
   handleSubmitTransaction: PropTypes.func.isRequired,
   transactionLoading: PropTypes.bool.isRequired,
   address: PropTypes.string.isRequired,
