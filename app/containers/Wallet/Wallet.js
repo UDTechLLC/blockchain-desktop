@@ -152,7 +152,7 @@ class Wallet extends Component {
               handleSubmitTransaction={(to, amount) => this.handleSubmitTransaction(to, amount)}
               address={this.props.userData.address}
               // cpk={this.props.userData.cpk}
-              balance={this.props.balance}
+              balance={this.props.balance.total}
             />
           </div>
           <div
@@ -180,7 +180,11 @@ Wallet.propTypes = {
     cpk: PropTypes.string,
     address: PropTypes.string
   }),
-  balance: PropTypes.number,
+  balance: PropTypes.shape({
+    total: PropTypes.number,
+    approved: PropTypes.number,
+    pending: PropTypes.number
+  }),
   getBalance: PropTypes.func.isRequired,
   bcNodes: PropTypes.arrayOf(PropTypes.string)
 };
@@ -192,7 +196,7 @@ Wallet.defaultProps = {
     address: null
   },
   bcNodes: [],
-  balance: 0
+  balance: {}
 };
 
 const mapStateToProps = state => ({

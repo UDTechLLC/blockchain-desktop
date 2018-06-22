@@ -2,7 +2,11 @@ import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../utils/utility';
 
 const initialState = {
-  balance: 0,
+  balance: {
+    total: 0,
+    approved: 0,
+    pending: 0
+  },
   success: false,
   error: null,
   loading: false
@@ -13,7 +17,10 @@ const getBalanceStart = state => (updateObject(state, {
 }));
 
 const getBalanceSuccess = (state, action) => (updateObject(state, {
-  balance: action.balance ? action.balance : 0,
+  balance: {
+    ...state.balance,
+    ...action.balance
+  },
   success: action.success,
   loading: false
 }));
