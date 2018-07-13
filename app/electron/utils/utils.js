@@ -1,28 +1,10 @@
 /* eslint-disable max-len,no-plusplus */
 // const _ = require('lodash');
 const aesjs = require('aes-js');
-const axios = require('axios');
 const bitcoin = require('bitcoinjs-lib');
 const fs = require('fs');
 const pbkdf2 = require('pbkdf2');
 const { dialog } = require('electron');
-
-/**
- * unmount fs buckets
- * @param cpk {string}
- * @param serversArray {array}
- * @param funcAfter {function}
- */
-const unmountFs = (cpk, serversArray, funcAfter = null) => {
-  const reqs = serversArray.map(url => axios.post(`${url}/${cpk}/unmount`));
-  axios.all(reqs)
-    .catch(error => {
-      console.log(error);
-      if (funcAfter) {
-        funcAfter();
-      }
-    });
-};
 
 /**
  * convert string to bytes array
@@ -35,22 +17,6 @@ const stringToBytes = string => {
     result.push(string.charCodeAt(i));
   }
   return result;
-};
-
-/**
- * clean array from null values
- * @param actual {Array}
- * @returns {Array}
- */
-const cleanArray = actual => {
-  const newArray = [];
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < actual.length; i++) {
-    if (actual[i]) {
-      newArray.push(actual[i]);
-    }
-  }
-  return newArray;
 };
 
 /**
@@ -164,25 +130,6 @@ const getHash = (string, format = 'hex') => {
   return bitcoin.crypto.ripemd160(publicSHA256).toString('hex');
 };
 
-// /**
-//  * get axios response data and insert new data inside with previous encryption of it
-//  * @param data {string}
-//  * @param newDataObject {object}
-//  * @param key {string}
-//  * @param password {string}
-//  * @returns {Object}
-//  */
-// const encryptDataForRaft = (data, newDataObject, key, password) => {
-//   const defaultObj = data.length
-//     ? JSON.parse(data)[key]
-//     : {};
-//   const encryptedNewDataObj = _.mapValues(newDataObject, v => aesEncrypt(JSON.stringify(v), password).encryptedHex);
-//   return {
-//     ...defaultObj,
-//     ...encryptedNewDataObj
-//   };
-// };
-
 /**
  * decrypt users data object after axios request
  * @param data {object}
@@ -232,15 +179,12 @@ const errorHandler = (error, mainWindow, listenerName, log = true) => {
 };
 
 module.exports = {
-  unmountFs,
   stringToBytes,
-  cleanArray,
   ensureDirectoryExistence,
   aesEncrypt,
   aesDecrypt,
   fileCrushing,
   getHash,
-  // encryptDataForRaft,
   decryptDataFromRaft,
   jsonParse,
   errorHandler

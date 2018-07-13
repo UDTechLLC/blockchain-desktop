@@ -1,8 +1,8 @@
 const fs = require('fs');
 
-const utils = require('./../utils/utils');
-const wallet = require('./../utils/wallet');
-const rest = require('./../rest');
+const utils = require('../../utils/utils');
+const wallet = require('../../utils/wallet');
+const rest = require('../../rest/index');
 
 const signUp = password => {
   //  create user data with wallet service

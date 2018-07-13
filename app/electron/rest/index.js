@@ -5,7 +5,7 @@ export {
   files2FS,
   getFileFromFS,
   removeFilesFromFs
-} from './storageNodes';
+} from './storage-nodes';
 export {
   getAllUserInfo,
   getValuesByKvKey,

@@ -2,7 +2,7 @@
 const { ipcMain } = require('electron');
 // const utils = require('../utils/utils');
 const rest = require('./../rest');
-const Folders = require('./folders');
+const Folders = require('./folders/folders');
 const Files = require('./files');
 const Notes = require('./notes');
 const TimeBomb = require('./timebomb');

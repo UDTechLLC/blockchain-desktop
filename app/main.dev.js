@@ -9,19 +9,17 @@
  *
  * @flow
  */
-const axios = require('axios');
-const fs = require('fs');
 const path = require('path');
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const { requireTaskPool } = require('electron-remote');
 
 const MenuBuilder = require('./menu');
-const CommonListeners = require('./electron/app/common');
 const utils = require('./electron/utils/utils');
-const rest = require('./electron/rest');
 
-const auth = requireTaskPool(require.resolve('./electron/app/auth'));
+const auth = requireTaskPool(require.resolve('./electron/app/auth/auth'));
+const flds = requireTaskPool(require.resolve('./electron/app/folders/folders'));
 
+// const CommonListeners = require('./electron/app/common');
 // const Digest = require('./electron/app/digest');
 // const FS = require('./electron/app/filesystem');
 // const Raft = require('./electron/app/raft');
@@ -89,11 +87,11 @@ app.on('ready', async () => {
     minHeight: 600
   });
   mainWindow.on('closed', () => {
-    if (cpkGlob) {
-      utils.unmountFs(cpkGlob, fsUrlGlob, app.quit);
-    } else {
-      app.quit();
-    }
+    // if (cpkGlob) {
+    //   utils.unmountFs(cpkGlob, fsUrlGlob, app.quit);
+    // } else {
+    app.quit();
+    // }
   });
   mainWindow.loadURL(`file://${__dirname}/app.html`);
   mainWindow.webContents.on('did-finish-load', () => {
@@ -150,120 +148,31 @@ ipcMain.on('sign-out:start', async (event, { userData, storageNodes }) => {
   }
 });
 
-// this listeners is here because of redefining cpkGlob and fsUrlGlob
-
-//  fs mounting
-ipcMain.on('fs:mount', (event, fsUrl) => {
-  const origin = cpkGlob;
-  const threeUrls = fsUrl.slice(0, 3);
-  //  send fs url of user to main func
-  fsUrlGlob = threeUrls;
-  const reqAllState = [];
-  const reqAllMount = [];
-  // const reqAllCreate = [];
-  if (threeUrls[0] === threeUrls[2]) {
-    reqAllState.push(axios.get(`${threeUrls[0]}/${origin}/state`));
-    reqAllMount.push(axios.post(`${threeUrls[0]}/${origin}/mount`));
-    // reqAllCreate.push(axios.post(threeUrls[0], { data: { origin } }));
-  } else {
-    for (let i = 0; i < threeUrls.length; i += 1) {
-      reqAllState.push(axios.get(`${threeUrls[i]}/${origin}/state`));
-      reqAllMount.push(axios.post(`${threeUrls[i]}/${origin}/mount`));
-      //  unexpected trigger on create request
-      // reqAllCreate.push(axios.post(`${threeUrls[i]}`, { data: { origin }}));
-    }
+//  folders listeners
+// eslint-disable-next-line object-curly-newline
+ipcMain.on('create-folder:start', async (event, { name, parentFolder, userData, raftNode }) => {
+  try {
+    const folder = await flds.createOne(name, parentFolder, userData, raftNode);
+    mainWindow.webContents.send('create-folder:success', folder);
+  } catch (e) {
+    utils.errorHandler(e, mainWindow, 'create-folder');
   }
-  // // user origin create and mount requests
-  // return Promise.all(reqAllMount)
-  //   .then(() => mainWindow.webContents.send('fs:mounted'))
-  //   .catch(({ response }) => {
-  //     if (response.data.data.exitcode === 7) {
-  //       return mainWindow.webContents.send('fs:mounted');
-  //     }
-  //     return setTimeout(() => (
-  //       Promise.all(reqAllCreate)
-  //         .then(() => mainWindow.webContents.send('fs:mounted'))
-  //         .catch(({ response }) => {
-  //           if (response.data.data.exitcode === 7) {
-  //             return mainWindow.webContents.send('fs:mounted');
-  //           }
-  //           console.log(response.data.data);
-  //         })
-  //     ), 100);
-  //   });
-
-  // with status method
-  return Promise.all(reqAllState)
-    .then(responses => {
-      //  find out what nodes are not mounted
-      const reqMount = utils.cleanArray(responses.map((response, i) => (
-        !response.data.mounted
-          ? reqAllMount[i]
-          : null
-      )));
-      // not created
-      const urlsCreate = utils.cleanArray(responses.map((response, i) => (
-        !response.data.created
-          ? threeUrls[i]
-          : null
-      )));
-      // if we have nodes to create
-      if (urlsCreate.length) {
-        return Promise.all(urlsCreate.map(url => (
-          axios.post(url, { data: { origin } })
-        )))
-          .then(() => (
-            Promise.all(reqMount)
-              .then(() => mainWindow.webContents.send('fs:mounted'))
-              .catch(({ response }) => {
-                console.log(response.data);
-                return dialog.showErrorBox('Error', response.data.message);
-              })
-          ))
-          .catch(({ response }) => {
-            console.log(response.data);
-            return dialog.showErrorBox('Error', response.data.message);
-          });
-      } else
-      if (!urlsCreate && reqMount.length) {
-        //  only mount
-        return Promise.all(reqMount)
-          .then(() => mainWindow.webContents.send('fs:mounted'))
-          .catch(({ response }) => {
-            console.log(response.data);
-            return dialog.showErrorBox('Error', response.data.message);
-          });
-      }
-      return mainWindow.webContents.send('fs:mounted');
-    })
-    .catch(({ response }) => {
-      console.log(response.data);
-      return dialog.showErrorBox('Error', response.data.message);
-    });
 });
-//  on auth listener
-ipcMain.on('auth:start', (event, { password, filePath }) => {
-  let encryptedHex;
-  // eslint-disable-next-line comma-spacing
-  let credFilePath = process.platform !== 'win32' ? filePath : filePath.replace(/\\/gi,'/');
-  if (credFilePath.indexOf('/') < 0 || !credFilePath) {
-    credFilePath = `${configFolder}/${filePath}`;
+
+ipcMain.on('edit-folder:start', async (event, { folder, userData, raftNode }) => {
+  try {
+    const theFolder = await flds.editOne(folder, userData, raftNode);
+    mainWindow.webContents.send('create-folder:success', theFolder);
+  } catch (e) {
+    utils.errorHandler(e, mainWindow, 'edit-folder');
   }
-  return fs.readFile(credFilePath, (err, data) => {
-    if (err) {
-      dialog.showErrorBox('Error', err);
-    }
-    encryptedHex = data;
-    if (!encryptedHex) {
-      dialog.showErrorBox('Error', 'There is no credentials file');
-      return;
-    }
-    const decrypt = utils.aesDecrypt(encryptedHex, password, 'hex');
+});
 
-    //  send cpk of user to main func
-    cpkGlob = JSON.parse(decrypt.strData).cpk;
-
-    // on user data decryption and mounting fs - give userData to react part
-    mainWindow.webContents.send('auth:complete', decrypt.strData);
-  });
+ipcMain.on('remove-folders:start', async (event, { folders, userData, raftNode }) => {
+  try {
+    const files = await flds.remove(folders, userData, raftNode);
+    mainWindow.webContents.send('create-folder:success', { folders, files });
+  } catch (e) {
+    utils.errorHandler(e, mainWindow, 'remove-folders');
+  }
 });
