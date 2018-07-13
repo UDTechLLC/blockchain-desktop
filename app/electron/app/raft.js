@@ -1,7 +1,7 @@
 // const axios = require('axios');
 const { ipcMain } = require('electron');
 // const utils = require('../utils/utils');
-const requests = require('../utils/rest-requests');
+const rest = require('./../rest');
 const Folders = require('./folders');
 const Files = require('./files');
 const Notes = require('./notes');
@@ -30,7 +30,7 @@ const raft = mainWindow => {
     //     return mainWindow.webContents.send('user-data:get-complete', data);
     //   })
     //   .catch(({ response }) => utils.catchRestError(mainWindow, response, 'user-data:get', 'GET'));
-    return requests.getAlllUserInfo(userData, raftNode, mainWindow);
+    return rest.getAllUserInfo(userData, raftNode, mainWindow);
   });
   //  folders listeners
   Folders(mainWindow);

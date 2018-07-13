@@ -1,5 +1,4 @@
-/* eslint-disable object-curly-newline */
-/* eslint global-require: 0, flowtype-errors/show-errors: 0 */
+/* eslint-disable global-require */
 /**
  * This module executes inside of electron's main process. You can start
  * electron renderer process from here and communicate with the other processes
@@ -14,32 +13,31 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
-
-const utils = require('./electron/utils/utils');
+const { requireTaskPool } = require('electron-remote');
 
 const MenuBuilder = require('./menu');
 const CommonListeners = require('./electron/app/common');
-const Digest = require('./electron/app/digest');
-const Auth = require('./electron/app/auth');
-const FS = require('./electron/app/filesystem');
-const Raft = require('./electron/app/raft');
+const utils = require('./electron/utils/utils');
+const rest = require('./electron/rest');
+
+const auth = requireTaskPool(require.resolve('./electron/app/auth'));
+
+// const Digest = require('./electron/app/digest');
+// const FS = require('./electron/app/filesystem');
+// const Raft = require('./electron/app/raft');
 // const FilesListeners = require('./electron/app/files');
-const BlockChain = require('./electron/app/blockchain');
+// const BlockChain = require('./electron/app/blockchain');
 // const GhostPad = require('./electron/app/notes');
 
-let configFolder = `${process.cwd()}/.wizeconfig`;
-if (process.platform === 'darwin') {
-  configFolder = '/Applications/Wizebit.app/Contents/Resources/.wizeconfig';
-} else if (process.platform === 'win32') {
-  configFolder = `${process.cwd()}\\wizeconfig`;
-}
+// let configFolder = `${process.cwd()}/.wizeconfig`;
+// if (process.platform === 'darwin') {
+//   configFolder = '/Applications/Wizebit.app/Contents/Resources/.wizeconfig';
+// } else if (process.platform === 'win32') {
+//   configFolder = `${process.cwd()}\\wizeconfig`;
+// }
 
 //  mainWindow container
 let mainWindow;
-//  private key container for listeners
-let cpkGlob;
-//  file system container for listeners
-let fsUrlGlob;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -109,21 +107,47 @@ app.on('ready', async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
   //  common
-  CommonListeners(mainWindow, configFolder);
+  // CommonListeners(mainWindow, configFolder);
   //  digest
-  Digest(mainWindow);
+  // Digest(mainWindow);
   //  raft
-  Raft(mainWindow);
+  // Raft(mainWindow);
   //  file system listeners
-  FS(mainWindow, cpkGlob, fsUrlGlob);
-  //  auth
-  Auth(mainWindow, configFolder, cpkGlob);
+  // FS(mainWindow, cpkGlob, fsUrlGlob);
   // //  files listeners
   // FilesListeners(mainWindow);
   //  blockchain listeners
-  BlockChain(mainWindow);
+  // BlockChain(mainWindow);
   // //  notes listeners
   // GhostPad(mainWindow);
+});
+
+//  auth listeners
+ipcMain.on('sign-up:start', async (event, password) => {
+  try {
+    const encryptedHex = await auth.signUp(password);
+    mainWindow.webContents.send('sign-up:success', encryptedHex);
+  } catch (e) {
+    utils.errorHandler(e, mainWindow, 'sign-up');
+  }
+});
+
+ipcMain.on('sign-in:start', async (event, { password, filePath }) => {
+  try {
+    const userData = await auth.signIn(password, filePath);
+    mainWindow.webContents.send('sign-in:success', userData);
+  } catch (e) {
+    utils.errorHandler(e, mainWindow, 'sign-in');
+  }
+});
+
+ipcMain.on('sign-out:start', async (event, { userData, storageNodes }) => {
+  try {
+    const success = await auth.signOut(userData, storageNodes);
+    mainWindow.webContents.send('sign-out:success', success);
+  } catch (e) {
+    utils.errorHandler(e, mainWindow, 'sign-out');
+  }
 });
 
 // this listeners is here because of redefining cpkGlob and fsUrlGlob

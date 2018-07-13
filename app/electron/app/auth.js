@@ -1,91 +1,66 @@
-/* eslint-disable max-len */
-const { ipcMain } = require('electron');
+const fs = require('fs');
 
-const utils = require('../utils/utils');
-const wallet = require('../utils/wallet');
+const utils = require('./../utils/utils');
+const wallet = require('./../utils/wallet');
+const rest = require('./../rest');
 
-const auth = mainWindow => {
-  //  on credentials generate listener
-  ipcMain.on('registration:start', (event, password) => {
-    //  create user data with wallet service
-    const userData = wallet.newCredentials();
-    const strData = JSON.stringify(userData);
-    const encryptedData = utils.aesEncrypt(strData, password, 'hex').encryptedHex;
-    return mainWindow.webContents.send('registration:complete', encryptedData);
-    //  save to file
-    // if (utils.ensureDirectoryExistence(configFolder)) {
-    //   const aes = utils.aesEncrypt(strData, password, 'hex');
-    //   fs.readdir(configFolder, (error, files) => {
-    //     if (error) {
-    //       dialog.showErrorBox('Error', error);
-    //     }
-    //     const credFiles = files.map(file => (
-    //       !file.indexOf('credentials')
-    //         ? file
-    //         : null
-    //     ));
-    //     const credArr = utils.cleanArray(credFiles);
-    //     fs.writeFile(`${configFolder}/credentials-${credArr.length}.bak`, aes.encryptedHex, err => {
-    //       if (err) {
-    //         dialog.showErrorBox('Error', err);
-    //       }
-    //       mainWindow.webContents.send('registration:complete', strData);
-    //     });
-    //   });
-    // }
-  });
+const signUp = password => {
+  //  create user data with wallet service
+  const userData = wallet.newCredentials();
+  const strData = JSON.stringify(userData);
+  return utils.aesEncrypt(strData, password, 'hex').encryptedHex;
+};
 
-  // //  on auth listener
-  // ipcMain.on('auth:start', (event, { password, filePath }) => {
-  //   let encryptedHex;
-  //   // eslint-disable-next-line comma-spacing
-  //   let credFilePath = process.platform !== 'win32' ? filePath : filePath.replace(/\\/gi,'/');
-  //   if (credFilePath.indexOf('/') < 0 || !credFilePath) {
-  //     credFilePath = `${configFolder}/${filePath}`;
-  //   }
-  //   return fs.readFile(credFilePath, (err, data) => {
-  //     if (err) {
-  //       dialog.showErrorBox('Error', err);
-  //     }
-  //     encryptedHex = data;
-  //     if (!encryptedHex) {
-  //       dialog.showErrorBox('Error', 'There is no credentials file');
-  //       return;
-  //     }
-  //     const decrypt = utils.aesDecrypt(encryptedHex, password, 'hex');
-  //
-  //     //  send cpk of user to main func
-  //     cpkGlob = JSON.parse(decrypt.strData).cpk;
-  //
-  //     // on user data decryption and mounting fs - give userData to react part
-  //     mainWindow.webContents.send('auth:complete', decrypt.strData);
-  //   });
-  // });
+const signIn = (password, filePath) => {
+  const credFilePath = process.platform !== 'win32' ? filePath : filePath.replace(/\\/gi, '/');
+  fs.readFile(credFilePath, (error, encryptedHex) => {
+    if (error && !encryptedHex) throw new Error(error);
 
-  // decrypt credentials with password
-  ipcMain.on('crypto:decrypt-credentials', (event, { string, password }) => {
-    const credentials = utils.aesDecrypt(string, password, 'hex').strData;
-    return mainWindow.webContents.send('crypto:decrypted-credentials', credentials);
+    //  parse user credentials with passed password
+    const strUserData = utils.aesDecrypt(encryptedHex, password, 'hex').strData;
+
+    //  parse user credentials with passed password
+    utils.jsonParse(strUserData, (err, userData) => {
+      if (err) {
+        //  in case of troubles with parse decrypted info - there is wrong password
+        throw new Error({ message: 'Wrong password!' });
+      } else if (!wallet.validateAddress(userData.address)) {
+        //  if decrypted address in not valid - throw an error
+        throw new Error({ message: 'There`s something wrong with your credentials!' });
+      }
+
+      const passwordHash = utils.getHash(password);
+
+      //  get digest through rest
+      rest.getDigest(userData, passwordHash, (digestError, digestInfo) => {
+        if (digestError) throw new Error(digestError);
+
+        // get raft info
+        rest.getAllUserInfo(userData, digestInfo.raftNodes[0], (userInfoError, userInfo) => {
+          if (userInfoError) throw new Error(userInfoError);
+
+          //  mount fs
+          rest.mountBuckets(userData.cpk, digestInfo.storageNodes, mountErr => {
+            if (mountErr) throw new Error(mountErr);
+
+            return { ...userInfo, digestInfo, userData };
+          });
+        });
+      });
+    });
   });
 };
 
-export default auth;
+const signOut = (userData, storageNodes) => {
+  rest.unmountBuckets(userData, storageNodes, (error, success) => {
+    if (error) throw new Error(error);
 
-// class Auth {
-//   constructor(mainWindow, configFolder, cpkGlob) {
-//     this.mainWindow = mainWindow;
-//     this.configFolder = configFolder;
-//     this.cpkGlob = cpkGlob;
-//     ipcMain.on('registration:start', (event, password) => this.regUser(password));
-//   }
-//   regUser = password => {
-//     console.log('here we go');
-//     //  create user data with wallet service
-//     const userData = wallet.newCredentials();
-//     const strData = JSON.stringify(userData);
-//     const encryptedData = utils.aesEncrypt(strData, password, 'hex').encryptedHex;
-//     return this.mainWindow.webContents.send('registration:complete', encryptedData);
-//   }
-// }
-//
-// export default Auth;
+    return { success };
+  });
+};
+
+module.exports = {
+  signUp,
+  signIn,
+  signOut
+};

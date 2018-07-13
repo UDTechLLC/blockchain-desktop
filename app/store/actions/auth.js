@@ -4,7 +4,7 @@ import * as actionTypes from './actionTypes';
 import { getDigest } from './index';
 
 const regStart = (password) => {
-  ipcRenderer.send('registration:start', password);
+  ipcRenderer.send('sign-up:start', password);
   return { type: actionTypes.REGISTRATION_START };
 };
 
@@ -15,7 +15,7 @@ const regSuccess = encryptedData => ({
 
 export const registration = password => dispatch => {
   dispatch(regStart(password));
-  ipcRenderer.once('registration:complete', (event, encryptedData) => dispatch(regSuccess(encryptedData)));
+  ipcRenderer.once('sign-up:success', (event, encryptedData) => dispatch(regSuccess(encryptedData)));
 };
 
 const authStart = (password, filePath) => {

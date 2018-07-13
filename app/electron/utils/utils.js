@@ -204,20 +204,31 @@ const decryptDataFromRaft = (data, key, password) => (
 );
 
 /**
+ * Parse json and catch error if something wrong
+ * @param string {string}
+ * @param callback {function}
+ */
+const jsonParse = (string, callback) => {
+  try {
+    const obj = JSON.parse(string);
+    callback(undefined, obj);
+  } catch (e) {
+    callback({ message: 'Invalid input data' });
+  }
+};
+
+/**
  * Standard catch of rest error
+ * @param error {*}
  * @param mainWindow
- * @param response {object}
- * @param listenerName {string}
- * @param reqType {string}
+ * @param listenerName {String}
+ * @param log {Boolean}
  * @return {listener}
  */
-const catchRestError = (mainWindow, response, listenerName, reqType = 'POST') => {
-  const error = response && response.data
-    ? (response.data.data || response.data)
-    : `Unexpected error on ${listenerName} ${reqType}`;
-  console.log(error);
-  dialog.showErrorBox(`Error on ${listenerName}`, error);
-  return mainWindow.webContents.send(`${listenerName}-failed`);
+const errorHandler = (error, mainWindow, listenerName, log = true) => {
+  if (log) console.log(`Error on ${listenerName}:`, error);
+  dialog.showErrorBox(`Error on ${listenerName}:`, error.message);
+  return mainWindow.webContents.send(`${listenerName}-fail`, { status: 'error', ...error });
 };
 
 module.exports = {
@@ -231,5 +242,6 @@ module.exports = {
   getHash,
   // encryptDataForRaft,
   decryptDataFromRaft,
-  catchRestError
+  jsonParse,
+  errorHandler
 };
