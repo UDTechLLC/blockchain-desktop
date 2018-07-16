@@ -1,6 +1,6 @@
 export {
   registration,
-  authSuccess,
+  regCleanUp,
   auth,
   logout
 } from './auth';

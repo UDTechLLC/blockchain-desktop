@@ -1,58 +1,35 @@
 import * as actionTypes from '../actions/actionTypes';
-import { updateObject } from '../../utils/utility';
+import { updateObject } from '../../utils/utils';
 
 const initialState = {
   userData: {
-    csk: null,
-    cpk: null,
-    address: null
-    // csk: '90665570941d31da6af6a32ab58a0c81fbd90165be7bbc994d050a7143d9d1a7',
-    // cpk: '18db234a25b57fd05020bc31444452deec65a425534e2bb2bcf9ce2f0' +
-    // '1a1b6f97287000eeece78629597d64637851d6e05cd5c2c6fa9d6d1ca410391db967a91',
-    // address: '14b21WZ21rQcXQfNRdqNcLesjxXcX5PMP4'
+    csk: undefined,
+    cpk: undefined,
+    address: undefined
   },
-  encryptedData: '',
-  error: null,
+  error: undefined,
   loading: false
 };
 
-const regStart = state => (updateObject(state, {
-  loading: true
-}));
+const actionStart = state => (updateObject(state, { loading: true }));
 
-const regSuccess = (state, action) => (updateObject(state, {
-  encryptedData: action.encryptedData,
-  loading: false
-}));
-
-const regFail = (state, action) => (updateObject(state, {
+const actionFail = (state, action) => (updateObject(state, {
   error: action.error,
   loading: false
 }));
 
-const authStart = state => (updateObject(state, {
-  loading: true
-}));
+const regSuccess = state => (updateObject(state, { loading: false }));
 
 const authSuccess = (state, action) => (updateObject(state, {
-  userData: {
-    csk: action.userData.csk,
-    cpk: action.userData.cpk,
-    address: action.userData.address
-  },
+  userData: { ...action.userData },
   loading: false
 }));
 
-const authFail = (state, action) => (updateObject(state, {
-  error: action.error,
-  loading: false
-}));
-
-const authLogout = state => (updateObject(state, {
+const logoutSuccess = state => (updateObject(state, {
   userData: {
-    csk: null,
-    cpk: null,
-    address: null
+    csk: undefined,
+    cpk: undefined,
+    address: undefined
   },
   loading: false
 }));
@@ -60,13 +37,20 @@ const authLogout = state => (updateObject(state, {
 const reducer = (state = initialState, action) => {
   if (action) {
     switch (action.type) {
-      case actionTypes.REGISTRATION_START: return regStart(state, action);
+      //  start actions
+      case actionTypes.REGISTRATION_START:
+      case actionTypes.AUTH_START:
+      case actionTypes.LOGOUT_START:
+        return actionStart(state, action);
+      //  fail actions
+      case actionTypes.REGISTRATION_FAIL:
+      case actionTypes.AUTH_FAIL:
+      case actionTypes.LOGOUT_FAIL:
+        return actionFail(state, action);
+      //  success actions
       case actionTypes.REGISTRATION_SUCCESS: return regSuccess(state, action);
-      case actionTypes.REGISTRATION_FAIL: return regFail(state, action);
-      case actionTypes.AUTH_START: return authStart(state, action);
       case actionTypes.AUTH_SUCCESS: return authSuccess(state, action);
-      case actionTypes.AUTH_FAIL: return authFail(state, action);
-      case actionTypes.AUTH_LOGOUT: return authLogout(state, action);
+      case actionTypes.LOGOUT_SUCCESS: return logoutSuccess(state, action);
       default: return state;
     }
   }

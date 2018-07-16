@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
-import { updateObject } from '../../utils/utility';
+import { updateObject } from '../../utils/utils';
 
 const initialState = {
   internet: false,

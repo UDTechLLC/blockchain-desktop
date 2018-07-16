@@ -175,7 +175,7 @@ const jsonParse = (string, callback) => {
 const errorHandler = (error, mainWindow, listenerName, log = true) => {
   if (log) console.log(`Error on ${listenerName}:`, error);
   dialog.showErrorBox(`Error on ${listenerName}:`, error.message);
-  return mainWindow.webContents.send(`${listenerName}-fail`, { status: 'error', ...error });
+  return mainWindow.webContents.send(`${listenerName}:fail`, { status: 'error', ...error });
 };
 
 module.exports = {

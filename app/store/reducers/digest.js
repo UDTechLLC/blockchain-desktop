@@ -1,42 +1,38 @@
 import * as actionTypes from '../actions/actionTypes';
-import { updateObject } from '../../utils/utility';
+import { updateObject } from '../../utils/utils';
 
 const initialState = {
-  digestInfo: {
-    bcNodes: [],
-    raftNodes: [],
-    storageNodes: [],
-    spacelfet: 0,
-    totalNodes: 0,
-    suspicious: 0
-  },
-  error: null,
+  digestInfo: {},
+  error: undefined,
   loading: false
 };
 
-const getDigestStart = state => (updateObject(state, {
-  loading: true
-}));
+const actionStart = state => (updateObject(state, { loading: true }));
 
-const getDigestSuccess = (state, action) => (updateObject(state, {
-  digestInfo: {
-    ...action.digestInfo,
-    timestamp: new Date()
-  },
+const actionFail = (state, action) => (updateObject(state, {
+  error: action.error,
   loading: false
 }));
 
-const getDigestFail = (state, action) => (updateObject(state, {
-  error: action.error,
+const authSuccess = (state, action) => (updateObject(state, {
+  digestInfo: { ...action.digestInfo },
+  loading: false
+}));
+
+const authLogout = state => (updateObject(state, {
+  digestInfo: {},
   loading: false
 }));
 
 const reducer = (state = initialState, action) => {
   if (action) {
     switch (action.type) {
-      case actionTypes.GET_DIGEST_START: return getDigestStart(state, action);
-      case actionTypes.GET_DIGEST_SUCCESS: return getDigestSuccess(state, action);
-      case actionTypes.GET_DIGEST_FAIL: return getDigestFail(state, action);
+      case actionTypes.AUTH_START:
+        return actionStart(state, action);
+      case actionTypes.AUTH_SUCCESS:
+        return authSuccess(state, action);
+      case actionTypes.AUTH_FAIL: return actionFail(state, action);
+      case actionTypes.LOGOUT_SUCCESS: return authLogout(state, action);
       default: return state;
     }
   }
