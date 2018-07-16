@@ -7,27 +7,19 @@ export {
 export {
   // getCredFilesList,
   checkInternet
-} from './commonInfo';
+} from './common';
 export { getBalance } from './blockchain';
-export { getDigest } from './digest';
-// export {
-//   getNotes,
-//   editNotesList,
-//   deleteNote
-// } from './notes';
 export {
-  getAppSettings,
-  getUserData,
+  // getAppSettings,
   createNewFolder,
   editFolder,
-  deleteFolder,
+  removeFolders,
   uploadFiles,
   downloadFile,
-  saveDownloadedFile,
-  removeFile,
+  removeFiles,
   createNote,
   editNote,
-  removeNote,
+  removeNotes,
   setTimebomb
 } from './raft';
 export { setSearchWord } from './search';

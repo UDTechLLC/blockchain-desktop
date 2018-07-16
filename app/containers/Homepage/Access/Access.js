@@ -56,7 +56,7 @@ Access.propTypes = {
 const mapStateToProps = state => ({
   userData: state.auth.userData,
   authError: state.auth.error,
-  credentials: state.commonInfo.credentials
+  credentials: state.common.credentials
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -1,4 +1,4 @@
-/* eslint-disable global-require,object-curly-newline */
+/* eslint-disable global-require */
 /**
  * This module executes inside of electron's main process. You can start
  * electron renderer process from here and communicate with the other processes
@@ -205,12 +205,12 @@ ipcMain.on('edit-note:start', async (event, { note, userData, raftNode }) => {
   }
 });
 
-ipcMain.on('remove-files:start', async (event, { files, userData, raftNode }) => {
+ipcMain.on('remove-notes:start', async (event, { notes, userData, raftNode }) => {
   try {
-    const theFiles = await fls.remove(files, userData, raftNode);
-    mainWindow.webContents.send('create-files:success', theFiles);
+    const theNotes = await nts.remove(notes, userData, raftNode);
+    mainWindow.webContents.send('create-notes:success', theNotes);
   } catch (e) {
-    utils.errorHandler(e, mainWindow, 'remove-files');
+    utils.errorHandler(e, mainWindow, 'remove-notes');
   }
 });
 

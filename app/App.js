@@ -100,8 +100,8 @@ App.propTypes = {
 
 const mapStateToProps = state => ({
   isAuth: state.auth.userData.csk !== null,
-  internetChecking: state.commonInfo.internetChecking,
-  internet: state.commonInfo.internet
+  internetChecking: state.common.internetChecking,
+  internet: state.common.internet
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -1,302 +1,264 @@
+import _ from 'lodash';
+import { saveAs } from 'file-saver';
 import { ipcRenderer } from 'electron';
+
 import * as actionTypes from './actionTypes';
+import * as utils from '../../utils/utils';
 
-//  get settings
-const getAppSettingsStart = (userData, raftNode) => {
-  ipcRenderer.send('listeners-settings:get', { userData, raftNode });
-  return { type: actionTypes.GET_APP_SETTINGS_START };
-};
-
-const getAppSettingsSuccess = settings => ({
-  type: actionTypes.GET_APP_SETTINGS_SUCCESS,
-  settings
-});
-
-const getAppSettingsFail = () => ({
-  type: actionTypes.GET_APP_SETTINGS_FAIL
-});
-
-export const getAppSettings = (userData, raftNode) => dispatch => {
-  dispatch(getAppSettingsStart(userData, raftNode));
-  ipcRenderer.once('listeners-settings:get-complete', (event, settings) => (
-    dispatch(getAppSettingsSuccess(settings))
-  ));
-  ipcRenderer.once('listeners-settings:get-failed', () => dispatch(getAppSettingsFail()));
-};
-
-//  get all user data
-const getUserDataStart = (userData, raftNode) => {
-  ipcRenderer.send('user-data:get', { userData, raftNode });
-  return { type: actionTypes.GET_USER_DATA_START };
-};
-
-const getUserDataSuccess = data => ({
-  type: actionTypes.GET_USER_DATA_SUCCESS,
-  data
-});
-
-const getUserDataFail = () => ({
-  type: actionTypes.GET_USER_DATA_FAIL
-});
-
-export const getUserData = (userData, raftNode) => dispatch => {
-  dispatch(getUserDataStart(userData, raftNode));
-  ipcRenderer.once('user-data:get-complete', (event, data) => (
-    dispatch(getUserDataSuccess(data))
-  ));
-  ipcRenderer.once('user-data:get-failed', () => dispatch(getUserDataFail()));
-};
+// //  get settings
+// const getAppSettingsStart = (userData, raftNode) => {
+//   ipcRenderer.send('listeners-settings:get', { userData, raftNode });
+//   return { type: actionTypes.GET_APP_SETTINGS_START };
+// };
+//
+// const getAppSettingsSuccess = settings => ({
+//   type: actionTypes.GET_APP_SETTINGS_SUCCESS,
+//   settings
+// });
+//
+// const getAppSettingsFail = () => ({
+//   type: actionTypes.GET_APP_SETTINGS_FAIL
+// });
+//
+// export const getAppSettings = (userData, raftNode) => dispatch => {
+//   dispatch(getAppSettingsStart(userData, raftNode));
+//   ipcRenderer.once('listeners-settings:get-complete', (event, settings) => (
+//     dispatch(getAppSettingsSuccess(settings))
+//   ));
+//   ipcRenderer.once('listeners-settings:get-failed', () => dispatch(getAppSettingsFail()));
+// };
 
 //  create new folder
-const createNewFolderStart = (newFolderName, userData, raftNode) => {
-  ipcRenderer.send('folder:create', { newFolderName, userData, raftNode });
-  return { type: actionTypes.CREATE_NEW_FOLDER_START };
-};
+const createNewFolderStart = () => ({ type: actionTypes.CREATE_NEW_FOLDER_START });
 
-const createNewFolderSuccess = newFolder => ({
+const createNewFolderSuccess = folder => ({
   type: actionTypes.CREATE_NEW_FOLDER_SUCCESS,
-  newFolder
+  folder
 });
 
-const createNewFolderFail = () => ({
-  type: actionTypes.CREATE_NEW_FOLDER_FAIL
+const createNewFolderFail = error => ({
+  type: actionTypes.CREATE_NEW_FOLDER_FAIL,
+  error
 });
 
-export const createNewFolder = (newFolderName, userData, raftNode) => dispatch => {
-  dispatch(createNewFolderStart(newFolderName, userData, raftNode));
-  ipcRenderer.once('folder:create-success', (event, newFolder) => (
-    dispatch(createNewFolderSuccess(newFolder))
+export const createNewFolder = (name, parentFolder, userData, raftNode) => dispatch => {
+  dispatch(createNewFolderStart());
+  ipcRenderer.send('create-folder:start', { name, parentFolder, userData, raftNode });
+  ipcRenderer.once('create-folder:success', (event, folder) => (
+    dispatch(createNewFolderSuccess(folder))
   ));
-  ipcRenderer.once('folder:create-failed', () => dispatch(createNewFolderFail()));
+  ipcRenderer.once('create-folder:fail', (event, error) => dispatch(createNewFolderFail(error)));
 };
 
 //  edit folder name
-const editFolderStart = (signature, newName, userData, raftNode) => {
-  ipcRenderer.send('folder:edit', {
-    signature,
-    newName,
-    userData,
-    raftNode
-  });
-  return { type: actionTypes.EDIT_FOLDER_START };
-};
+const editFolderStart = () => ({ type: actionTypes.EDIT_FOLDER_START });
 
-const editFolderSuccess = (signature, newName) => ({
+const editFolderSuccess = folder => ({
   type: actionTypes.EDIT_FOLDER_SUCCESS,
-  signature,
-  newName
+  folder
 });
 
-const editFolderFail = () => ({
-  type: actionTypes.EDIT_FOLDER_FAIL
+const editFolderFail = error => ({
+  type: actionTypes.EDIT_FOLDER_FAIL,
+  error
 });
 
-export const editFolder = (signature, newName, userData, raftNode) => dispatch => {
-  dispatch(editFolderStart(signature, newName, userData, raftNode));
-  ipcRenderer.once('folder:edit-success', () => (
-    dispatch(editFolderSuccess(signature, newName))
+export const editFolder = (folder, userData, raftNode) => dispatch => {
+  dispatch(editFolderStart());
+  ipcRenderer.send('edit-folder:start', { folder, userData, raftNode });
+  ipcRenderer.once('edit-folder:success', (event, theFolder) => (
+    dispatch(editFolderSuccess(theFolder))
   ));
-  ipcRenderer.once('folder:edit-failed', () => dispatch(editFolderFail()));
+  ipcRenderer.once('edit-folder:fail', (event, error) => dispatch(editFolderFail(error)));
 };
 
-//  delete folder
-const deleteFolderStart = (folderId, userData, raftNode) => {
-  ipcRenderer.send('folder:delete', { folderId, userData, raftNode });
-  return { type: actionTypes.DELETE_FOLDER_START };
-};
+//  remove folder
+const removeFoldersStart = () => ({ type: actionTypes.REMOVE_FOLDERS_START });
 
-const deleteFolderSuccess = folderId => ({
-  type: actionTypes.DELETE_FOLDER_SUCCESS,
-  folderId
+const removeFoldersSuccess = (folders, files) => ({
+  type: actionTypes.REMOVE_FOLDERS_SUCCESS,
+  folders,
+  files
 });
 
-const deleteFolderFail = () => ({
-  type: actionTypes.DELETE_FOLDER_FAIL
+const removeFoldersFail = error => ({
+  type: actionTypes.REMOVE_FOLDERS_FAIL,
+  error
 });
 
-export const deleteFolder = (folderId, userData, raftNode) => dispatch => {
-  dispatch(deleteFolderStart(folderId, userData, raftNode));
-  ipcRenderer.once('folder:delete-success', () => dispatch(deleteFolderSuccess(folderId)));
-  ipcRenderer.once('folder:delete-failed', () => dispatch(deleteFolderFail()));
+export const removeFolders = (folders, userData, raftNode) => dispatch => {
+  dispatch(removeFoldersStart());
+  ipcRenderer.send('remove-folders:start', { folders, userData, raftNode });
+  ipcRenderer.once('remove-folders:success', (event, { flds, files }) => (
+    dispatch(removeFoldersSuccess(flds, files))
+  ));
+  ipcRenderer.once('remove-folders:fail', (event, error) => dispatch(removeFoldersFail(error)));
 };
 
 //  upload new files
-const uploadFilesStart = (userData, files, storageNodes, raftNode) => {
-  ipcRenderer.send('files:upload', {
-    userData,
-    files,
-    storageNodes,
-    raftNode
-  });
-  return { type: actionTypes.UPLOAD_FILES_START };
-};
+const uploadFilesStart = () => ({ type: actionTypes.UPLOAD_FILES_START });
 
-const uploadFilesSuccess = filesList => ({
+const uploadFilesSuccess = files => ({
   type: actionTypes.UPLOAD_FILES_SUCCESS,
-  filesList
+  files
 });
 
-const uploadFilesFail = () => ({
-  type: actionTypes.UPLOAD_FILES_FAIL
+const uploadFilesFail = error => ({
+  type: actionTypes.UPLOAD_FILES_FAIL,
+  error
 });
 
-export const uploadFiles = (userData, files, storageNodes, raftNode) => dispatch => {
-  dispatch(uploadFilesStart(userData, files, storageNodes, raftNode));
-  ipcRenderer.once('files:upload-success', (event, filesList) => dispatch(uploadFilesSuccess(filesList)));
-  ipcRenderer.once('files:upload-failed', () => dispatch(uploadFilesFail()));
+export const uploadFiles = (files, userData, storageNodes, raftNode) => dispatch => {
+  dispatch(uploadFilesStart());
+  ipcRenderer.send('upload-files:start', { files, userData, storageNodes, raftNode });
+  ipcRenderer.once('upload-files:success', (event, theFiles) => (
+    dispatch(uploadFilesSuccess(theFiles))
+  ));
+  ipcRenderer.once('upload-files:fail', (event, error) => dispatch(uploadFilesFail(error)));
 };
 
 //  download file
-const downloadFileStart = (signature, userData, raftNode) => {
-  ipcRenderer.send('file:download', { signature, userData, raftNode });
-  return { type: actionTypes.DOWNLOAD_FILE_START };
+const downloadFileStart = () => ({ type: actionTypes.DOWNLOAD_FILE_START });
+
+const downloadFileSuccess = (name, base64File) => dispatch => {
+  const blob = utils.b64toBlob(base64File);
+  dispatch(saveAs(blob, name));
+
+  return { type: actionTypes.DOWNLOAD_FILE_SUCCESS };
 };
 
-const downloadFileSuccess = (signature, base64File) => ({
-  type: actionTypes.DOWNLOAD_FILE_SUCCESS,
-  signature,
-  base64File
-});
-
-const downloadFileFail = () => ({
-  type: actionTypes.DOWNLOAD_FILE_FAIL
+const downloadFileFail = error => ({
+  type: actionTypes.DOWNLOAD_FILE_FAIL,
+  error
 });
 
 export const downloadFile = (signature, userData, raftNode) => dispatch => {
-  dispatch(downloadFileStart(signature, userData, raftNode));
-  ipcRenderer.once('file:download-success', (event, base64File) => (
-    dispatch(downloadFileSuccess(signature, base64File))
+  dispatch(downloadFileStart());
+  ipcRenderer.send('download-file:start', { signature, userData, raftNode });
+  ipcRenderer.once('download-file:success', (event, base64File) => (
+    dispatch(downloadFileSuccess(signature, { name, base64File }))
   ));
-  ipcRenderer.once('file:download-failed', () => dispatch(downloadFileFail()));
+  ipcRenderer.once('download-file:fail', (event, error) => dispatch(downloadFileFail(error)));
 };
-
-export const saveDownloadedFile = () => ({
-  type: actionTypes.SAVE_DOWNLOADED_FILE
-});
 
 //  delete file
-const removeFileStart = (signature, userData, raftNode) => {
-  ipcRenderer.send('file:remove', { signature, userData, raftNode });
-  return { type: actionTypes.REMOVE_FILE_START };
-};
+const removeFilesStart = () => ({ type: actionTypes.REMOVE_FILES_START });
 
-const removeFileSuccess = signature => ({
-  type: actionTypes.REMOVE_FILE_SUCCESS,
-  signature
+const removeFilesSuccess = files => ({
+  type: actionTypes.REMOVE_FILES_SUCCESS,
+  files
 });
 
-const removeFileFail = () => ({
-  type: actionTypes.REMOVE_FILE_FAIL
+const removeFilesFail = error => ({
+  type: actionTypes.REMOVE_FILES_FAIL,
+  error
 });
 
-export const removeFile = (signature, userData, raftNode) => dispatch => {
-  dispatch(removeFileStart(signature, userData, raftNode));
-  ipcRenderer.once('file:remove-success', () => dispatch(removeFileSuccess(signature)));
-  ipcRenderer.once('file:remove-failed', () => dispatch(removeFileFail()));
+export const removeFiles = (files, userData, raftNode) => dispatch => {
+  dispatch(removeFilesStart());
+  ipcRenderer.send('remove-files:start', { files, userData, raftNode });
+  ipcRenderer.once('remove-files:success', (event, theFiles) => (
+    dispatch(removeFilesSuccess(theFiles))
+  ));
+  ipcRenderer.once('remove-files:fail', (event, error) => dispatch(removeFilesFail(error)));
 };
 
 // create note
-const createNoteStart = (userData, raftNode) => {
-  ipcRenderer.send('note:create', { userData, raftNode });
-  return { type: actionTypes.CREATE_NOTE_START };
-};
+const createNoteStart = () => ({ type: actionTypes.CREATE_NOTE_START });
 
-const createNoteSuccess = newNote => ({
+const createNoteSuccess = note => ({
   type: actionTypes.CREATE_NOTE_SUCCESS,
-  newNote
+  note
 });
 
-const createNoteFail = () => ({
-  type: actionTypes.CREATE_NOTE_FAIL
+const createNoteFail = error => ({
+  type: actionTypes.CREATE_NOTE_FAIL,
+  error
 });
 
 export const createNote = (userData, raftNode) => dispatch => {
-  dispatch(createNoteStart(userData, raftNode));
-  ipcRenderer.once('note:create-success', (event, newNote) => (
-    dispatch(createNoteSuccess(newNote))
+  dispatch(createNoteStart());
+  ipcRenderer.send('create-note:start', { userData, raftNode });
+  ipcRenderer.once('create-note:success', (event, note) => (
+    dispatch(createNoteSuccess(note))
   ));
-  ipcRenderer.once('note:create-failed', () => dispatch(createNoteFail()));
+  ipcRenderer.once('create-note:fail', (event, error) => dispatch(createNoteFail(error)));
 };
 
 //  edit note
-const editNoteStart = (signature, noteUpdateData, userData, raftNode) => {
-  ipcRenderer.send('note:edit', {
-    signature,
-    noteUpdateData,
-    userData,
-    raftNode
-  });
-  return { type: actionTypes.EDIT_NOTE_START };
-};
+const editNoteStart = () => ({ type: actionTypes.EDIT_NOTE_START });
 
-const editNoteSuccess = (signature, noteUpdateData) => ({
+const editNoteSuccess = note => ({
   type: actionTypes.EDIT_NOTE_SUCCESS,
-  signature,
-  noteUpdateData
+  note
 });
 
-const editNoteFail = () => ({
-  type: actionTypes.EDIT_NOTE_FAIL
+const editNoteFail = error => ({
+  type: actionTypes.EDIT_NOTE_FAIL,
+  error
 });
 
-export const editNote = (signature, noteUpdateData, userData, raftNode) => dispatch => {
-  dispatch(editNoteStart(signature, noteUpdateData, userData, raftNode));
-  ipcRenderer.once('note:edit-success', () => (
-    dispatch(editNoteSuccess(signature, noteUpdateData))
+export const editNote = (note, userData, raftNode) => dispatch => {
+  dispatch(editNoteStart());
+  ipcRenderer.send('edit-note:start', { note, userData, raftNode });
+  ipcRenderer.once('edit-note:success', (event, theNote) => (
+    dispatch(editNoteSuccess(theNote))
   ));
-  ipcRenderer.once('note:edit-failed', () => dispatch(editNoteFail()));
+  ipcRenderer.once('edit-note:fail', (event, error) => dispatch(editNoteFail(error)));
 };
 
 //  remove note
-const removeNoteStart = (signature, userData, raftNode) => {
-  ipcRenderer.send('note:remove', { signature, userData, raftNode });
-  return { type: actionTypes.REMOVE_NOTE_START };
-};
+const removeNotesStart = () => ({ type: actionTypes.REMOVE_NOTES_START });
 
-const removeNoteSuccess = signature => ({
-  type: actionTypes.REMOVE_NOTE_SUCCESS,
-  signature
+const removeNotesSuccess = notes => ({
+  type: actionTypes.REMOVE_NOTES_SUCCESS,
+  notes
 });
 
-const removeNoteFail = () => ({
-  type: actionTypes.REMOVE_NOTE_FAIL
+const removeNotesFail = error => ({
+  type: actionTypes.REMOVE_NOTES_FAIL,
+  error
 });
 
-export const removeNote = (signature, userData, raftNode) => dispatch => {
-  dispatch(removeNoteStart(signature, userData, raftNode));
-  ipcRenderer.once('note:remove-success', () => (
-    dispatch(removeNoteSuccess(signature))
+export const removeNotes = (notes, userData, raftNode) => dispatch => {
+  dispatch(removeNotesStart());
+  ipcRenderer.send('remove-notes:start', { notes, userData, raftNode });
+  ipcRenderer.once('remove-notes:success', (event, theNotes) => (
+    dispatch(removeNotesSuccess(theNotes))
   ));
-  ipcRenderer.once('note:remove-failed', () => dispatch(removeNoteFail()));
+  ipcRenderer.once('remove-notes:fail', (event, error) => dispatch(removeNotesFail(error)));
 };
 
-//  ghost time (timebomb)
-const setTimebombStart = (objType, signature, timestamp, userData, raftNode) => {
-  ipcRenderer.send('timebomb:set', {
-    objType,
-    signature,
-    timestamp,
-    userData,
-    raftNode
-  });
-  return ({ type: actionTypes.SET_TIMEBOMB_START });
+//  ghost time
+const setGhostTimeStart = () => ({ type: actionTypes.SET_GHOST_TIME_START });
+
+const setGhostTimeSuccess = updated => {
+  const key = _.findKey(updated, o => !_.isEmpty(o));
+  const data = _.mapValues(updated[key], o => o);
+
+  return {
+    type: actionTypes.SET_GHOST_TIME_SUCCESS,
+    key,
+    data
+  };
 };
 
-const setTimebombSuccess = (objType, signature, timestamp) => ({
-  type: actionTypes.SET_TIMEBOMB_SUCCESS,
-  objType,
-  signature,
-  timestamp
+const setGhostTimeFail = error => ({
+  type: actionTypes.SET_GHOST_TIME_FAIL,
+  error
 });
 
-const setTimebombFail = () => ({
-  type: actionTypes.SET_TIMEBOMB_FAIL
-});
-
-export const setTimebomb = (objType, signature, timestamp, userData, raftNode) => dispatch => {
-  dispatch(setTimebombStart(objType, signature, timestamp, userData, raftNode));
-  ipcRenderer.once('timebomb:set-success', () => (
-    dispatch(setTimebombSuccess(objType, signature, timestamp))
+export const setGhostTime = (obj2Upd, ghostTime, userData, raftNode) => dispatch => {
+  dispatch(setGhostTimeStart());
+  const kv = {
+    folders: {},
+    files: {},
+    notes: {},
+    ...obj2Upd
+  };
+  ipcRenderer.send('set-ghost-time:start', { kv, ghostTime, raftNode });
+  ipcRenderer.once('set-ghost-time:success', (event, updated) => (
+    dispatch(setGhostTimeSuccess(updated))
   ));
-  ipcRenderer.once('timebomb:set-failed', () => dispatch(setTimebombFail()));
+  ipcRenderer.once('set-ghost-time:fail', (event, error) => dispatch(setGhostTimeFail(error)));
 };

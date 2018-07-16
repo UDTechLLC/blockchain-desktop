@@ -54,7 +54,7 @@ const mapStateToProps = state => ({
   isAuth: state.auth.userData.csk !== null,
   balance: state.blockchain.balance,
   bcNodes: state.digest.digestInfo.bcNodes,
-  loading: state.auth.loading || state.blockchain.loading || state.commonInfo.loading
+  loading: state.auth.loading || state.blockchain.loading || state.common.loading
     || state.digest.loading || state.raft.loading
 });
 
