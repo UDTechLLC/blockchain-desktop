@@ -72,12 +72,12 @@ class PageWithInfoPanel extends Component {
             disableManipulationButtons={this.props.disableManipulationButtons}
             showRemoveButton={this.props.showRemoveButton}
             toggleShowRemoveButton={() => this.props.toggleShowRemoveButton()}
-            onTopManipulationButtonClick={() => this.props.onTopManipulationButtonClick()}
-            onBottomManipulationButtonClick={() => this.props.onBottomManipulationButtonClick()}
-            manipulationFirstButtonText={this.props.manipulationFirstButtonText}
-            timepickerDate={this.props.timepickerDate}
-            onTimepickerChange={date => this.props.onTimepickerChange(date)}
-            onTimebombSet={() => this.props.onTimebombSet()}
+            onTopManBtnClick={() => this.props.onTopManBtnClick()}
+            onBottomManBtnClick={() => this.props.onBottomManBtnClick()}
+            firstManBtnText={this.props.firstManBtnText}
+            timePickerDate={this.props.timePickerDate}
+            onTimePickerChange={date => this.props.onTimePickerChange(date)}
+            onGhostTimeSet={() => this.props.onGhostTimeSet()}
           />
         </div>
       </div>
@@ -96,32 +96,26 @@ PageWithInfoPanel.propTypes = {
   disableManipulationButtons: PropTypes.bool,
   showRemoveButton: PropTypes.bool,
   toggleShowRemoveButton: PropTypes.func,
-  onTopManipulationButtonClick: PropTypes.func,
-  onBottomManipulationButtonClick: PropTypes.func,
-  manipulationFirstButtonText: PropTypes.string,
-  //  timebomb
-  timepickerDate: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]),
-  onTimepickerChange: PropTypes.func,
-  onTimebombSet: PropTypes.func
+  onTopManBtnClick: PropTypes.func,
+  onBottomManBtnClick: PropTypes.func,
+  firstManBtnText: PropTypes.string,
+  //  GhostTime
+  timePickerDate: PropTypes.instanceOf(Date),
+  onTimePickerChange: PropTypes.func,
+  onGhostTimeSet: PropTypes.func
 };
 
 PageWithInfoPanel.defaultProps = {
-  columns: [
-    'SecurityLayer',
-    'Manipulation'
-  ],
+  columns: ['SecurityLayer', 'Manipulation'],
   disableManipulationButtons: false,
   showRemoveButton: false,
-  toggleShowRemoveButton: null,
-  onTopManipulationButtonClick: null,
-  onBottomManipulationButtonClick: null,
-  manipulationFirstButtonText: 'download',
-  timepickerDate: new Date(),
-  onTimepickerChange: null,
-  onTimebombSet: null
+  toggleShowRemoveButton: undefined,
+  onTopManBtnClick: undefined,
+  onBottomManBtnClick: undefined,
+  firstManBtnText: 'download',
+  timePickerDate: new Date(),
+  onTimePickerChange: undefined,
+  onGhostTimeSet: undefined
 };
 
 export default PageWithInfoPanel;

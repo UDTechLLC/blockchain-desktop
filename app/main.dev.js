@@ -10,17 +10,12 @@
  * @flow
  */
 const path = require('path');
+const isOnline = require('is-online');
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { requireTaskPool } = require('electron-remote');
 
 const MenuBuilder = require('./menu');
 const utils = require('./electron/utils/utils');
-
-const auth = requireTaskPool(require.resolve('./electron/listeners/auth/auth'));
-const flds = requireTaskPool(require.resolve('./electron/listeners/folders/folders'));
-const fls = requireTaskPool(require.resolve('./electron/listeners/files/files'));
-const nts = requireTaskPool(require.resolve('./electron/listeners/notes/notes'));
-const ghstTime = requireTaskPool(require.resolve('./electron/listeners/ghost-time/ghost-time'));
 
 // let configFolder = `${process.cwd()}/.wizeconfig`;
 // if (process.platform === 'darwin') {
@@ -101,6 +96,18 @@ app.on('ready', async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 });
+
+const auth = requireTaskPool(require.resolve(`${__dirname}/electron/listeners/auth/auth`));
+const flds = requireTaskPool(require.resolve(`${__dirname}/electron/listeners/folders/folders`));
+const fls = requireTaskPool(require.resolve(`${__dirname}/electron/listeners/files/files`));
+const nts = requireTaskPool(require.resolve(`${__dirname}/electron/listeners/notes/notes`));
+const ghstTime = requireTaskPool(require.resolve(`${__dirname}/electron/listeners/ghost-time/ghost-time`));
+
+//  common listeners
+ipcMain.on('internet-connection:check', () => (
+  isOnline()
+    .then(online => mainWindow.webContents.send('internet-connection:status', online))
+));
 
 //  auth listeners
 ipcMain.on('sign-up:start', async (event, password) => {

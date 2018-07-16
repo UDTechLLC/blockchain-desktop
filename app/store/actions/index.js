@@ -20,6 +20,6 @@ export {
   createNote,
   editNote,
   removeNotes,
-  setTimebomb
+  setGhostTime
 } from './raft';
 export { setSearchWord } from './search';

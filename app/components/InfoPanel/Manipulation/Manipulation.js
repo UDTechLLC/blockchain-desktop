@@ -59,10 +59,10 @@ const Manipulation = props => (
           ].join(' ')}
         >
           <Button
-            onClick={() => props.onTopManipulationButtonClick()}
+            onClick={props.onTopManBtnClick}
             disabled={props.disableManipulationButtons}
           >
-            {props.manipulationFirstButtonText}
+            {props.firstManBtnText}
           </Button>
         </div>
       </div>
@@ -84,12 +84,12 @@ const Manipulation = props => (
         ].join(' ')}
       >
         <DateTimePicker
-          onChange={props.onTimepickerChange}
-          value={props.timepickerDate}
+          onChange={props.onTimePickerChange}
+          value={props.timePickerDate}
         />
         <button
           type="button"
-          onClick={() => props.onTimebombSet()}
+          onClick={props.onGhostTimeSet}
         >
           set
         </button>
@@ -127,7 +127,7 @@ const Manipulation = props => (
           >
             <Button
               type="button"
-              onClick={() => props.onBottomManipulationButtonClick()}
+              onClick={() => props.onBottomManBtnClick()}
               disabled={props.disableManipulationButtons}
               btnStyles={props.showRemoveButton ? ['Transparent', 'InsideFlex'] : null}
             >
@@ -144,19 +144,16 @@ Manipulation.propTypes = {
   disableManipulationButtons: PropTypes.bool.isRequired,
   showRemoveButton: PropTypes.bool.isRequired,
   toggleShowRemoveButton: PropTypes.func.isRequired,
-  timepickerDate: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]).isRequired,
-  onTimepickerChange: PropTypes.func.isRequired,
-  onTimebombSet: PropTypes.func.isRequired,
-  onTopManipulationButtonClick: PropTypes.func.isRequired,
-  onBottomManipulationButtonClick: PropTypes.func.isRequired,
-  manipulationFirstButtonText: PropTypes.string
+  timePickerDate: PropTypes.instanceOf(Date).isRequired,
+  onTimePickerChange: PropTypes.func.isRequired,
+  onGhostTimeSet: PropTypes.func.isRequired,
+  onTopManBtnClick: PropTypes.func.isRequired,
+  onBottomManBtnClick: PropTypes.func.isRequired,
+  firstManBtnText: PropTypes.string
 };
 
 Manipulation.defaultProps = {
-  manipulationFirstButtonText: 'download'
+  firstManBtnText: 'download'
 };
 
 export default Manipulation;

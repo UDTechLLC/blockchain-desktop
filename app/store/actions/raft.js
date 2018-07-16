@@ -3,7 +3,7 @@ import { saveAs } from 'file-saver';
 import { ipcRenderer } from 'electron';
 
 import * as actionTypes from './actionTypes';
-import * as utils from '../../utils/utils';
+import * as utils from './../../utils/utils';
 
 // //  get settings
 // const getAppSettingsStart = (userData, raftNode) => {
@@ -41,9 +41,9 @@ const createNewFolderFail = error => ({
   error
 });
 
-export const createNewFolder = (name, parentFolder, userData, raftNode) => dispatch => {
+export const createNewFolder = (name, userData, raftNode) => dispatch => {
   dispatch(createNewFolderStart());
-  ipcRenderer.send('create-folder:start', { name, parentFolder, userData, raftNode });
+  ipcRenderer.send('create-folder:start', { name, parentFolder: 'Root', userData, raftNode });
   ipcRenderer.once('create-folder:success', (event, folder) => (
     dispatch(createNewFolderSuccess(folder))
   ));

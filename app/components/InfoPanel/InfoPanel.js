@@ -41,13 +41,13 @@ const infoPanel = props => {
             key={Math.random()}
             disableManipulationButtons={props.disableManipulationButtons}
             showRemoveButton={props.showRemoveButton}
-            toggleShowRemoveButton={() => props.toggleShowRemoveButton()}
-            onTopManipulationButtonClick={() => props.onTopManipulationButtonClick()}
-            onBottomManipulationButtonClick={() => props.onBottomManipulationButtonClick()}
-            manipulationFirstButtonText={props.manipulationFirstButtonText}
-            timepickerDate={props.timepickerDate}
-            onTimepickerChange={date => props.onTimepickerChange(date)}
-            onTimebombSet={() => props.onTimebombSet()}
+            toggleShowRemoveButton={props.toggleShowRemoveButton}
+            onTopManBtnClick={props.onTopManBtnClick}
+            onBottomManBtnClick={props.onBottomManBtnClick}
+            firstManBtnText={props.firstManBtnText}
+            timePickerDate={props.timePickerDate}
+            onTimePickerChange={date => props.onTimePickerChange(date)}
+            onGhostTimeSet={props.onGhostTimeSet}
           />
         );
         break;
@@ -107,33 +107,27 @@ infoPanel.propTypes = {
   disableManipulationButtons: PropTypes.bool,
   showRemoveButton: PropTypes.bool,
   toggleShowRemoveButton: PropTypes.func,
-  onTopManipulationButtonClick: PropTypes.func,
-  onBottomManipulationButtonClick: PropTypes.func,
-  manipulationFirstButtonText: PropTypes.string,
+  onTopManBtnClick: PropTypes.func,
+  onBottomManBtnClick: PropTypes.func,
+  firstManBtnText: PropTypes.string,
   //  timebomb
-  timepickerDate: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]),
-  onTimepickerChange: PropTypes.func,
-  onTimebombSet: PropTypes.func
+  timePickerDate: PropTypes.instanceOf(Date),
+  onTimePickerChange: PropTypes.func,
+  onGhostTimeSet: PropTypes.func
 };
 
 infoPanel.defaultProps = {
   hide: false,
-  columns: [
-    'SecurityLayer',
-    'Manipulation'
-  ],
+  columns: ['SecurityLayer', 'Manipulation'],
   disableManipulationButtons: false,
   showRemoveButton: false,
-  toggleShowRemoveButton: null,
-  onTopManipulationButtonClick: null,
-  onBottomManipulationButtonClick: null,
-  manipulationFirstButtonText: 'download',
-  timepickerDate: new Date(),
-  onTimepickerChange: null,
-  onTimebombSet: null
+  toggleShowRemoveButton: undefined,
+  onTopManBtnClick: undefined,
+  onBottomManBtnClick: undefined,
+  firstManBtnText: 'download',
+  timePickerDate: new Date(),
+  onTimePickerChange: undefined,
+  onGhostTimeSet: undefined
 };
 
 export default infoPanel;

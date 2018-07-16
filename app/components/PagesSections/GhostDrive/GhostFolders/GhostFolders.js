@@ -26,12 +26,12 @@ const ghostFolders = props => (
           <FolderItem
             key={i}
             folder={props.folders[key]}
-            onFolderCheck={name => props.onFolderCheck(name)}
+            onFolderCheck={id => props.onFolderCheck(id)}
             isActive={props.folders[key].name === props.activeFolder}
-            onDelete={name => props.onFolderDelete(name)}
+            onDelete={id => props.onFolderDelete(id)}
             nameThatMayChange={props.nameThatMayChange}
             onNameThatMayChange={val => props.onNameThatMayChange(val)}
-            onFolderNameEdit={() => props.onFolderNameEdit()}
+            onFolderNameEdit={props.onFolderNameEdit}
           />
         ))
       }
@@ -40,7 +40,7 @@ const ghostFolders = props => (
 );
 
 ghostFolders.propTypes = {
-  folders: PropTypes.shape(),
+  folders: PropTypes.shape().isRequired,
   onFolderCheck: PropTypes.func.isRequired,
   activeFolder: PropTypes.string.isRequired,
   onCreateFolder: PropTypes.func.isRequired,
@@ -48,10 +48,6 @@ ghostFolders.propTypes = {
   nameThatMayChange: PropTypes.string.isRequired,
   onNameThatMayChange: PropTypes.func.isRequired,
   onFolderNameEdit: PropTypes.func.isRequired
-};
-
-ghostFolders.defaultProps = {
-  folders: {}
 };
 
 export default ghostFolders;
