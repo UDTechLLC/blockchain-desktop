@@ -10,7 +10,7 @@ cache:
   yarn: true
   directories:
     - node_modules
-    - app/node_modules
+    - listeners/node_modules
 
 addons:
   apt:
@@ -26,7 +26,7 @@ addons:
 install:
   - export CXX="g++-4.8"
   - yarn
-  - cd app && yarn && cd ..
+  - cd listeners && yarn && cd ..
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
 
 before_script:

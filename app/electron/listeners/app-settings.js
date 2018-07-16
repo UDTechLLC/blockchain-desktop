@@ -3,19 +3,19 @@ const { ipcMain } = require('electron');
 const utils = require('../utils/utils');
 
 const appSettings = mainWindow => {
-  ipcMain.on('app-settings:get', (event, { userData, raftNode }) => {
+  ipcMain.on('listeners-settings:get', (event, { userData, raftNode }) => {
     //  key in raft
     const settingsKey = `${userData.cpk}_stt`;
     //  request to raft
     return axios.get(`${raftNode}/key/${settingsKey}`)
       .then(({ data }) => {
         const settings = utils.decryptDataFromRaft(data, settingsKey, userData.csk);
-        return mainWindow.webContents.send('app-settings:get-complete', settings);
+        return mainWindow.webContents.send('listeners-settings:get-complete', settings);
       })
-      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'app-settings:get', 'GET'));
+      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'listeners-settings:get', 'GET'));
   });
 
-  ipcMain.on('app-settings:change', (event, { newSettings, userData, raftNode }) => {
+  ipcMain.on('listeners-settings:change', (event, { newSettings, userData, raftNode }) => {
     //  key in raft
     const settingsKey = `${userData.cpk}_stt`;
     //  request to raft
@@ -28,8 +28,8 @@ const appSettings = mainWindow => {
       }
     };
     return axios.post(`${raftNode}/key`, data, config)
-      .then(() => mainWindow.webContents.send('app-settings:change-success'))
-      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'app-settings:change'));
+      .then(() => mainWindow.webContents.send('listeners-settings:change-success'))
+      .catch(({ response }) => utils.catchRestError(mainWindow, response, 'listeners-settings:change'));
   });
 };
 

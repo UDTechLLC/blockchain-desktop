@@ -1,11 +1,11 @@
-/* eslint-disable global-require */
+/* eslint-disable global-require,object-curly-newline */
 /**
  * This module executes inside of electron's main process. You can start
  * electron renderer process from here and communicate with the other processes
  * through IPC.
  *
  * When running `npm run build` or `npm run build-main`, this file is compiled to
- * `./app/main.prod.js` using webpack. This gives us some performance wins.
+ * `./listeners/main.prod.js` using webpack. This gives us some performance wins.
  *
  * @flow
  */
@@ -16,20 +16,15 @@ const { requireTaskPool } = require('electron-remote');
 const MenuBuilder = require('./menu');
 const utils = require('./electron/utils/utils');
 
-const auth = requireTaskPool(require.resolve('./electron/app/auth/auth'));
-const flds = requireTaskPool(require.resolve('./electron/app/folders/folders'));
-
-// const CommonListeners = require('./electron/app/common');
-// const Digest = require('./electron/app/digest');
-// const FS = require('./electron/app/filesystem');
-// const Raft = require('./electron/app/raft');
-// const FilesListeners = require('./electron/app/files');
-// const BlockChain = require('./electron/app/blockchain');
-// const GhostPad = require('./electron/app/notes');
+const auth = requireTaskPool(require.resolve('./electron/listeners/auth/auth'));
+const flds = requireTaskPool(require.resolve('./electron/listeners/folders/folders'));
+const fls = requireTaskPool(require.resolve('./electron/listeners/files/files'));
+const nts = requireTaskPool(require.resolve('./electron/listeners/notes/notes'));
+const ghstTime = requireTaskPool(require.resolve('./electron/listeners/ghost-time/ghost-time'));
 
 // let configFolder = `${process.cwd()}/.wizeconfig`;
 // if (process.platform === 'darwin') {
-//   configFolder = '/Applications/Wizebit.app/Contents/Resources/.wizeconfig';
+//   configFolder = '/Applications/Wizebit.listeners/Contents/Resources/.wizeconfig';
 // } else if (process.platform === 'win32') {
 //   configFolder = `${process.cwd()}\\wizeconfig`;
 // }
@@ -72,7 +67,8 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-//  main listener - on app start
+
+//  main listener - on listeners start
 app.on('ready', async () => {
   //  install extensions
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
@@ -88,7 +84,7 @@ app.on('ready', async () => {
   });
   mainWindow.on('closed', () => {
     // if (cpkGlob) {
-    //   utils.unmountFs(cpkGlob, fsUrlGlob, app.quit);
+    //   utils.unmountFs(cpkGlob, fsUrlGlob, listeners.quit);
     // } else {
     app.quit();
     // }
@@ -104,20 +100,6 @@ app.on('ready', async () => {
   //  menu builder
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
-  //  common
-  // CommonListeners(mainWindow, configFolder);
-  //  digest
-  // Digest(mainWindow);
-  //  raft
-  // Raft(mainWindow);
-  //  file system listeners
-  // FS(mainWindow, cpkGlob, fsUrlGlob);
-  // //  files listeners
-  // FilesListeners(mainWindow);
-  //  blockchain listeners
-  // BlockChain(mainWindow);
-  // //  notes listeners
-  // GhostPad(mainWindow);
 });
 
 //  auth listeners
@@ -149,7 +131,6 @@ ipcMain.on('sign-out:start', async (event, { userData, storageNodes }) => {
 });
 
 //  folders listeners
-// eslint-disable-next-line object-curly-newline
 ipcMain.on('create-folder:start', async (event, { name, parentFolder, userData, raftNode }) => {
   try {
     const folder = await flds.createOne(name, parentFolder, userData, raftNode);
@@ -174,5 +155,71 @@ ipcMain.on('remove-folders:start', async (event, { folders, userData, raftNode }
     mainWindow.webContents.send('create-folder:success', { folders, files });
   } catch (e) {
     utils.errorHandler(e, mainWindow, 'remove-folders');
+  }
+});
+
+//  files listeners
+ipcMain.on('upload-files:start', async (event, { files, userData, storageNodes, raftNode }) => {
+  try {
+    const theFiles = await fls.upload(files, userData, storageNodes, raftNode);
+    mainWindow.webContents.send('upload-files:success', theFiles);
+  } catch (e) {
+    utils.errorHandler(e, mainWindow, 'upload-files');
+  }
+});
+
+ipcMain.on('download-file:start', async (event, { signature, userData, raftNode }) => {
+  try {
+    const { name, base64File } = await fls.downloadOne(signature, userData, raftNode);
+    mainWindow.webContents.send('download-file:success', { name, base64File });
+  } catch (e) {
+    utils.errorHandler(e, mainWindow, 'download-file');
+  }
+});
+
+ipcMain.on('remove-files:start', async (event, { files, userData, raftNode }) => {
+  try {
+    const theFiles = await fls.remove(files, userData, raftNode);
+    mainWindow.webContents.send('create-files:success', theFiles);
+  } catch (e) {
+    utils.errorHandler(e, mainWindow, 'remove-files');
+  }
+});
+
+//  notes listeners
+ipcMain.on('create-note:start', async (event, { userData, raftNode }) => {
+  try {
+    const note = await nts.createOne(userData, raftNode);
+    mainWindow.webContents.send('note-create:success', note);
+  } catch (e) {
+    utils.errorHandler(e, mainWindow, 'note-create');
+  }
+});
+
+ipcMain.on('edit-note:start', async (event, { note, userData, raftNode }) => {
+  try {
+    const theNote = await nts.editOne(note, userData, raftNode);
+    mainWindow.webContents.send('edit-note:success', theNote);
+  } catch (e) {
+    utils.errorHandler(e, mainWindow, 'edit-note');
+  }
+});
+
+ipcMain.on('remove-files:start', async (event, { files, userData, raftNode }) => {
+  try {
+    const theFiles = await fls.remove(files, userData, raftNode);
+    mainWindow.webContents.send('create-files:success', theFiles);
+  } catch (e) {
+    utils.errorHandler(e, mainWindow, 'remove-files');
+  }
+});
+
+//  ghost-time listeners
+ipcMain.on('set-ghost-time:start', async (event, { kv, ghostTime, userData, raftNode }) => {
+  try {
+    const updated = await ghstTime.set(kv, ghostTime, userData, raftNode);
+    mainWindow.webContents.send('set-ghost-time:success', updated);
+  } catch (e) {
+    utils.errorHandler(e, mainWindow, 'set-ghost-time');
   }
 });

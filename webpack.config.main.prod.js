@@ -16,11 +16,11 @@ export default merge.smart(baseConfig, {
 
   target: 'electron-main',
 
-  entry: './app/main.dev',
+  entry: './listeners/main.dev',
 
   output: {
     path: __dirname,
-    filename: './app/main.prod.js'
+    filename: './listeners/main.prod.js'
   },
 
   plugins: [

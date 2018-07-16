@@ -18,10 +18,10 @@ export default merge.smart(baseConfig, {
 
   target: 'electron-renderer',
 
-  entry: './app/index',
+  entry: './listeners/index',
 
   output: {
-    path: path.join(__dirname, 'app/dist'),
+    path: path.join(__dirname, 'listeners/dist'),
     publicPath: './dist/',
     filename: 'renderer.prod.js'
   },

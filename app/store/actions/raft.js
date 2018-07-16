@@ -3,7 +3,7 @@ import * as actionTypes from './actionTypes';
 
 //  get settings
 const getAppSettingsStart = (userData, raftNode) => {
-  ipcRenderer.send('app-settings:get', { userData, raftNode });
+  ipcRenderer.send('listeners-settings:get', { userData, raftNode });
   return { type: actionTypes.GET_APP_SETTINGS_START };
 };
 
@@ -18,10 +18,10 @@ const getAppSettingsFail = () => ({
 
 export const getAppSettings = (userData, raftNode) => dispatch => {
   dispatch(getAppSettingsStart(userData, raftNode));
-  ipcRenderer.once('app-settings:get-complete', (event, settings) => (
+  ipcRenderer.once('listeners-settings:get-complete', (event, settings) => (
     dispatch(getAppSettingsSuccess(settings))
   ));
-  ipcRenderer.once('app-settings:get-failed', () => dispatch(getAppSettingsFail()));
+  ipcRenderer.once('listeners-settings:get-failed', () => dispatch(getAppSettingsFail()));
 };
 
 //  get all user data
