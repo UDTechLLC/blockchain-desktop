@@ -10,7 +10,7 @@ import { bytes2HumanReadableSize } from '../../utils/commonFunctions';
 
 import { logoGhost, logout, settings, wallet } from '../../assets/img/img';
 import css from './Header.css';
-import commonCss from '../../assets/css/common.css';
+import commonCss from './../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
 const styles = { ...commonCss, ...css };
@@ -19,7 +19,7 @@ class Header extends Component {
   state = {
     unAuthorisedMenu: [
       { link: '/access', label: 'Access' },
-      { link: '/register', abel: 'Register' }
+      { link: '/register', label: 'Register' }
     ],
     authorisedMenu: [
       { link: '/ghost-drive', label: 'Ghost drive' },
@@ -39,11 +39,16 @@ class Header extends Component {
       : this.state.unAuthorisedMenu;
     const rightMenu = this.props.isAuth
       ? this.state.iconsMenu
-      : null;
+      : undefined;
     return (
       <div
         className={[
+          styles.w100,
           styles.flexBetweenCenter,
+          styles.paddingSmTop,
+          styles.paddingMdRight,
+          styles.paddingSmBottom,
+          styles.paddingMdLeft,
           styles.Header
         ].join(' ')}
       >
@@ -51,14 +56,27 @@ class Header extends Component {
           <div
             className={[
               styles.flexAlignCenter,
+              styles.relative,
               styles.Logo
             ].join(' ')}
           >
             {
               !this.props.loading
-                ? <img src={logoGhost} alt="Ghostdrive" />
+                ? (
+                  <img
+                    src={logoGhost}
+                    alt="GhostDrive logo"
+                    className={styles.marginSmRight}
+                  />
+                )
                 : (
-                  <div className={styles.LogoImg}>
+                  <div
+                    className={[
+                      styles.relative,
+                      styles.marginSmRight,
+                      styles.LogoImg
+                    ].join(' ')}
+                  >
                     <Loading color="white" />
                   </div>
                 )
@@ -71,10 +89,10 @@ class Header extends Component {
             />
           </div>
           <nav>
-            <ul className={styles.NavList}>
+            <ul className={[styles.flex, styles.NavList].join(' ')}>
               {
                 leftMenu.map((item, index) => (
-                  <li key={index}>
+                  <li key={index} className={styles.marginSmRight}>
                     <UiNavLink
                       link={item.link}
                       label={item.label}
@@ -108,11 +126,13 @@ class Header extends Component {
                     >
                       {
                         index !== rightMenu.length - 1
-                          ? null
+                          ? undefined
                           : (
                             <li
                               className={[
                                 styles.flexBetweenCenter,
+                                styles.marginSmRight,
+                                styles.white,
                                 styles.GraphWrapper
                               ].join(' ')}
                             >
@@ -125,7 +145,7 @@ class Header extends Component {
                             </li>
                           )
                       }
-                      <li>
+                      <li className={styles.marginSmRight}>
                         <NavLink
                           to={item.link}
                         >
@@ -137,7 +157,7 @@ class Header extends Component {
                 }
               </ul>
             )
-            : null
+            : undefined
         }
       </div>
     );

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import VertivalLineV from '../../UI/VerticalLineV/VerticalLineV';
-import PincodeButton from '../../UI/PincodeButton/PincodeButton';
+import VertivalLineV from '../UI/VerticalLineV/VerticalLineV';
+import PincodeButton from '../UI/PincodeButton/PincodeButton';
 
 import css from './PinCode.css';
-import commonCss from '../../../assets/css/common.css';
+import commonCss from '../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
 const styles = { ...commonCss, ...css };

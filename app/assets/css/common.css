@@ -32,6 +32,91 @@
   left: 0;
 }
 
+.relative {
+  position: relative;
+}
+
+/* margin`s & padding`s */
+.marginSmTop {
+   margin-top: 1.5rem;
+ }
+
+.marginSmRight {
+  margin-right: 1.5rem;
+}
+
+.marginSmBottom {
+  margin-bottom: 1.5rem;
+}
+
+.marginSmLeft {
+  margin-left: 1.5rem;
+}
+
+.marginSm {
+  margin: 1.5rem;
+}
+
+.paddingSmTop {
+  padding-top: 1.5rem;
+}
+
+.paddingSmRight {
+  padding-right: 1.5rem;
+}
+
+.paddingSmBottom {
+  padding-bottom: 1.5rem;
+}
+
+.paddingSmLeft {
+  padding-left: 1.5rem;
+}
+
+.paddingSm {
+  padding: 1.5rem;
+}
+
+.marginMdTop {
+  margin-top: 4rem;
+}
+
+.marginMdRight {
+  margin-right: 4rem;
+}
+
+.marginMdBottom {
+  margin-bottom: 4rem;
+}
+
+.marginMdLeft {
+  margin-left: 4rem;
+}
+
+.marginMd {
+  margin: 4rem;
+}
+
+.paddingMdTop {
+  padding-top: 4rem;
+}
+
+.paddingMdRight {
+  padding-right: 4rem;
+}
+
+.paddingMdBottom {
+  padding-bottom: 4rem;
+}
+
+.paddingMdLeft {
+  padding-left: 4rem;
+}
+
+.marginMd {
+  padding: 4rem;
+}
+
 /* flex boxes */
 .flex {
   box-sizing: border-box;

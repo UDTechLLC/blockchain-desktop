@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import classes from './Auth.css';
 
-import PinCode from './PinCode/PinCode';
+// import PinCode from './../PinCode/PinCode';
 import Login from './Login/Login';
 import Registration from './Registration/Registration';
 
@@ -11,6 +11,7 @@ class Auth extends Component {
   render() {
     return (
       <div className={classes.Auth}>
+        {/*
         <div className={classes.PinCode}>
           <PinCode
             password={this.props.password}
@@ -19,6 +20,7 @@ class Auth extends Component {
             handleClearPassword={() => this.props.handleClearPassword()}
           />
         </div>
+        */}
         <div className={classes.FileSection}>
           {
             this.props.login

@@ -14,7 +14,6 @@ import blockchain from './store/reducers/blockchain';
 import digest from './store/reducers/digest';
 import search from './store/reducers/search';
 
-import './reset.css';
 import './app.global.css';
 import App from './App';
 
