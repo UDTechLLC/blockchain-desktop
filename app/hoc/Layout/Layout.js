@@ -51,7 +51,7 @@ Layout.propTypes = {
 // };
 
 const mapStateToProps = state => ({
-  isAuth: state.auth.userData.csk !== null,
+  isAuth: !!state.auth.userData.csk,
   balance: state.blockchain.balance,
   bcNodes: state.digest.digestInfo.bcNodes,
   loading: state.auth.loading || state.blockchain.loading || state.common.loading

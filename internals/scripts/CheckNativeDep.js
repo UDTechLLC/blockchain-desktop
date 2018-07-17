@@ -35,8 +35,8 @@ ${chalk.whiteBright.bgGreen.bold('npm uninstall your-package')}
 ${chalk.bold('Then, instead of installing the package to the root "./package.json":')}
 ${chalk.whiteBright.bgRed.bold('npm install your-package --save')}
 
-${chalk.bold('Install the package to "./listeners/package.json"')}
-${chalk.whiteBright.bgGreen.bold('cd ./listeners && npm install your-package --save')}
+${chalk.bold('Install the package to "./app/package.json"')}
+${chalk.whiteBright.bgGreen.bold('cd ./app && npm install your-package --save')}
 
 
 Read more about native dependencies at:

@@ -5,7 +5,7 @@
  * through IPC.
  *
  * When running `npm run build` or `npm run build-main`, this file is compiled to
- * `./listeners/main.prod.js` using webpack. This gives us some performance wins.
+ * `./app/main.prod.js` using webpack. This gives us some performance wins.
  *
  * @flow
  */
@@ -17,11 +17,17 @@ const { requireTaskPool } = require('electron-remote');
 const MenuBuilder = require('./menu');
 const utils = require('./electron/utils/utils');
 
-// let configFolder = `${process.cwd()}/.wizeconfig`;
+const auth = requireTaskPool(require.resolve('./electron/listeners/auth/auth'));
+const flds = requireTaskPool(require.resolve('./electron/listeners/folders/folders'));
+const fls = requireTaskPool(require.resolve('./electron/listeners/files/files'));
+const nts = requireTaskPool(require.resolve('./electron/listeners/notes/notes'));
+const ghstTime = requireTaskPool(require.resolve('./electron/listeners/ghost-time/ghost-time'));
+
+// let configFolder = `${process.cwd()}/.ghost-config`;
 // if (process.platform === 'darwin') {
-//   configFolder = '/Applications/Wizebit.listeners/Contents/Resources/.wizeconfig';
+//   configFolder = '/Applications/GhostDrive.app/Contents/Resources/.ghost-config';
 // } else if (process.platform === 'win32') {
-//   configFolder = `${process.cwd()}\\wizeconfig`;
+//   configFolder = `${process.cwd()}\\ghost-config`;
 // }
 
 //  mainWindow container
@@ -63,7 +69,7 @@ app.on('window-all-closed', () => {
   }
 });
 
-//  main listener - on listeners start
+//  main listener - on app start
 app.on('ready', async () => {
   //  install extensions
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
@@ -79,7 +85,7 @@ app.on('ready', async () => {
   });
   mainWindow.on('closed', () => {
     // if (cpkGlob) {
-    //   utils.unmountFs(cpkGlob, fsUrlGlob, listeners.quit);
+    //   utils.unmountFs(cpkGlob, fsUrlGlob, app.quit);
     // } else {
     app.quit();
     // }
@@ -96,12 +102,6 @@ app.on('ready', async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 });
-
-const auth = requireTaskPool(require.resolve(`${__dirname}/electron/listeners/auth/auth`));
-const flds = requireTaskPool(require.resolve(`${__dirname}/electron/listeners/folders/folders`));
-const fls = requireTaskPool(require.resolve(`${__dirname}/electron/listeners/files/files`));
-const nts = requireTaskPool(require.resolve(`${__dirname}/electron/listeners/notes/notes`));
-const ghstTime = requireTaskPool(require.resolve(`${__dirname}/electron/listeners/ghost-time/ghost-time`));
 
 //  common listeners
 ipcMain.on('internet-connection:check', () => (

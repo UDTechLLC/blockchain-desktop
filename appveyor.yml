@@ -8,7 +8,7 @@ environment:
 cache:
   - "%LOCALAPPDATA%/Yarn"
   - node_modules -> package.json
-  - listeners/node_modules -> listeners/package.json
+  - app/node_modules -> app/package.json
 
 matrix:
   fast_finish: true
@@ -25,7 +25,7 @@ install:
   - ps: Install-Product node $env:nodejs_version
   - set CI=true
   - yarn
-  - cd listeners && yarn
+  - cd app && yarn
 
 test_script:
   - node --version

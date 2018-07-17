@@ -7,7 +7,7 @@ import * as utils from './../../utils/utils';
 
 // //  get settings
 // const getAppSettingsStart = (userData, raftNode) => {
-//   ipcRenderer.send('listeners-settings:get', { userData, raftNode });
+//   ipcRenderer.send('app-settings:get', { userData, raftNode });
 //   return { type: actionTypes.GET_APP_SETTINGS_START };
 // };
 //
@@ -22,10 +22,10 @@ import * as utils from './../../utils/utils';
 //
 // export const getAppSettings = (userData, raftNode) => dispatch => {
 //   dispatch(getAppSettingsStart(userData, raftNode));
-//   ipcRenderer.once('listeners-settings:get-complete', (event, settings) => (
+//   ipcRenderer.once('app-settings:get-complete', (event, settings) => (
 //     dispatch(getAppSettingsSuccess(settings))
 //   ));
-//   ipcRenderer.once('listeners-settings:get-failed', () => dispatch(getAppSettingsFail()));
+//   ipcRenderer.once('app-settings:get-failed', () => dispatch(getAppSettingsFail()));
 // };
 
 //  create new folder

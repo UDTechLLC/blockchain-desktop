@@ -99,7 +99,7 @@ App.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  isAuth: state.auth.userData.csk !== null,
+  isAuth: !!state.auth.userData.csk,
   internetChecking: state.common.internetChecking,
   internet: state.common.internet
 });

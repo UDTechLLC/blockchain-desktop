@@ -55,3 +55,9 @@ h1 > b {
   font-weight: 600;
   letter-spacing: 1px;
 }
+
+/*
+::selection {
+  background: red;
+}
+*/

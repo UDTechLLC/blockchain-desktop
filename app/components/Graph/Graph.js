@@ -16,6 +16,7 @@ const graph = props => {
         {
           segments.map((v, k) => (
             <div
+              key={k}
               className={[
                 styles.ProgressSegment,
                 (k + 1) <= progress2segments ? styles.White : null
