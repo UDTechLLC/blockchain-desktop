@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
@@ -9,14 +8,7 @@ import Graph from '../Graph/Graph';
 import Search from '../Search/Search';
 import { bytes2HumanReadableSize } from '../../utils/commonFunctions';
 
-import {
-  logoGhost,
-  // loop,
-  logout,
-  settings,
-  wallet
-  /* , logoTitle */
-} from '../../assets/img/img';
+import { logoGhost, logout, settings, wallet } from '../../assets/img/img';
 import css from './Header.css';
 import commonCss from '../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
@@ -26,58 +18,17 @@ const styles = { ...commonCss, ...css };
 class Header extends Component {
   state = {
     unAuthorisedMenu: [
-      {
-        link: '/access',
-        label: 'Access'
-      },
-      {
-        link: '/register',
-        label: 'Register'
-      }
+      { link: '/access', label: 'Access' },
+      { link: '/register', abel: 'Register' }
     ],
     authorisedMenu: [
-      {
-        link: '/ghost-drive',
-        label: 'Ghost drive'
-      },
-      // {
-      //   link: '/files',
-      //   label: 'Files'
-      // },
-      // {
-      //   link: '/upload',
-      //   label: 'Upload'
-      // },
-      // {
-      //   link: '/x-files',
-      //   label: 'Ghost Files'
-      // },
-      {
-        link: '/ghost-pad',
-        label: 'Ghost note'
-      }
+      { link: '/ghost-drive', label: 'Ghost drive' },
+      { link: '/ghost-pad', label: 'Ghost note' }
     ],
     iconsMenu: [
-      // {
-      //   link: '/deposit',
-      //   label: loop,
-      //   alt: 'logout'
-      // },
-      {
-        link: '/wallet',
-        label: wallet,
-        alt: 'settings'
-      },
-      {
-        link: '/account',
-        label: settings,
-        alt: 'settings'
-      },
-      {
-        link: '/logout',
-        label: logout,
-        alt: 'logout'
-      },
+      { link: '/wallet', label: wallet, alt: 'settings' },
+      { link: '/account', label: settings, alt: 'settings' },
+      { link: '/logout', label: logout, alt: 'logout' },
     ],
     userFilesSize: 340 * 1024 * 1024,
     userFilesLimit: 1024 * 1024 * 1024

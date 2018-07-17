@@ -3,20 +3,20 @@ import { updateObject } from '../../utils/utils';
 
 const initialState = {
   internet: false,
-  credentials: [],
-  error: null,
+  // credentials: [],
+  error: undefined,
   internetChecking: false,
-  loading: false
+  // loading: false
 };
 
-const getCredFilesListStart = state => (updateObject(state, {
-  loading: true
-}));
-
-const getCredFilesListSuccess = (state, action) => (updateObject(state, {
-  credentials: action.credentials,
-  loading: false
-}));
+// const getCredFilesListStart = state => (updateObject(state, {
+//   loading: true
+// }));
+//
+// const getCredFilesListSuccess = (state, action) => (updateObject(state, {
+//   credentials: action.credentials,
+//   loading: false
+// }));
 
 // const getCredFilesListFail = state => (updateObject(state, {
 //   // internet: false,
@@ -43,8 +43,8 @@ const reducer = (state = initialState, action) => {
       case actionTypes.NET_CHECK_START: return internetCheckStart(state, action);
       case actionTypes.NET_CHECK_SUCCESS: return internetCheckSuccess(state, action);
       case actionTypes.NET_CHECK_FAIL: return internetCheckFail(state, action);
-      case actionTypes.GET_CRED_FILES_LIST_START: return getCredFilesListStart(state, action);
-      case actionTypes.GET_CRED_FILES_LIST_SUCCESS: return getCredFilesListSuccess(state, action);
+      // case actionTypes.GET_CRED_FILES_LIST_START: return getCredFilesListStart(state, action);
+      // case actionTypes.GET_CRED_FILES_LIST_SUCCESS: return getCredFilesListSuccess(state, action);
       // case actionTypes.GET_CRED_FILES_LIST_FAIL: return getCredFilesListFail(state, action);
       default: return state;
     }

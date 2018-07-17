@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import * as actions from '../../store/actions';
-import PageWithInfoPanel from '../PageWithInfoPanel/PageWithInfoPanel';
+import InfoPanelWrapper from '../../components/InfoPanelWrapper/InfoPanelWrapper';
 import NotesList from '../../components/PagesSections/GhostNote/NotesList/NotesList';
 import NoteText from '../../components/PagesSections/GhostNote/NoteText/NoteText';
 
@@ -87,7 +87,7 @@ class GhostNote extends Component {
   };
   render() {
     return (
-      <PageWithInfoPanel
+      <InfoPanelWrapper
         disableManipulationButtons={!Object.keys(this.state.activeNote)}
         showRemoveButton={this.state.showRemoveButton}
         toggleShowRemoveButton={() => this.toggleShowRemoveButton()}
@@ -120,7 +120,7 @@ class GhostNote extends Component {
             />
           </div>
         </div>
-      </PageWithInfoPanel>
+      </InfoPanelWrapper>
     );
   }
 }

@@ -29,9 +29,13 @@ export const registration = password => dispatch => {
 
 const authStart = () => ({ type: actionTypes.AUTH_START });
 
-const authSuccess = userData => ({
+const authSuccess = data => ({
   type: actionTypes.AUTH_SUCCESS,
-  userData
+  userData: data.userData,
+  digestInfo: data.digestInfo,
+  folders: data.folders,
+  files: data.files,
+  notes: data.notes
 });
 
 const authFail = error => ({

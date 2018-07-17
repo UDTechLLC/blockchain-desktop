@@ -4,19 +4,14 @@ import { connect } from 'react-redux';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
 
 import { checkInternet } from './store/actions/index';
-// import PreventSelection from './utils/preventSelection';
 import Spinner from './components/UI/Spinner/Spinner';
 import Layout from './hoc/Layout/Layout';
-import NoInternetConnection from './components/NoInternetConnection/NoInternetConnection';
+import NoInternetConnection from './components/PagesSections/NoInternetConnection/NoInternetConnection';
 import Homepage from './containers/Homepage/Homepage';
 import GhostDrive from './containers/GhostDrive/GhostDrive';
-// import FilesList from './containers/FilesList/FilesList';
-// import FileUpload from './containers/FileUpload/FileUpload';
 import Wallet from './containers/Wallet/Wallet';
 import Settings from './containers/Settings/Settings';
 import GhostNote from './containers/GhostNote/GhostNote';
-// import Deposit from './containers/Deposit/Deposit';
-// import XFiles from './containers/XFiles/XFiles';
 import Logout from './containers/Homepage/Logout/Logout';
 import Ghost from './components/Animations/Ghost/Ghost';
 
@@ -29,7 +24,6 @@ class App extends Component {
     content: false,
   };
   componentWillMount() {
-    // PreventSelection(document);
     this.props.checkInternet();
     setTimeout(() => this.setState({ content: true }), 1649);
   }
@@ -50,14 +44,12 @@ class App extends Component {
           routes = (
             <Switch>
               <Route exact path="/ghost-drive" component={GhostDrive} key={Math.random()} />
+              {/*
               <Route exact path="/account" component={Settings} key={Math.random()} />
               <Route exact path="/wallet" component={Wallet} key={Math.random()} />
-              {/* <Route exact path="/upload" component={FileUpload} key={Math.random()} /> */}
-              {/* <Route exact path="/files" component={FilesList} key={Math.random()} /> */}
               <Route exact path="/ghost-pad" component={GhostNote} key={Math.random()} />
-              {/* <Route exact path="/deposit" component={Deposit} key={Math.random()} /> */}
-              {/* <Route exact path="/x-files" component={XFiles} key={Math.random()} /> */}
               <Route exact path="/logout" component={Logout} key={Math.random()} />
+              */}
               <Redirect to="/ghost-drive" />
             </Switch>
           );

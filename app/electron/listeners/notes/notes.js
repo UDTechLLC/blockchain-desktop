@@ -3,7 +3,7 @@ const uuidv4 = require('uuid/v4');
 const key = require('./../../utils/raft-keys');
 const rest = require('./../../rest');
 
-const createOne = ({ cpk, csk }, raftNode) => {
+const createOne = ({ cpk, csk }, raftNode, callback) => {
   const notesKey = key.notesKey(cpk);
 
   const id = uuidv4();
@@ -24,30 +24,30 @@ const createOne = ({ cpk, csk }, raftNode) => {
 
   const mode = { operation: 'add', objects: 'notes' };
   rest.editKeyValue(mode, notesKey, note, raftNode, csk, error => {
-    if (error) throw new Error(error);
+    if (error) return callback(error);
 
-    return note;
+    return callback(undefined, note);
   });
 };
 
-const editOne = (note, { cpk, csk }, raftNode) => {
+const editOne = (note, { cpk, csk }, raftNode, callback) => {
   const notesKey = key.notesKey(cpk);
 
   const mode = { operation: 'edit', objects: 'notes' };
   rest.editKeyValue(mode, notesKey, note, raftNode, csk, error => {
-    if (error) throw new Error(error);
+    if (error) return callback(error);
 
-    return note;
+    return callback(undefined, note);
   });
 };
 
-const remove = (notes, { cpk, csk }, raftNode) => {
+const remove = (notes, { cpk, csk }, raftNode, callback) => {
   const notesKey = key.notesKey(cpk);
 
   rest.removeKeyValues(notesKey, Object.keys(notes), raftNode, csk, error => {
-    if (error) throw new Error(error);
+    if (error) return callback(error);
 
-    return notes;
+    return callback(undefined, notes);
   });
 };
 

@@ -3,7 +3,7 @@ const _ = require('lodash');
 const rest = require('./../../rest');
 const raftKeys = require('./../../utils/raft-keys');
 
-const set = (kv, ghostTime, { cpk, csk }, raftNode) => {
+const set = (kv, ghostTime, { cpk, csk }, raftNode, callback) => {
   const key = _.findKey(kv, o => !_.isEmpty(o));
   const data = _.mapValues(kv[key], o => ({ ...o, ghostTime }));
 
@@ -16,14 +16,14 @@ const set = (kv, ghostTime, { cpk, csk }, raftNode) => {
 
   const mode = { operation: 'edit', objects: key };
   rest.editKeyValue(mode, kvKey, data, raftNode, csk, error => {
-    if (error) throw new Error(error);
+    if (error) return callback(error);
 
-    return {
+    return callback(undefined, {
       folders: {},
       files: {},
       notes: {},
       [key]: data
-    };
+    });
   });
 };
 

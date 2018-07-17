@@ -6,7 +6,7 @@ import { ipcRenderer } from 'electron';
 
 import * as actions from '../../store/actions';
 
-import PageWithInfoPanel from '../PageWithInfoPanel/PageWithInfoPanel';
+import InfoPanelWrapper from '../../components/InfoPanelWrapper/InfoPanelWrapper';
 import BlockchainOperations from '../../components/PagesSections/Wallet/BlochchainOperations/BlochchainOperations';
 import DepositWallet from '../../components/PagesSections/DepositWallet/DepositWallet';
 
@@ -123,7 +123,7 @@ class Wallet extends Component {
   };
   render() {
     return (
-      <PageWithInfoPanel
+      <InfoPanelWrapper
         columns={[
           'SecurityLayer',
           'SecurityLayer'
@@ -163,7 +163,7 @@ class Wallet extends Component {
             />
           </div>
         </div>
-      </PageWithInfoPanel>
+      </InfoPanelWrapper>
     );
   }
 }

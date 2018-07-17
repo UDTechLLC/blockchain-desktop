@@ -5,12 +5,12 @@ const key = require('./../../utils/raft-keys');
 const utils = require('./../../utils/utils');
 const rest = require('./../../rest');
 
-const createOne = (name, parentFolder, { cpk, csk }, raftNode) => {
+const createOne = (name, parentFolder, { cpk, csk }, raftNode, callback) => {
   //  key in raft
   const foldersKey = key.foldersKey(cpk);
   //  generate new folder id
   const id = uuidv4();
-  if (id === parentFolder) throw new Error({ message: 'There is id generation error happened!' });
+  if (id === parentFolder) return callback({ message: 'There is id generation error happened!' });
   //  create new folder kv
   const folder = {
     [id]: {
@@ -29,35 +29,35 @@ const createOne = (name, parentFolder, { cpk, csk }, raftNode) => {
 
   const mode = { operation: 'add', objects: 'folders' };
   rest.editKeyValue(mode, foldersKey, folder, raftNode, csk, error => {
-    if (error) throw new Error(error);
+    if (error) return callback(error);
 
-    return folder;
+    return callback(undefined, folder);
   });
 };
 
-const editOne = (folder, { cpk, csk }, raftNode) => {
+const editOne = (folder, { cpk, csk }, raftNode, callback) => {
   //  keys in raft
   const foldersKey = key.foldersKey(cpk);
   const theFolder = { [folder.id]: folder };
 
   const mode = { operation: 'edit', objects: 'folders' };
   rest.editKeyValue(mode, foldersKey, theFolder, raftNode, csk, error => {
-    if (error) throw new Error(error);
+    if (error) return callback(error);
 
-    return theFolder;
+    return callback(undefined, theFolder);
   });
 };
 
-const remove = (folders, { cpk, csk }, raftNode) => {
+const remove = (folders, { cpk, csk }, raftNode, callback) => {
   //  keys in raft
   const foldersKey = key.foldersKey(cpk);
   const filesKey = key.filesKey(cpk);
 
   rest.removeKeyValues(foldersKey, Object.keys(folders), raftNode, csk, error => {
-    if (error) throw new Error(error);
+    if (error) return callback(error);
 
     rest.getValuesByKvKey(filesKey, raftNode, csk, (err, files) => {
-      if (err) throw new Error(err);
+      if (err) return callback(err);
 
       const deleteFilesObj = _.pickBy(files, v => (
         _.includes(Object.keys(folders), v.parentFolder)
@@ -66,7 +66,7 @@ const remove = (folders, { cpk, csk }, raftNode) => {
       //  if there is some files in folder
       if (Object.keys(deleteFilesObj).length) {
         rest.removeKeyValues(filesKey, Object.keys(deleteFilesObj), raftNode, csk, e => {
-          if (e) throw new Error(e);
+          if (e) return callback(e);
 
           //  else if folder had files
           let shardsReqs = [];
@@ -81,14 +81,14 @@ const remove = (folders, { cpk, csk }, raftNode) => {
           });
 
           rest.promiseAllDelete(shardsReqs, deleteError => {
-            if (deleteError) throw new Error(deleteError);
+            if (deleteError) return callback(deleteError);
 
-            return deleteFilesObj;
+            return callback(undefined, deleteFilesObj);
           });
         });
       }
 
-      return deleteFilesObj;
+      return callback(undefined, deleteFilesObj);
     });
   });
 };

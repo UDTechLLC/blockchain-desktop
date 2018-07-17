@@ -63,8 +63,8 @@ Auth.defaultProps = {
   login: true,
   password: '',
   repeatPassword: '',
-  handleDropCredFile: () => null,
-  handleDownload: () => null
+  handleDropCredFile: undefined,
+  handleDownload: undefined
 };
 
 export default Auth;
