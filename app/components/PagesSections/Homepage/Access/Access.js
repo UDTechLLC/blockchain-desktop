@@ -2,17 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 
-import { fileImg } from '../../../assets/img/img';
-import css from './Login.css';
-import commonCss from '../../../assets/css/common.css';
+import { fileImg } from '../../../../assets/img/img';
+import css from './Acces.css';
+import commonCss from '../../../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
 const styles = { ...commonCss, ...css };
 
-const login = props => (
+const access = props => (
   <div className={styles.Login}>
     <Dropzone
-      onDrop={files => props.handleDropCredFile(files[0])}
+      onDrop={files => props.handleDropFile(files[0])}
       multiple={false}
       accept=".bak"
     >
@@ -68,12 +68,13 @@ const login = props => (
 );
 
 
-login.propTypes = {
-  password: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]).isRequired,
-  handleDropCredFile: PropTypes.func.isRequired,
+access.propTypes = {
+  password: PropTypes.string,
+  handleDropFile: PropTypes.func.isRequired,
 };
 
-export default login;
+access.defaultProps = {
+  password: ''
+};
+
+export default access;

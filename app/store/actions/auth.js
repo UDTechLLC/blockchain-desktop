@@ -2,12 +2,13 @@ import { ipcRenderer } from 'electron';
 import { saveAs } from 'file-saver';
 
 import * as actionTypes from './actionTypes';
-import { b64toBlob } from '../../utils/utils';
 
 const regStart = () => ({ type: actionTypes.REGISTRATION_START });
 
 const regSuccess = encryptedHex => dispatch => {
-  const blob = b64toBlob(encryptedHex);
+  const blob = new Blob([encryptedHex], {
+    type: 'text/plain'
+  });
   dispatch(saveAs(blob, 'credentials.bak'));
 
   return { type: actionTypes.REGISTRATION_SUCCESS };
@@ -23,7 +24,7 @@ export const regCleanUp = () => ({ type: actionTypes.REGISTRATION_CLEAN_UP });
 export const registration = password => dispatch => {
   dispatch(regStart());
   ipcRenderer.send('sign-up:start', password);
-  ipcRenderer.once('sign-up:success', (event, encryptedData) => dispatch(regSuccess(encryptedData)));
+  ipcRenderer.once('sign-up:success', (event, encryptedHex) => dispatch(regSuccess(encryptedHex)));
   ipcRenderer.once('sign-up:fail', (event, error) => dispatch(regFail(error)));
 };
 

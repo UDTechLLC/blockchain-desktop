@@ -9,7 +9,7 @@
   height: calc(100vh - 70px);
   position: relative;
   background-size: cover;
-  margin: 0 15px;
+  /*margin: 0 15px;*/
   box-sizing: border-box;
   overflow: hidden;
 }

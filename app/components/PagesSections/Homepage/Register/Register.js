@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import classes from './Registration.css';
-import { fileImg, logo2 } from '../../../assets/img/img';
+import classes from './Register.css';
+import { fileImg, logo2 } from '../../../../assets/img/img';
 
-const registration = props => (
+const register = props => (
   <div className={classes.Registration}>
     <div className={classes.Content}>
       <h1>GHOST DRIVE ACCESS POINT</h1>
@@ -23,10 +23,7 @@ const registration = props => (
           placeholder="repeat password"
         />
       </div>
-      <button
-        className={classes.FileLine}
-        onClick={() => props.handleDownload()}
-      >
+      <div className={classes.FileLine}>
         <img src={fileImg} alt="file-img" />
         <div>
           <div>
@@ -39,7 +36,7 @@ const registration = props => (
             <p>only access to administrator</p>
           </div>
         </div>
-      </button>
+      </div>
       <div className={classes.ImgLine}>
         <img src={logo2} alt="WizeBit" />
       </div>
@@ -47,22 +44,15 @@ const registration = props => (
   </div>
 );
 
-registration.propTypes = {
-  password: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]),
-  repeatPassword: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]),
-  handleDownload: PropTypes.func.isRequired
+register.propTypes = {
+  password: PropTypes.string,
+  repeatPassword: PropTypes.string
 };
 
-registration.defaultProps = {
+register.defaultProps = {
   password: '',
   repeatPassword: ''
 };
 
-export default registration;
+export default register;
 
