@@ -16,26 +16,20 @@ class Button extends Component {
     return (
       <button
         key={uuidv4()}
-        className={styles.Button}
+        className={[
+          styles.transparentButton,
+          styles.absolute100,
+          styles.Button
+        ].join(' ')}
         onClick={() => this.props.buttonClick(this.props.value)}
-        style={
-          this.props.timer < 1 || this.props.timer > this.props.maxTimerVal
-            ? { opacity: 0, transition: `all ${Math.random()}s linear` }
-            : { transition: `all ${Math.random()}s linear` }
-        }
       >
         <div
           className={styles.ButtonInnerContainer}
-          style={
-            this.props.timer < 1 || this.props.timer > this.props.maxTimerVal
-              ? { pointerEvents: 'none', cursor: 'default' }
-              : {}
-          }
         >
-          <div className={styles.SupTitle}>
+          <div className={[styles.marginXsBottom, styles.SupTitle].join(' ')}>
             {this.props.suptitle}&nbsp;
           </div>
-          <div className={styles.Title}>
+          <div className={[styles.marginXsBottom, styles.Title].join(' ')}>
             {this.props.title}
           </div>
           {
@@ -45,11 +39,11 @@ class Button extends Component {
                   {this.props.letters.map((l, j) => <div key={j}>{l}</div>)}
                 </div>
               )
-              : null
+              : undefined
           }
           <div />
         </div>
-        <div className={styles.FocusBlock}>
+        <div className={[styles.absolute100, styles.FocusBlock].join(' ')}>
           <div /><div /><div /><div />
         </div>
       </button>
@@ -72,9 +66,8 @@ Button.propTypes = {
     PropTypes.number
   ]),
   buttonClick: PropTypes.func.isRequired,
-  // reRendrer: PropTypes.bool
   timer: PropTypes.number,
-  maxTimerVal: PropTypes.number
+  maxTimerVal: PropTypes.number,
 };
 
 Button.defaultProps = {
@@ -82,9 +75,8 @@ Button.defaultProps = {
   title: undefined,
   letters: [],
   value: undefined,
-  // reRendrer: false,
   timer: 1,
-  maxTimerVal: 39
+  maxTimerVal: 39,
 };
 
 export default Button;

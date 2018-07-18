@@ -37,6 +37,46 @@
 }
 
 /* margin`s & padding`s */
+.marginXsTop {
+  margin-top: 0.7rem;
+}
+
+.marginXsRight {
+  margin-right: 0.7rem;
+}
+
+.marginXsBottom {
+  margin-bottom: 0.7rem;
+}
+
+.marginXsLeft {
+  margin-left: 0.7rem;
+}
+
+.marginXs {
+  margin: 0.7rem;
+}
+
+.paddingXsTop {
+  padding-top: 0.7rem;
+}
+
+.paddingXsRight {
+  padding-right: 0.7rem;
+}
+
+.paddingXsBottom {
+  padding-bottom: 0.7rem;
+}
+
+.paddingXsLeft {
+  padding-left: 0.7rem;
+}
+
+.paddingXs {
+  padding: 0.7rem;
+}
+
 .marginSmTop {
    margin-top: 1.5rem;
  }
@@ -239,7 +279,7 @@
 }
 
 .orange {
-  color: #e14737;
+  color: #e34530;
 }
 
 .lightBlueBg {

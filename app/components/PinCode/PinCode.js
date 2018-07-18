@@ -87,58 +87,88 @@ class PinCode extends Component {
     return (
       <div
         className={[
-          styles.PinCode
+          styles.flexColumn,
+          styles.alignCenter,
         ].join(' ')}
       >
         <div
           className={[
             styles.w100,
-            styles.flexBetweenCenter,
-            styles.TopSection
+            styles.flexColumnAllCenter,
+            styles.ContentWrapper
           ].join(' ')}
         >
-          <div className={[styles.flex1, styles.Heading].join(' ')}>
-            System identification
-          </div>
-          <div className={[styles.flex1, styles.Timer].join(' ')}>
-            Please enter your pin
-            <div>
-              <span>[</span>
-              {this.state.timer >= 10 ? this.state.timer : `0${this.state.timer}`}
-              <span>]</span>
-            </div>
-          </div>
-        </div>
-        <div className={[
-          styles.wh100,
-          styles.flexColumnAllCenter,
-          styles.PinCodePanel
-        ].join(' ')}>
+          {/* Heading text */}
           <div
             className={[
+              styles.w100,
+              styles.marginXsBottom,
+              styles.flexBetweenCenter,
+              styles.HeadingBlock
+            ].join(' ')}
+          >
+            <div
+              className={[
+                styles.flex1,
+                styles.orange,
+                styles.Heading
+              ].join(' ')}
+            >
+              System identification
+            </div>
+            <div
+              className={[
+                styles.flex1,
+                styles.Timer
+              ].join(' ')}
+            >
+              Please enter your pin
+              <div
+                className={[styles.marginXsLeft].join(' ')}
+              >
+                <span>[</span>
+                {this.state.timer >= 10 ? this.state.timer : `0${this.state.timer}`}
+                <span>]</span>
+              </div>
+            </div>
+          </div>
+          {/* 9 buttons */}
+          <div
+            className={[
+              styles.flex,
+              styles.w100,
               styles.Buttons
             ].join(' ')}
           >
             {
               this.state.buttons.map((button, i) => (
-                <PincodeButton
+                <div
                   key={i}
-                  suptitle={button.view.suptitle}
-                  title={button.view.title}
-                  letters={button.view.letters}
-                  value={button.value}
-                  buttonClick={val => this.handleButtonClick(val)}
-                  timer={this.state.timer}
-                  maxTimerVal={buttonSwapTimer}
-                  // transition={
-                  //   (+this.state.timer < 1 || +this.state.timer > (buttonSwapTimer - 1))
-                  //     ? Math.random() : 0
-                  // }
-                  // reRendrer={this.state.timer < 1 || this.state.timer > (buttonSwapTimer - 1)}
-                />
+                  style={{
+                    opacity: +!(this.state.timer < 1 || this.state.timer > buttonSwapTimer),
+                    transition: `opacity ${Math.random()}s linear`,
+                    pointerEvents: this.state.timer < 1 || this.state.timer > buttonSwapTimer
+                      ? 'none'
+                      : undefined
+                  }}
+                  className={styles.relative}
+                >
+                  <PincodeButton
+
+                    suptitle={button.view.suptitle}
+                    title={button.view.title}
+                    letters={button.view.letters}
+                    value={button.value}
+                    buttonClick={val => this.handleButtonClick(val)}
+                    timer={this.state.timer}
+                    maxTimerVal={buttonSwapTimer}
+                    hide={this.state.timer < 1 || this.state.timer >= (buttonSwapTimer - 1)}
+                  />
+                </div>
               ))
             }
           </div>
+          {/* 3 buttons */}
           <div
             className={[
               styles.flexBetweenCenter,
@@ -146,35 +176,30 @@ class PinCode extends Component {
               styles.LastButtonWrapper
             ].join(' ')}
           >
-            <PincodeButton
-              title="Clear"
-              buttonClick={() => this.props.handleClearPassword()}
-            />
-            <PincodeButton
-              title="00"
-              value={0}
-              buttonClick={() => this.handleButtonClick(0)}
-              maxTimerVal={buttonSwapTimer - 1}
-            />
-            <PincodeButton
-              title="Enter"
-              buttonClick={() => this.props.handleSubmit()}
-            />
+            <div className={styles.relative}>
+              <PincodeButton
+                title="Clear"
+                buttonClick={() => this.props.handleClearPassword()}
+                hide={false}
+              />
+            </div>
+            <div className={styles.relative}>
+              <PincodeButton
+                title="00"
+                value={0}
+                buttonClick={() => this.handleButtonClick(0)}
+                hide={false}
+              />
+            </div>
+            <div className={styles.relative}>
+              <PincodeButton
+                title="Enter"
+                buttonClick={() => this.props.handleSubmit()}
+                hide={false}
+              />
+            </div>
           </div>
         </div>
-        {/*
-        <div
-          className={[
-            styles.flexBetweenCenter,
-            styles.w100,
-            styles.LastButtonWrapper
-          ].join(' ')}
-          key={i}
-        >
-          xTimerVal={buttonSwapTimer - 1}
-          />
-        </div>
-        */}
         <div className={styles.ToTheRight}>
           <VertivalLineV count={12} />
         </div>

@@ -85,7 +85,16 @@ class Homepage extends Component {
           styles.flex
         ].join(' ')}
       >
-        <div className={[styles.flex2, styles.paddingMd, styles.relative].join(' ')}>
+        <div
+          className={[
+            styles.flex2,
+            styles.paddingMd,
+            styles.relative,
+            styles.flexColumn,
+            styles.justifyCenter,
+            styles.w100
+          ].join(' ')}
+        >
           <PinCode
             password={this.state.password}
             buttonClick={val => this.handlePinCodeBtnClick(val)}
