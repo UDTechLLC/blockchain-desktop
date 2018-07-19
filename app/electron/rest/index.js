@@ -12,4 +12,9 @@ export {
   editKeyValue,
   removeKeyValues
 } from './key-value';
+export {
+  getBalance,
+  prepareTransaction,
+  signTransaction
+} from './blockchain';
 export { promiseAllDelete } from './common';

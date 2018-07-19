@@ -40,11 +40,16 @@ const signIn = (password, filePath, callback) => {
         rest.getAllUserInfo(userData, digestInfo.raftNodes[0], (userInfoError, userInfo) => {
           if (userInfoError) return callback(userInfoError);
 
-          //  mount fs
-          rest.mountBuckets(userData.cpk, digestInfo.storageNodes, mountErr => {
-            if (mountErr) return callback(mountErr);
+          //  get bc balance
+          rest.getBalance(userData.address, digestInfo.bcNodes[0], (bcError, balance) => {
+            if (bcError) return callback(bcError);
 
-            return callback(undefined, { ...userInfo, digestInfo, userData });
+            //  mount fs
+            rest.mountBuckets(userData.cpk, digestInfo.storageNodes, mountErr => {
+              if (mountErr) return callback(mountErr);
+
+              return callback(undefined, { ...userInfo, ...balance, digestInfo, userData });
+            });
           });
         });
       });

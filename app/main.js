@@ -20,6 +20,7 @@ const auth = require('./electron/listeners/auth/auth');
 const flds = require('./electron/listeners/folders/folders');
 const fls = require('./electron/listeners/files/files');
 const nts = require('./electron/listeners/notes/notes');
+const bc = require('./electron/listeners/blockchain/blockchain');
 const ghstTime = require('./electron/listeners/ghost-time/ghost-time');
 
 // let configFolder = `${process.cwd()}/.ghost-config`;
@@ -207,6 +208,15 @@ ipcMain.on('remove-notes:start', (event, { notes, userData, raftNode }) => {
     if (error) return utils.errorHandler(error, mainWindow, 'remove-notes');
 
     mainWindow.webContents.send('remove-notes:success', theNotes);
+  });
+});
+
+//  blockchain listeners
+ipcMain.on('create-transaction:start', (event, { userData, to, amount, bcNode }) => {
+  bc.createTransaction(userData, to, amount, bcNode, (error, balance) => {
+    if (error) return utils.errorHandler(error, mainWindow, 'create-transaction');
+
+    mainWindow.webContents.send('create-transaction:success', balance);
   });
 });
 
