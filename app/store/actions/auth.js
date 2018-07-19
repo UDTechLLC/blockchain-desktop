@@ -5,11 +5,11 @@ import * as actionTypes from './actionTypes';
 
 const regStart = () => ({ type: actionTypes.REGISTRATION_START });
 
-const regSuccess = encryptedHex => dispatch => {
+const regSuccess = encryptedHex => {
   const blob = new Blob([encryptedHex], {
     type: 'text/plain'
   });
-  dispatch(saveAs(blob, 'credentials.bak'));
+  saveAs(blob, 'credentials.bak');
 
   return { type: actionTypes.REGISTRATION_SUCCESS };
 };

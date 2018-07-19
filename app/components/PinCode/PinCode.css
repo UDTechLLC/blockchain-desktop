@@ -1,5 +1,9 @@
+.ContentWrapper {
+  width: 50vh;
+}
+
 .Heading {
-  font-size: 1.2vw;
+  font-size: 1vw;
   font-weight: 400;
   text-transform: uppercase;
 }
@@ -9,7 +13,7 @@
   justify-content: space-between;
   align-items: center;
   color: #30d6d6;
-  font-size: 1.2vw;
+  font-size: 1vw;
   font-weight: 500;
   box-sizing: border-box;
 }
@@ -49,17 +53,7 @@
  margin-right: 0.7rem;
 }
 
-@media (max-width: 1300px) {
-  .ContentWrapper {
-    width: calc(0.8 * (100vw - 16rem) * 0.4);
-  }
-}
-
-@media (max-height: 680px) {
-  .ContentWrapper {
-    width: calc(100vh / 2.2);
-  }
-
+@media (max-height: 790px) {
   .HeadingBlock {
     flex-direction: column;
     align-items: flex-start;

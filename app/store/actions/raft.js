@@ -120,9 +120,9 @@ export const uploadFiles = (files, userData, storageNodes, raftNode) => dispatch
 //  download file
 const downloadFileStart = () => ({ type: actionTypes.DOWNLOAD_FILE_START });
 
-const downloadFileSuccess = (name, base64File) => dispatch => {
+const downloadFileSuccess = (name, base64File) => {
   const blob = utils.b64toBlob(base64File);
-  dispatch(saveAs(blob, name));
+  saveAs(blob, name);
 
   return { type: actionTypes.DOWNLOAD_FILE_SUCCESS };
 };
@@ -135,8 +135,8 @@ const downloadFileFail = error => ({
 export const downloadFile = (signature, userData, raftNode) => dispatch => {
   dispatch(downloadFileStart());
   ipcRenderer.send('download-file:start', { signature, userData, raftNode });
-  ipcRenderer.once('download-file:success', (event, base64File) => (
-    dispatch(downloadFileSuccess(signature, { name, base64File }))
+  ipcRenderer.once('download-file:success', (event, { name, base64File }) => (
+    dispatch(downloadFileSuccess(name, base64File))
   ));
   ipcRenderer.once('download-file:fail', (event, error) => dispatch(downloadFileFail(error)));
 };
@@ -256,7 +256,7 @@ export const setGhostTime = (obj2Upd, ghostTime, userData, raftNode) => dispatch
     notes: {},
     ...obj2Upd
   };
-  ipcRenderer.send('set-ghost-time:start', { kv, ghostTime, raftNode });
+  ipcRenderer.send('set-ghost-time:start', { kv, ghostTime, userData, raftNode });
   ipcRenderer.once('set-ghost-time:success', (event, updated) => (
     dispatch(setGhostTimeSuccess(updated))
   ));

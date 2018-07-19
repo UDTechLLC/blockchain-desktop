@@ -121,13 +121,13 @@ infoPanel.defaultProps = {
   columns: ['SecurityLayer', 'Manipulation'],
   disableManBtns: false,
   showRemoveButton: false,
-  toggleShowRemoveBtn: undefined,
-  onTopManBtnClick: undefined,
-  onBottomManBtnClick: undefined,
+  toggleShowRemoveBtn: () => undefined,
+  onTopManBtnClick: () => undefined,
+  onBottomManBtnClick: () => undefined,
   firstManBtnText: 'download',
   timePickerDate: new Date(),
-  onTimePickerChange: undefined,
-  onGhostTimeSet: undefined
+  onTimePickerChange: () => undefined,
+  onGhostTimeSet: () => undefined
 };
 
 export default infoPanel;

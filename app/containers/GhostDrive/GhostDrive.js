@@ -156,14 +156,14 @@ class GhostDrive extends Component {
   render() {
     return (
       <InfoPanelWrapper
-        // disableManBtns={!this.state.checkedFile}
-        // showRemoveButton={this.state.showRemoveButton}
-        // toggleShowRemoveBtn={this.toggleShowRemoveButton}
-        // onTopManBtnClick={this.handleDownloadFile}
-        // onBottomManBtnClick={this.handleRemoveFile}
-        // timePickerDate={this.state.timePickerDate}
-        // onTimePickerChange={timePickerDate => this.setState({ timePickerDate })}
-        // onGhostTimeSet={this.handleSetGhostTime()}
+        disableManBtns={!this.state.checkedFile}
+        showRemoveButton={this.state.showRemoveButton}
+        toggleShowRemoveBtn={this.toggleShowRemoveButton}
+        onTopManBtnClick={this.handleDownloadFile}
+        onBottomManBtnClick={this.handleRemoveFile}
+        timePickerDate={this.state.timePickerDate}
+        onTimePickerChange={timePickerDate => this.setState({ timePickerDate })}
+        onGhostTimeSet={this.handleSetGhostTime}
       >
         <div
           className={[
