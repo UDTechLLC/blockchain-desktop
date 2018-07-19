@@ -16,12 +16,16 @@ const ghostFiles = props => {
     <Dropzone
       onDrop={(accepted, rejected) => props.onDrop(accepted, rejected)}
       maxSize={102400000}
+      className={styles.flexAllCenter}
     >
       {
         !Object.keys(props.files).length
           ? (
             <p>
-              {`There is no files in folder "${props.folderInfo[Object.keys(props.folderInfo)[0]].name}". You can drop it here or upload file with click.`}
+              {
+                `There is no files in folder "${props.folderInfo[Object.keys(props.folderInfo)[0]].name}".` +
+                ' You can drop it here or upload file with click.'
+              }
             </p>
           )
           : undefined
@@ -31,8 +35,10 @@ const ghostFiles = props => {
   return (
     <div
       className={[
-        styles.flex,
-        styles.wh100,
+        styles.flexColumn,
+        styles.flex0050,
+        styles.h100,
+        styles.paddingSm,
         styles.GhostFiles
       ].join(' ')}
     >
@@ -44,6 +50,7 @@ const ghostFiles = props => {
                 className={[
                   styles.flex,
                   styles.wh100,
+                  styles.paddingSm,
                   styles.ItemsWrapper
                 ].join(' ')}
               >

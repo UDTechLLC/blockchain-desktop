@@ -23,7 +23,7 @@ class Header extends Component {
     ],
     authorisedMenu: [
       { link: '/ghost-drive', label: 'Ghost drive' },
-      { link: '/ghost-pad', label: 'Ghost note' }
+      { link: '/ghost-note', label: 'Ghost note' }
     ],
     iconsMenu: [
       { link: '/wallet', label: wallet, alt: 'settings' },

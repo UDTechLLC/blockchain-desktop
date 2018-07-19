@@ -28,6 +28,7 @@ class GhostFolders extends Component {
           styles.transparentButton,
           styles.w100,
           styles.relative,
+          styles.blue,
           styles.marginXsBottom,
           styles.FolderItem,
           !this.props.isActive ? null : styles.Active

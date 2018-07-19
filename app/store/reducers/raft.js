@@ -110,7 +110,12 @@ const authLogout = state => (updateObject(state, {
 }));
 
 const createNewFolderSuccess = (state, action) => (updateObject(state, {
-  folders: { ...state.folders, ...action.folders },
+  folders: { ...state.folders, ...action.folder },
+  loading: false
+}));
+
+const editFolderSuccess = (state, action) => (updateObject(state, {
+  folders: { ...state.folders, ...action.folder },
   loading: false
 }));
 
@@ -121,11 +126,6 @@ const deleteFolderSuccess = (state, action) => (updateObject(state, {
   files: _.omitBy(state.files, (v, k) => (
     Object.keys(action.files).includes(k)
   )),
-  loading: false
-}));
-
-const editFolderSuccess = (state, action) => (updateObject(state, {
-  folders: { ...state.folders, ...action.folders },
   loading: false
 }));
 

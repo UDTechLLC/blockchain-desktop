@@ -89,8 +89,8 @@ const removeFoldersFail = error => ({
 export const removeFolders = (folders, userData, raftNode) => dispatch => {
   dispatch(removeFoldersStart());
   ipcRenderer.send('remove-folders:start', { folders, userData, raftNode });
-  ipcRenderer.once('remove-folders:success', (event, { flds, files }) => (
-    dispatch(removeFoldersSuccess(flds, files))
+  ipcRenderer.once('remove-folders:success', (event, data) => (
+    dispatch(removeFoldersSuccess(data.folders, data.files))
   ));
   ipcRenderer.once('remove-folders:fail', (event, error) => dispatch(removeFoldersFail(error)));
 };

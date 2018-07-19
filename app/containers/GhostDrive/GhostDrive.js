@@ -184,7 +184,6 @@ class GhostDrive extends Component {
             />
           </div>
           <div className={styles.flex3}>
-            {/*
             <GhostFiles
               folderInfo={{
                 [this.state.checkedFolder]: this.props.folders[this.state.checkedFolder]
@@ -194,12 +193,8 @@ class GhostDrive extends Component {
               onFileCheck={signature => this.handleCheckFile(signature)}
               activeFile={this.state.checkedFile}
             />
-            */}
-              <div>
-                hello world
-              </div>
-            </div>
           </div>
+        </div>
       </InfoPanelWrapper>
     );
   }

@@ -29,11 +29,9 @@ class App extends Component {
       routes = (
         <Switch>
           <Route exact path="/ghost-drive" component={GhostDrive} key={Math.random()} />
-          {/*
-            <Route exact path="/account" component={Settings} key={Math.random()} />
-            <Route exact path="/wallet" component={Wallet} key={Math.random()} />
-            <Route exact path="/ghost-pad" component={GhostNote} key={Math.random()} />
-          */}
+          <Route exact path="/ghost-note" component={GhostNote} key={Math.random()} />
+          <Route exact path="/account" component={Settings} key={Math.random()} />
+          <Route exact path="/wallet" component={Wallet} key={Math.random()} />
           <Route exact path="/logout" component={Logout} key={Math.random()} />
           <Redirect to="/ghost-drive" />
         </Switch>

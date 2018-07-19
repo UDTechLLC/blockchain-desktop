@@ -25,7 +25,6 @@
   z-index: 1;
 }
 
-
 .ButtonInnerContainer > div {
   text-align: left;
 }
@@ -45,12 +44,12 @@
 
 .SubTitle {
   color: #96bd0d;
-  font-size: 1.2em;
+  font-size: 1em;
   font-weight: 400;
   text-transform: uppercase;
   position: absolute;
   left: 8px;
-  bottom: 10px;
+  bottom: 5px;
 }
 
 .FocusBlock {

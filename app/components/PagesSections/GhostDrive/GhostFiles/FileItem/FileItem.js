@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { timestamp2date, bytes2HumanReadableSize } from '../../../../../utils/commonFunctions';
+import { timestamp2date, bytes2HumanReadableSize, getFileName, getFileExtension } from '../../../../../utils/utils';
 import { xFileBlue } from '../../../../../assets/img/img';
 import css from './FileItem.css';
 import commonCss from '../../../../../assets/css/common.css';
@@ -13,36 +13,38 @@ const styles = { ...commonCss, ...css };
 class FileItem extends Component {
   state = {
     hide: false,
-    oldTimebomb: this.props.file.timebomb
+    oldGhostTime: this.props.file.ghostTime
   };
   componentWillMount() {
-    this.setTimebomb();
+    this.setGhostTime();
   }
-  setTimebomb = () => {
-    if (this.props.file && typeof this.props.file === 'object' && this.props.file.timebomb) {
-      const now = +new Date().getTime() / 1000;
-      const dif = Math.round(this.props.file.timebomb - now);
+  setGhostTime = () => {
+    if (this.props.file && typeof this.props.file === 'object' && this.props.file.ghostTime) {
+      const now = new Date().getTime();
+      const dif = this.props.file.ghostTime - now;
       if (dif > 0) {
-        const time = dif * 1000;
-        this.setState({ hide: true, oldTimebomb: this.props.file.timebomb });
-        setTimeout(() => this.setState({ hide: false }), time);
+        this.setState({ hide: true, oldGhostTime: this.props.file.ghostTime }, () => (
+          setTimeout(() => this.setState({ hide: false }), dif)
+        ));
       }
     }
   };
   render() {
-    if (this.state.oldTimebomb !== this.props.file.timebomb) {
-      this.setTimebomb();
-    }
-    const extension = this.props.file.name.lastIndexOf('.') > 0
-      ? this.props.file.name.substr(this.props.file.name.lastIndexOf('.') + 1)
-      : null;
+    if (this.state.oldGhostTime !== this.props.file.ghostTime) this.setGhostTime();
+
+    const extension = getFileExtension(this.props.file.name);
+    const cleanName = getFileName(this.props.file.name);
+
     return (
       <div
         role="button"
         tabIndex={0}
         className={[
+          styles.marginSmBottom,
+          styles.relative,
+          styles.blue,
           styles.FileItem,
-          !this.props.isActive ? null : styles.Active
+          !this.props.isActive ? undefined : styles.Active
         ].join(' ')}
         onClick={() => this.props.onFileCheck(this.props.file.signature)}
         style={{
@@ -72,7 +74,7 @@ class FileItem extends Component {
             {
               bytes2HumanReadableSize(this.props.file.size)
                 ? bytes2HumanReadableSize(this.props.file.size)
-                : null
+                : undefined
             }
           </div>
           <div
@@ -81,7 +83,7 @@ class FileItem extends Component {
               styles.flexAllCenter
             ].join(' ')}
           >
-            {this.props.file.name}
+            {cleanName}
           </div>
           <div
             className={[

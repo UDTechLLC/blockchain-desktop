@@ -7,7 +7,7 @@
 
 .FolderItem > div:not(:first-of-type),
 .FolderItem button {
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-weight: 500;
   line-height: 1;
   text-align: center;
@@ -15,10 +15,6 @@
   width: 100%;
   left: 0;
   right: 0;
-}
-
-.FolderItem div {
-  color: #2f96ba;
 }
 
 .FolderItem.Active div {
