@@ -183,6 +183,10 @@
   flex: 5;
 }
 
+.flex0050 {
+  flex: 0 0 50%;
+}
+
 .flexColumn {
   box-sizing: border-box;
   display: flex;

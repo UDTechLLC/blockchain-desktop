@@ -1,8 +1,10 @@
 .GhostFolders {
   flex-wrap: wrap;
-  padding: 15px 0;
 }
 
-.GhostFolders > div {
-  width: calc(100% / 3);
+.GhostFolders > button {
+  width: 100%;
+  max-width: calc(100% / 3);
+  padding-top: calc(100% / 3);
+  height: 0;
 }

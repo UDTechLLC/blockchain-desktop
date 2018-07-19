@@ -2,37 +2,29 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import classes from './Layout.css';
-
 import Aux from '../Aux/Aux';
 import Header from '../../components/Header/Header';
-// import Footer from '../../components/Footer/Footer';
+
+import css from './Layout.css';
+import commonCss from '../../assets/css/common.css';
+// global classes names starts with lowercase letter: styles.class
+// and component classes - uppercase: styles.Class
+const styles = { ...commonCss, ...css };
 
 class Layout extends Component {
   render() {
     return (
       <Aux>
-        <div className={classes.Layout}>
+        <div className={[styles.wh100, styles.Layout].join(' ')}>
           <Header
             isAuth={this.props.isAuth}
             loading={this.props.loading}
           />
-          <main>
-            <article>
+          <main className={[styles.w100, styles.relative].join(' ')}>
+            <article className={[styles.wh100, styles.flexColumn, styles.justifyCenter].join(' ')}>
               { this.props.children }
             </article>
           </main>
-          {/*
-          <Footer
-            isAuth={this.props.isAuth}
-            balance={this.props.balance}
-          />
-          {
-            this.props.isAuth
-              ? <Footer />
-              : null
-          }
-          */}
         </div>
       </Aux>
     );
@@ -40,22 +32,15 @@ class Layout extends Component {
 }
 
 Layout.propTypes = {
+  children: PropTypes.node.isRequired,
   isAuth: PropTypes.bool.isRequired,
-  children: PropTypes.element.isRequired,
-  // balance: PropTypes.number
   loading: PropTypes.bool.isRequired
 };
 
-// Layout.defaultProps = {
-//   balance: 0
-// };
-
 const mapStateToProps = state => ({
   isAuth: !!state.auth.userData.csk,
-  balance: state.blockchain.balance,
-  bcNodes: state.digest.digestInfo.bcNodes,
-  loading: state.auth.loading || state.blockchain.loading || state.common.loading
-    || state.digest.loading || state.raft.loading
+  loading: state.common.loading || state.raft.loading || state.auth.loading
+    || state.blockchain.loading
 });
 
 export default connect(mapStateToProps)(Layout);

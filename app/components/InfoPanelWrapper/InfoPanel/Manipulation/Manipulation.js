@@ -60,7 +60,7 @@ const Manipulation = props => (
         >
           <Button
             onClick={props.onTopManBtnClick}
-            disabled={props.disableManipulationButtons}
+            disabled={props.disableManBtns}
           >
             {props.firstManBtnText}
           </Button>
@@ -80,7 +80,7 @@ const Manipulation = props => (
           styles.flexBetweenCenter,
           styles.pickerWrapper,
           styles.TimpickerWrapper,
-          props.disableManipulationButtons ? styles.Disabled : null
+          props.disableManBtns ? styles.Disabled : null
         ].join(' ')}
       >
         <DateTimePicker
@@ -115,8 +115,8 @@ const Manipulation = props => (
         >
           <Button
             type="button"
-            onClick={() => props.toggleShowRemoveButton()}
-            disabled={props.disableManipulationButtons}
+            onClick={() => props.toggleShowRemoveBtn()}
+            disabled={props.disableManBtns}
             btnStyles={props.showRemoveButton ? ['Transparent', 'InsideFlex'] : null}
           >
             {props.showRemoveButton ? 'deny' : 'delete'}
@@ -128,7 +128,7 @@ const Manipulation = props => (
             <Button
               type="button"
               onClick={() => props.onBottomManBtnClick()}
-              disabled={props.disableManipulationButtons}
+              disabled={props.disableManBtns}
               btnStyles={props.showRemoveButton ? ['Transparent', 'InsideFlex'] : null}
             >
               confirm
@@ -141,19 +141,15 @@ const Manipulation = props => (
 );
 
 Manipulation.propTypes = {
-  disableManipulationButtons: PropTypes.bool.isRequired,
+  disableManBtns: PropTypes.bool.isRequired,
   showRemoveButton: PropTypes.bool.isRequired,
-  toggleShowRemoveButton: PropTypes.func.isRequired,
+  toggleShowRemoveBtn: PropTypes.func.isRequired,
   timePickerDate: PropTypes.instanceOf(Date).isRequired,
   onTimePickerChange: PropTypes.func.isRequired,
   onGhostTimeSet: PropTypes.func.isRequired,
   onTopManBtnClick: PropTypes.func.isRequired,
   onBottomManBtnClick: PropTypes.func.isRequired,
-  firstManBtnText: PropTypes.string
-};
-
-Manipulation.defaultProps = {
-  firstManBtnText: 'download'
+  firstManBtnText: PropTypes.string.isRequired
 };
 
 export default Manipulation;

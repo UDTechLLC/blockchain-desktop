@@ -28,7 +28,8 @@ class Homepage extends Component {
     if (`${this.state[target]}${val}`.length > 12) {
       return ipcRenderer.send('message-box:show', {
         type: 'info',
-        buttons: ['Ok'],
+        buttons: ['OK'],
+        title: 'Announcement',
         message: 'Max length of password - is 12 symbols'
       });
     }
@@ -44,7 +45,8 @@ class Homepage extends Component {
     if (!this.state[target] || this.state[target] < 4) {
       return ipcRenderer.send('message-box:show', {
         type: 'info',
-        buttons: ['Ok'],
+        buttons: ['OK'],
+        title: 'Announcement',
         message: 'Min length of password - is 4 symbols'
       });
     }
@@ -53,19 +55,21 @@ class Homepage extends Component {
       if (!this.state.credentialsPath) {
         return ipcRenderer.send('message-box:show', {
           type: 'info',
-          buttons: ['Ok'],
+          buttons: ['OK'],
+          title: 'Announcement',
           message: 'Upload your credential files for access'
         });
       }
       //  auth action
-      this.props.handleAuth(this.state.password, this.state.credFilePath);
+      this.props.handleAuth(this.state.password, this.state.credentialsPath);
     } else if (url === '/register') {
       if (!this.state.repeatPassword) {
         return this.setState({ pinCodeTarget: 'repeatPassword' });
       } else if (this.state.password !== this.state.repeatPassword) {
         ipcRenderer.send('message-box:show', {
           type: 'info',
-          buttons: ['Ok'],
+          buttons: ['OK'],
+          title: 'Announcement',
           message: 'Password doesn\'t match!'
         });
         return this.handleClearPassword;

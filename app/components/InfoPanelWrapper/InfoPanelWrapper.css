@@ -1,15 +1,6 @@
-.Wrapper {
-  position: relative;
-}
-
 .Content {
-  height: calc(100% - 204px);
-  padding: 0 15px;
+  height: calc(100% - 20rem);
   overflow: hidden;
-  margin-bottom: 19px;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
   position: absolute;
   top: 0;
   right: 0;
@@ -18,19 +9,18 @@
 }
 
 .Content.ContentWithHidenInfo {
-  height: calc(100% - 6px);
+  height: calc(100% - 0.9rem);
 }
 
 .InfoPanel {
-  padding: 0 15px;
   position: absolute;
   right: 0;
   bottom: 0;
   left: 0;
-  height: 200px;
+  height: 20rem;
   transition: height 0.4s linear;
 }
 
 .InfoPanel.HidenPanel {
-  height: 6px;
+  height: 0.9rem;
 }

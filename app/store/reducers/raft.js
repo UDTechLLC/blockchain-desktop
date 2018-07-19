@@ -50,8 +50,9 @@ const actionFail = (state, action) => (updateObject(state, {
 const authSuccess = (state, action) => (updateObject(state, {
   folders: {
     [ROOT_HASH]: {
-      parentFolder: null,
+      id: ROOT_HASH,
       name: 'Root',
+      parentFolder: null,
       timestamp: 0,
       securityLayers: {
         _2fa: false,
@@ -70,8 +71,9 @@ const authSuccess = (state, action) => (updateObject(state, {
 const authFail = (state, action) => (updateObject(state, {
   folders: {
     [ROOT_HASH]: {
-      parentFolder: null,
+      id: ROOT_HASH,
       name: 'Root',
+      parentFolder: null,
       timestamp: 0,
       securityLayers: {
         _2fa: false,
@@ -186,6 +188,7 @@ const reducer = (state = initialState, action) => {
         return actionStart(state, action);
       //  fail actions
       case actionTypes.AUTH_FAIL:
+        return authFail(state, action);
       case actionTypes.CREATE_NEW_FOLDER_FAIL:
       case actionTypes.EDIT_FOLDER_FAIL:
       case actionTypes.REMOVE_FOLDERS_FAIL:

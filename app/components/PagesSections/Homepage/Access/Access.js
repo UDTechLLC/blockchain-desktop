@@ -58,12 +58,6 @@ const access = props => (
         placeholder="enter password"
       />
     </div>
-    {/*
-        <input
-          type="text"
-          className={styles.w100}
-        />
-        */}
   </div>
 );
 

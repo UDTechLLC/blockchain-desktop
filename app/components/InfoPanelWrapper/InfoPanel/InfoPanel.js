@@ -39,9 +39,9 @@ const infoPanel = props => {
         block = (
           <Manipulation
             key={Math.random()}
-            disableManipulationButtons={props.disableManipulationButtons}
+            disableManBtns={props.disableManBtns}
             showRemoveButton={props.showRemoveButton}
-            toggleShowRemoveButton={props.toggleShowRemoveButton}
+            toggleShowRemoveBtn={props.toggleShowRemoveBtn}
             onTopManBtnClick={props.onTopManBtnClick}
             onBottomManBtnClick={props.onBottomManBtnClick}
             firstManBtnText={props.firstManBtnText}
@@ -104,9 +104,9 @@ infoPanel.propTypes = {
   hide: PropTypes.bool,
   //  manipulation section
   //  buttons
-  disableManipulationButtons: PropTypes.bool,
+  disableManBtns: PropTypes.bool,
   showRemoveButton: PropTypes.bool,
-  toggleShowRemoveButton: PropTypes.func,
+  toggleShowRemoveBtn: PropTypes.func,
   onTopManBtnClick: PropTypes.func,
   onBottomManBtnClick: PropTypes.func,
   firstManBtnText: PropTypes.string,
@@ -119,9 +119,9 @@ infoPanel.propTypes = {
 infoPanel.defaultProps = {
   hide: false,
   columns: ['SecurityLayer', 'Manipulation'],
-  disableManipulationButtons: false,
+  disableManBtns: false,
   showRemoveButton: false,
-  toggleShowRemoveButton: undefined,
+  toggleShowRemoveBtn: undefined,
   onTopManBtnClick: undefined,
   onBottomManBtnClick: undefined,
   firstManBtnText: 'download',

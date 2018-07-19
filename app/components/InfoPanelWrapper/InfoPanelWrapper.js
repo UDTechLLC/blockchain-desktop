@@ -14,47 +14,38 @@ class InfoPanelWrapper extends Component {
   handleTogglePanel = () => this.setState({ hide: !this.state.hide });
   render() {
     return (
-      <div
-        className={[
-          styles.wh100,
-          styles.Wrapper
-        ].join(' ')}
-      >
+      <div className={styles.wh100}>
         <div
-          className={
-            !this.state.hide
-              ? styles.Content
-              : [
-                styles.Content,
-                styles.ContentWithHidenInfo
-              ].join(' ')
-          }
+          className={[
+            styles.flexColumn,
+            styles.w100,
+            styles.Content,
+            !this.state.hide ? undefined : styles.ContentWithHidenInfo
+          ].join(' ')}
         >
           {this.props.children}
         </div>
         <div
-          className={
-            !this.state.hide
-              ? styles.InfoPanel
-              : [
-                styles.InfoPanel,
-                styles.HidenPanel
-              ].join(' ')
-          }
+          className={[
+            styles.paddingSmRight,
+            styles.paddingSmLeft,
+            styles.InfoPanel,
+            !this.state.hide ? undefined : styles.HidenPanel
+          ].join(' ')}
         >
           <InfoPanel
             columns={this.props.columns}
-            handleTogglePanel={() => this.handleTogglePanel()}
+            handleTogglePanel={this.handleTogglePanel}
             hide={this.state.hide}
-            disableManipulationButtons={this.props.disableManipulationButtons}
+            disableManBtns={this.props.disableManBtns}
             showRemoveButton={this.props.showRemoveButton}
-            toggleShowRemoveButton={() => this.props.toggleShowRemoveButton()}
-            onTopManBtnClick={() => this.props.onTopManBtnClick()}
-            onBottomManBtnClick={() => this.props.onBottomManBtnClick()}
+            toggleShowRemoveBtn={this.props.toggleShowRemoveBtn}
+            onTopManBtnClick={this.props.onTopManBtnClick}
+            onBottomManBtnClick={this.props.onBottomManBtnClick}
             firstManBtnText={this.props.firstManBtnText}
             timePickerDate={this.props.timePickerDate}
             onTimePickerChange={date => this.props.onTimePickerChange(date)}
-            onGhostTimeSet={() => this.props.onGhostTimeSet()}
+            onGhostTimeSet={this.props.onGhostTimeSet}
           />
         </div>
       </div>
@@ -70,9 +61,9 @@ InfoPanelWrapper.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.string),
   //  manipulation section
   //  buttons
-  disableManipulationButtons: PropTypes.bool,
+  disableManBtns: PropTypes.bool,
   showRemoveButton: PropTypes.bool,
-  toggleShowRemoveButton: PropTypes.func,
+  toggleShowRemoveBtn: PropTypes.func,
   onTopManBtnClick: PropTypes.func,
   onBottomManBtnClick: PropTypes.func,
   firstManBtnText: PropTypes.string,
@@ -84,9 +75,9 @@ InfoPanelWrapper.propTypes = {
 
 InfoPanelWrapper.defaultProps = {
   columns: ['SecurityLayer', 'Manipulation'],
-  disableManipulationButtons: false,
+  disableManBtns: false,
   showRemoveButton: false,
-  toggleShowRemoveButton: undefined,
+  toggleShowRemoveBtn: undefined,
   onTopManBtnClick: undefined,
   onBottomManBtnClick: undefined,
   firstManBtnText: 'download',

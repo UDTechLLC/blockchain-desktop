@@ -24,7 +24,7 @@ const ghostFiles = props => {
               {`There is no files in folder "${props.folderInfo[Object.keys(props.folderInfo)[0]].name}". You can drop it here or upload file with click.`}
             </p>
           )
-          : null
+          : undefined
       }
     </Dropzone>
   );
@@ -84,16 +84,15 @@ const ghostFiles = props => {
 };
 
 ghostFiles.propTypes = {
-  folderInfo: PropTypes.shape().isRequired,
-  files: PropTypes.shape(),
-  onDrop: PropTypes.func.isRequired,
+  files: PropTypes.shape().isRequired,
   onFileCheck: PropTypes.func.isRequired,
-  activeFile: PropTypes.string
+  onDrop: PropTypes.func.isRequired,
+  activeFile: PropTypes.string,
+  folderInfo: PropTypes.shape().isRequired,
 };
 
 ghostFiles.defaultProps = {
-  files: {},
-  activeFile: ''
+  activeFile: undefined
 };
 
 export default ghostFiles;
