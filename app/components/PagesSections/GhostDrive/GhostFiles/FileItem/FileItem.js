@@ -47,9 +47,7 @@ class FileItem extends Component {
           !this.props.isActive ? undefined : styles.Active
         ].join(' ')}
         onClick={() => this.props.onFileCheck(this.props.file.signature)}
-        style={{
-          display: this.state.hide ? 'none' : 'inherit'
-        }}
+        style={{ display: this.state.hide ? 'none' : 'inherit' }}
       >
         <div
           className={[

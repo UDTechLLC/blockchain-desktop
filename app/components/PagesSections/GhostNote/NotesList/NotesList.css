@@ -1,9 +1,11 @@
 .NotesList {
   flex-wrap: wrap;
-  padding: 15px 0;
 }
 
 .NotesList > div,
 .NotesList > button {
-  width: calc(100% / 3);
+  width: 100%;
+  max-width: calc(100% / 3);
+  padding-top: calc(100% / 3);
+  height: 0;
 }

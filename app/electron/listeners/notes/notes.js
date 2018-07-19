@@ -37,7 +37,7 @@ const editOne = (note, { cpk, csk }, raftNode, callback) => {
   rest.editKeyValue(mode, notesKey, note, raftNode, csk, error => {
     if (error) return callback(error);
 
-    return callback(undefined, note);
+    callback(undefined, note);
   });
 };
 

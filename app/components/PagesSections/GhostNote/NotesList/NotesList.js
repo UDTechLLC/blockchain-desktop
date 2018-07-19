@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -17,6 +18,7 @@ const notesList = props => (
       className={[
         styles.flex,
         styles.wh100,
+        styles.paddingSm,
         styles.NotesList
       ].join(' ')}
     >
@@ -32,11 +34,11 @@ const notesList = props => (
               changedTitle={
                 props.notes[key].id === props.activeNote.id
                   ? props.activeNote.name
-                  : null
+                  : undefined
               }
             />
             ))
-          : null
+          : undefined
       }
     </div>
   </WithCustomScrollbar>
@@ -51,7 +53,7 @@ notesList.propTypes = {
 
 notesList.defaultProps = {
   notes: {},
-  activeNote: ''
+  activeNote: undefined
 };
 
 export default notesList;

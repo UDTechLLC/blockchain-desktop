@@ -12,26 +12,25 @@ const styles = { ...commonCss, ...cornersCss, ...css };
 class NotesItem extends Component {
   state = {
     hide: false,
-    oldTimebomb: this.props.note.timebomb
+    oldGhostTime: this.props.note.ghostTime
   };
   componentWillMount() {
-    this.setTimebomb();
+    this.setGhostTime();
   }
-  setTimebomb = () => {
-    if (this.props.note && typeof this.props.note === 'object' && this.props.note.timebomb) {
-      const now = +new Date().getTime() / 1000;
-      const dif = Math.round(this.props.note.timebomb - now);
+  setGhostTime = () => {
+    if (this.props.note && typeof this.props.note === 'object' && this.props.note.ghostTime) {
+      const now = new Date().getTime();
+      const dif = this.props.note.ghostTime - now;
       if (dif > 0) {
-        const time = dif * 1000;
-        this.setState({ hide: true, oldTimebomb: this.props.note.timebomb });
-        setTimeout(() => this.setState({ hide: false }), time);
+        this.setState({ hide: true, oldGhostTime: this.props.note.ghostTime }, () => (
+          setTimeout(() => this.setState({ hide: false }), dif)
+        ));
       }
     }
   };
   render() {
-    if (this.state.oldTimebomb !== this.props.note.timebomb) {
-      this.setTimebomb();
-    }
+    if (this.state.oldGhostTime !== this.props.note.ghostTime) this.setGhostTime();
+
     return (
       <button
         type="button"
@@ -41,9 +40,7 @@ class NotesItem extends Component {
           styles.NotesItem
         ].join(' ')}
         onClick={() => this.props.onNoteCheck(this.props.note.id)}
-        style={{
-          display: this.state.hide ? 'none' : 'inherit'
-        }}
+        style={{ display: this.state.hide ? 'none' : 'inherit' }}
       >
         <div
           className={[
@@ -89,7 +86,7 @@ NotesItem.propTypes = {
 };
 
 NotesItem.defaultProps = {
-  changedTitle: null
+  changedTitle: undefined
 };
 
 export default NotesItem;
