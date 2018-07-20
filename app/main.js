@@ -213,10 +213,10 @@ ipcMain.on('remove-notes:start', (event, { notes, userData, raftNode }) => {
 
 //  blockchain listeners
 ipcMain.on('create-transaction:start', (event, { userData, to, amount, bcNode }) => {
-  bc.createTransaction(userData, to, amount, bcNode, (error, balance) => {
+  bc.createTransaction(userData, to, amount, bcNode, (error, wallet) => {
     if (error) return utils.errorHandler(error, mainWindow, 'create-transaction');
 
-    mainWindow.webContents.send('create-transaction:success', balance);
+    mainWindow.webContents.send('create-transaction:success', wallet);
   });
 });
 

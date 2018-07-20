@@ -2,46 +2,30 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import WithCustomScrollbar from '../../../UI/WithCustomScrollbar/WithCustomScrollbar';
-import CreateTransaction from '../CreateTransaction/CreateTransaction';
-import WalletInfo from '../WalletInfo/WalletInfo';
+import CreateTransaction from './CreateTransaction/CreateTransaction';
+import WalletInfo from './WalletInfo/WalletInfo';
 
-import css from './BlochchainOperations.css';
 import commonCss from '../../../../assets/css/common.css';
-// global classes names starts with lowercase letter: styles.class
+// global classe;s names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
-const styles = { ...commonCss, ...css };
+const styles = { ...commonCss };
 
 const blockchainOperations = props => (
   <WithCustomScrollbar>
     <div
       className={[
         styles.wh100,
-        styles.flexColumn,
-        styles.justifyAround,
-        styles.padding15,
-        styles.BlochchainOperations
+        styles.flexColumnAllCenter
       ].join(' ')}
     >
-      <div
-        className={styles.w100}
-      >
-        <CreateTransaction
-          transactionLoading={props.transactionLoading}
-          handleSubmitTransaction={(to, amount) => props.handleSubmitTransaction(to, amount)}
-        />
-      </div>
-      <div
-        className={[
-          // styles.flexColumn,
-          // styles.wh100
-          styles.w100
-        ].join(' ')}
-      >
-        <WalletInfo
-          address={props.address}
-          balance={props.balance}
-        />
-      </div>
+      <CreateTransaction
+        transactionLoading={props.transactionLoading}
+        handleSubmitTransaction={(to, amount) => props.handleSubmitTransaction(to, amount)}
+      />
+      <WalletInfo
+        address={props.address}
+        balance={props.balance}
+      />
     </div>
   </WithCustomScrollbar>
 );

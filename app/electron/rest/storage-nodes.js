@@ -38,16 +38,24 @@ const mountBuckets = async (origin, storageNodes, callback) => {
     const urlsCreate = _.compact(responses.map((response, i) => (
       !response.data.created ? threeUrls[i] : undefined
     )));
-
     // if we have nodes to create
     if (urlsCreate.length) {
       const createReqs = urlsCreate.map(url => (
-        axios.post(url, { data: { origin } })
+        axios.post(`${url}/buckets`, { data: { origin } })
       ));
 
       await Promise.all(createReqs);
+      // await new Promise((resolve, reject) => {
+      //   setTimeout(async () => {
+      //     try {
+      //       await Promise.all(reqMount);
+      //       resolve();
+      //     } catch (e) {
+      //       reject(e);
+      //     }
+      //   }, 5000);
+      // });
     }
-
     await Promise.all(reqMount);
 
     callback(undefined);

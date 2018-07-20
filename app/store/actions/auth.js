@@ -36,7 +36,8 @@ const authSuccess = data => ({
   digestInfo: data.digestInfo,
   folders: data.folders,
   files: data.files,
-  notes: data.notes
+  notes: data.notes,
+  wallet: data.wallet
 });
 
 const authFail = error => ({

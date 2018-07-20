@@ -4,11 +4,8 @@ export {
   auth,
   logout
 } from './auth';
-export {
-  // getCredFilesList,
-  checkInternet
-} from './common';
-export { getBalance } from './blockchain';
+export { checkInternet } from './common';
+export { createTransaction } from './blockchain';
 export {
   // getAppSettings,
   createNewFolder,

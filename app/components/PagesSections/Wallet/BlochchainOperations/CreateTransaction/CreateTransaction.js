@@ -1,15 +1,13 @@
-/* eslint-disable guard-for-in,no-restricted-syntax */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
-import checkValidity from '../../../../utils/validation';
-import Spinner from '../../../UI/Spinner/Spinner';
-import Input from '../../../UI/Input/Input';
-import Button from '../../../UI/Button/Button';
+import checkValidity from '../../../../../utils/validation';
+import Spinner from '../../../../UI/Spinner/Spinner';
+import Input from '../../../../UI/Input/Input';
+import Button from '../../../../UI/Button/Button';
 
 import css from './CreateTransaction.css';
-import commonCss from '../../../../assets/css/common.css';
+import commonCss from '../../../../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
 const styles = { ...commonCss, ...css };
@@ -130,7 +128,7 @@ class CreateTransaction extends Component {
                     disabled={
                       // !this.state.controls.from.valid ||
                       !this.state.controls.to.valid ||
-                      !this.state.controls.amount.value >= 1 ||
+                      !this.state.controls.amount.value > 0 ||
                       this.props.transactionLoading
                     }
                   >
@@ -150,9 +148,9 @@ class CreateTransaction extends Component {
     }
 
     return (
-      <div className={[styles.wh100, styles.flexColumn].join(' ')}>
-        <h3 className={[styles.orangeHeader, styles.Header].join(' ')}>
-          MY wallet and Transaction
+      <div className={[styles.w100, styles.marginMdBottom, styles.flexColumn].join(' ')}>
+        <h3 className={[styles.orange, styles.marginXsBottom, styles.Header].join(' ')}>
+          My wallet and Transaction
         </h3>
         <div>
           {form}
@@ -167,9 +165,4 @@ CreateTransaction.propTypes = {
   transactionLoading: PropTypes.bool.isRequired
 };
 
-const mapStateToProps = state => ({
-  token: state.auth.authKey,
-  isAuth: state.auth.authKey !== null,
-});
-
-export default connect(mapStateToProps)(CreateTransaction);
+export default CreateTransaction;

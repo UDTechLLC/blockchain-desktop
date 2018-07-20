@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import classes from './RateCalc.css';
 
-import Input from '../../../UI/Input/Input';
+import Input from '../../../../UI/Input/Input';
 
 const rateCalc = props => {
   const handler = (val, k) => props.handleCalculatorFieldChange(val, k);

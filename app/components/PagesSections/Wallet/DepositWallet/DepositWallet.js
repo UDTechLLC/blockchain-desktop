@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import Deposit from './Deposit/Deposit';
 import RateCalc from './RateCalc/RateCalc';
-import WithCustomScrollbar from '../../UI/WithCustomScrollbar/WithCustomScrollbar';
+import WithCustomScrollbar from '../../../UI/WithCustomScrollbar/WithCustomScrollbar';
 
 import css from './DepositWallet.css';
-import commonCss from '../../../assets/css/common.css';
+import commonCss from '../../../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
 const styles = { ...commonCss, ...css };

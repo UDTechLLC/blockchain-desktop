@@ -2,25 +2,25 @@ import { ipcRenderer } from 'electron';
 
 import * as actionTypes from './actionTypes';
 
-const getBalanceStart = (address, bcNode) => dispatch => {
-  ipcRenderer.send('blockchain:wallet-check', { address, bcNode });
-  ipcRenderer.once('blockchain:wallet-checked', (event, data) => {
-    dispatch(getBalanceSuccess(data));
-    ipcRenderer.removeAllListeners('blockchain:wallet-check');
-  });
-  return {
-    type: actionTypes.GET_BALANCE_START
-  };
-};
+const createTransactionStart = () => ({ type: actionTypes.CREATE_TRANSACTION_START });
 
-const getBalanceSuccess = data => ({
-  type: actionTypes.GET_BALANCE_SUCCESS,
-  balance: data.balance,
-  success: data.success
+const createTransactionSuccess = wallet => ({
+  type: actionTypes.CREATE_TRANSACTION_SUCCESS,
+  wallet
 });
 
-// const getBalanceFail = () => ();
+const createTransactionFail = error => ({
+  type: actionTypes.CREATE_TRANSACTION_FAIL,
+  error
+});
 
-export const getBalance = (address, bcNode) => dispatch => (
-  dispatch(getBalanceStart(address, bcNode))
-);
+export const createTransaction = (userData, to, amount, bcNode) => dispatch => {
+  dispatch(createTransactionStart());
+  ipcRenderer.send('create-transaction:start', { userData, to, amount, bcNode });
+  ipcRenderer.once('create-transaction:success', (event, wallet) => {
+    dispatch(createTransactionSuccess(wallet));
+  });
+  ipcRenderer.once('create-transaction:fail', (event, error) => {
+    dispatch(createTransactionFail(error));
+  });
+};

@@ -2,13 +2,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { ipcRenderer } from 'electron';
 
 import * as actions from '../../store/actions';
 
 import InfoPanelWrapper from '../../components/InfoPanelWrapper/InfoPanelWrapper';
 import BlockchainOperations from '../../components/PagesSections/Wallet/BlochchainOperations/BlochchainOperations';
-import DepositWallet from '../../components/PagesSections/DepositWallet/DepositWallet';
+import DepositWallet from '../../components/PagesSections/Wallet/DepositWallet/DepositWallet';
 
 import css from './Wallet.css';
 import commonCss from '../../assets/css/common.css';
@@ -18,7 +17,6 @@ const styles = { ...commonCss, ...css };
 
 class Wallet extends Component {
   state = {
-    transactionLoading: false,
     depositPlanSelect: {
       elementType: 'select',
       id: 'dp-select',
@@ -89,20 +87,13 @@ class Wallet extends Component {
       },
     }
   };
-  handleSubmitTransaction = (to, amount) => {
-    this.setState({ transactionLoading: true });
-    const userData = this.props.userData;
-    const bcNode = `${this.props.bcNodes[0]}`;
-    ipcRenderer.send('transaction:create', {
-      userData,
+  handleCreateTransaction = (to, amount) => {
+    this.props.createTransaction(
+      this.props.userData,
       to,
       amount,
-      bcNode
-    });
-    ipcRenderer.once('transaction:done', () => {
-      this.props.getBalance(this.props.userData.address, bcNode);
-      this.setState({ transactionLoading: false });
-    });
+      this.props.bcNode
+    );
   };
   handleDepositPlanChange = value => this.setState({
     depositPlanSelect: {
@@ -137,22 +128,23 @@ class Wallet extends Component {
         >
           <div
             className={[
+              styles.flex1,
               styles.h100,
-              styles.flex1
+              styles.paddingSm
             ].join(' ')}
           >
             <BlockchainOperations
-              transactionLoading={this.state.transactionLoading}
-              handleSubmitTransaction={(to, amount) => this.handleSubmitTransaction(to, amount)}
+              transactionLoading={this.props.transactionLoading}
+              handleSubmitTransaction={(to, amount) => this.handleCreateTransaction(to, amount)}
               address={this.props.userData.address}
-              // cpk={this.props.userData.cpk}
               balance={this.props.balance.total}
             />
           </div>
           <div
             className={[
+              styles.flex3,
               styles.h100,
-              styles.flex3
+              styles.paddingSm
             ].join(' ')}
           >
             <DepositWallet
@@ -170,37 +162,29 @@ class Wallet extends Component {
 
 Wallet.propTypes = {
   userData: PropTypes.shape({
-    csk: PropTypes.string,
-    cpk: PropTypes.string,
     address: PropTypes.string
-  }),
+  }).isRequired,
   balance: PropTypes.shape({
     total: PropTypes.number,
     approved: PropTypes.number,
     pending: PropTypes.number
-  }),
-  getBalance: PropTypes.func.isRequired,
-  bcNodes: PropTypes.arrayOf(PropTypes.string)
-};
-
-Wallet.defaultProps = {
-  userData: {
-    csk: null,
-    cpk: null,
-    address: null
-  },
-  bcNodes: [],
-  balance: {}
+  }).isRequired,
+  bcNode: PropTypes.string.isRequired,
+  transactionLoading: PropTypes.bool.isRequired,
+  createTransaction: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   userData: state.auth.userData,
   balance: state.blockchain.balance,
-  bcNodes: state.digest.digestInfo.bcNodes
+  transactionLoading: state.blockchain.loading,
+  bcNode: state.digest.digestInfo.bcNodes[0]
 });
 
 const mapDispatchToProps = dispatch => ({
-  getBalance: (address, bcNode) => dispatch(actions.getBalance(address, bcNode))
+  createTransaction: (userData, to, amount, bcNode) => (
+    dispatch(actions.createTransaction(userData, to, amount, bcNode))
+  )
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);

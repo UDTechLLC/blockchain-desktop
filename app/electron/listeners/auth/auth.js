@@ -41,14 +41,14 @@ const signIn = (password, filePath, callback) => {
           if (userInfoError) return callback(userInfoError);
 
           //  get bc balance
-          rest.getBalance(userData.address, digestInfo.bcNodes[0], (bcError, balance) => {
+          rest.getBalance(userData.address, digestInfo.bcNodes[0], (bcError, wallet) => {
             if (bcError) return callback(bcError);
 
             //  mount fs
             rest.mountBuckets(userData.cpk, digestInfo.storageNodes, mountErr => {
               if (mountErr) return callback(mountErr);
 
-              return callback(undefined, { ...userInfo, ...balance, digestInfo, userData });
+              return callback(undefined, { ...userInfo, wallet, digestInfo, userData });
             });
           });
         });

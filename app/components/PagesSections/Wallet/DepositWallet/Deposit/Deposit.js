@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Input from '../../../UI/Input/Input';
-import { ADMIN_ETH_WALLET } from '../../../../utils/const';
+import Input from '../../../../UI/Input/Input';
+import { ADMIN_ETH_WALLET } from '../../../../../utils/const';
 
 import css from './Deposit.css';
-import commonCss from '../../../../assets/css/common.css';
+import commonCss from '../../../../../assets/css/common.css';
 
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class

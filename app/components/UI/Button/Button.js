@@ -9,8 +9,10 @@ const styles = { ...commonCss, ...css };
 
 const button = (props) => {
   const btnStyles = [
-    styles.h100,
-    styles.lightBlueBg,
+    styles.transparentButton,
+    styles.flexAllCenter,
+    styles.paddingSmRight,
+    styles.paddingSmLeft,
     styles.blue,
     styles.Button
   ];
@@ -30,7 +32,7 @@ const button = (props) => {
         }
         onClick={props.onClick}
       >
-        <div>
+        <div className={[styles.flexAllCenter, styles.wh100].join(' ')}>
           {props.children}
         </div>
       </button>
