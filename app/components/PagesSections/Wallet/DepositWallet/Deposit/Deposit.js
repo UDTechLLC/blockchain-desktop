@@ -1,20 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Input from '../../../../UI/Input/Input';
-import { ADMIN_ETH_WALLET } from '../../../../../utils/const';
+import Input from './../../../../UI/Input/Input';
+import Button from './../../../../UI/Button/Button';
+import { ADMIN_ETH_WALLET } from './../../../../../utils/const';
 
 import css from './Deposit.css';
-import commonCss from '../../../../../assets/css/common.css';
-
+import commonCss from './../../../../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
 const styles = { ...commonCss, ...css };
 
 const deposit = props => (
-  <div className={styles.Deposit}>
-    <div className={styles.Top}>
-      <h3 className={styles.orangeHeader}>
+  <div className={[styles.w100, styles.flexColumn, styles.justifyCenter].join(' ')}>
+    <div>
+      <h3 className={[styles.marginXsBottom, styles.orangeHeader].join(' ')}>
         Deposit
       </h3>
       <Input
@@ -25,13 +25,27 @@ const deposit = props => (
         elementConfig={props.depositPlanSelect.elementConfig}
       />
     </div>
-    <div className={styles.Middle}>
-      <input type="text" value={ADMIN_ETH_WALLET} readOnly />
-      <button type="button">Copy</button>
-      <button type="button">Qr-code</button>
+    <div
+      className={[
+        styles.w100,
+        styles.flex,
+        styles.Middle
+      ].join(' ')}
+    >
+      <Input
+        elementType="input"
+        elementConfig={{
+          type: 'text',
+          readOnly: true
+        }}
+        value={ADMIN_ETH_WALLET}
+
+      />
+      <Button btnStyles={['marginXsRight']} type="button">Copy</Button>
+      <Button type="button">Qr-code</Button>
     </div>
-    <div className={styles.Bottom}>
-      <h3 className={styles.orangeHeader}>
+    <div className={[styles.marginSmBottom, styles.Bottom].join(' ')}>
+      <h3 className={[styles.marginXsBottom, styles.orangeHeader].join(' ')}>
         Important
       </h3>
       <p>

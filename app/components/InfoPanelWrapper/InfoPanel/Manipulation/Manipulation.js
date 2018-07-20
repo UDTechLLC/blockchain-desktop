@@ -38,7 +38,7 @@ const Manipulation = props => (
       >
         <div
           className={[
-            styles.flex1
+            styles.flex2
           ].join(' ')}
         >
           <div className={styles.Subtitle}>
@@ -79,8 +79,8 @@ const Manipulation = props => (
         className={[
           styles.flexBetweenCenter,
           styles.pickerWrapper,
-          styles.TimpickerWrapper,
-          props.disableManBtns ? styles.Disabled : null
+          styles.TimePickerWrapper,
+          props.disableManBtns ? styles.Disabled : undefined
         ].join(' ')}
       >
         <DateTimePicker
@@ -100,10 +100,12 @@ const Manipulation = props => (
           styles.absolute100,
           styles.flexColumn,
           styles.justifyCenter,
-          !props.showRemoveButton ? styles.alignEnd : null
+          !props.showRemoveButton ? styles.alignEnd : undefined
         ].join(' ')}
         style={{
-          zIndex: !props.showRemoveButton ? 1 : 11
+          zIndex: !props.showRemoveButton ? 1 : 11,
+          width: !props.showRemoveButton ? '100%' : 'calc(100% / 3 * 2)',
+          left: !props.showRemoveButton ? 0 : 'calc(100% / 3)'
         }}
       >
         <div
@@ -111,25 +113,25 @@ const Manipulation = props => (
             styles.flexBetweenCenter,
             styles.ConfirmationDeleteWrapper
           ].join(' ')}
-          style={props.showRemoveButton ? { backgroundColor: '#006694' } : null}
+          style={props.showRemoveButton ? { backgroundColor: '#006694' } : { width: 'calc(100% / 3)' }}
         >
           <Button
             type="button"
             onClick={() => props.toggleShowRemoveBtn()}
             disabled={props.disableManBtns}
-            btnStyles={props.showRemoveButton ? ['Transparent', 'InsideFlex'] : null}
+            btnStyles={props.showRemoveButton ? ['Transparent', 'InsideFlex'] : undefined}
           >
             {props.showRemoveButton ? 'deny' : 'delete'}
           </Button>
           <div
             className={styles.w100}
-            style={props.showRemoveButton ? null : { display: 'none' }}
+            style={props.showRemoveButton ? undefined : { display: 'none' }}
           >
             <Button
               type="button"
               onClick={() => props.onBottomManBtnClick()}
               disabled={props.disableManBtns}
-              btnStyles={props.showRemoveButton ? ['Transparent', 'InsideFlex'] : null}
+              btnStyles={props.showRemoveButton ? ['Transparent', 'InsideFlex'] : undefined}
             >
               confirm
             </Button>

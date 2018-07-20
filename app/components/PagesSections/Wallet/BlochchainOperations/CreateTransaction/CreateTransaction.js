@@ -6,11 +6,10 @@ import Spinner from '../../../../UI/Spinner/Spinner';
 import Input from '../../../../UI/Input/Input';
 import Button from '../../../../UI/Button/Button';
 
-import css from './CreateTransaction.css';
 import commonCss from '../../../../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
-const styles = { ...commonCss, ...css };
+const styles = { ...commonCss };
 
 class CreateTransaction extends Component {
   state = {
@@ -29,7 +28,7 @@ class CreateTransaction extends Component {
         },
         valid: false,
         touched: false,
-        errorMessage: null
+        errorMessage: undefined
       },
       amount: {
         elementType: 'input',
@@ -49,7 +48,7 @@ class CreateTransaction extends Component {
         },
         valid: false,
         touched: false,
-        errorMessage: null
+        errorMessage: undefined
       }
     }
   };
@@ -85,6 +84,7 @@ class CreateTransaction extends Component {
   render() {
     // form
     const formElementsArray = [];
+    // eslint-disable-next-line no-restricted-syntax,guard-for-in
     for (const key in this.state.controls) {
       formElementsArray.push({
         id: key,
@@ -94,7 +94,6 @@ class CreateTransaction extends Component {
 
     let form = (
       <form
-        className={styles.Form}
         onSubmit={e => { e.preventDefault(); this.onSubmitForm(); }}
       >
         {
@@ -116,17 +115,11 @@ class CreateTransaction extends Component {
             );
             if (formElementsArray.length === index + 1) {
               return (
-                <div
-                  className={[
-                    styles.flex,
-                    styles.LineWithButton,
-                  ].join(' ')}
-                  key={formElement.id}
-                >
+                <div className={styles.flex} key={formElement.id}>
                   {input}
                   <Button
+                    btnStyles={['marginSmLeft']}
                     disabled={
-                      // !this.state.controls.from.valid ||
                       !this.state.controls.to.valid ||
                       !this.state.controls.amount.value > 0 ||
                       this.props.transactionLoading
@@ -143,13 +136,11 @@ class CreateTransaction extends Component {
       </form>
     );
 
-    if (this.state.transactionLoading) {
-      form = <Spinner />;
-    }
+    if (this.state.transactionLoading) { form = <Spinner />; }
 
     return (
-      <div className={[styles.w100, styles.marginMdBottom, styles.flexColumn].join(' ')}>
-        <h3 className={[styles.orange, styles.marginXsBottom, styles.Header].join(' ')}>
+      <div className={[styles.w100, styles.marginSmBottom, styles.flexColumn].join(' ')}>
+        <h3 className={[styles.orangeHeader, styles.marginXsBottom].join(' ')}>
           My wallet and Transaction
         </h3>
         <div>

@@ -1,24 +1,3 @@
-.RateCalc {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.Heading h3 {
-  color: #095779;
-  font-size: 14px;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin: 4px 0 22px;
-  margin-top: -10px;
-}
-
-.FormWrapper > form {
-  width: 100%;
-  display: flex;
-}
-
 .FormWrapper > form > div:not(:last-of-type) {
   margin-right: 15px;
 }

@@ -2,9 +2,12 @@
   width: 50vh;
 }
 
-.Heading {
+.HeadingBlock {
   font-size: 1vw;
   font-weight: 400;
+}
+
+.Heading {
   text-transform: uppercase;
 }
 
@@ -13,15 +16,12 @@
   justify-content: space-between;
   align-items: center;
   color: #30d6d6;
-  font-size: 1vw;
-  font-weight: 500;
   box-sizing: border-box;
 }
 
 .Timer > span {
   color: #0c6791;
   font-weight: 900;
-  font-size: 1.6rem;
 }
 
 .ToTheRight {
@@ -57,6 +57,7 @@
   .HeadingBlock {
     flex-direction: column;
     align-items: flex-start;
+    font-size: 1.2rem;
   }
 
   .Heading {

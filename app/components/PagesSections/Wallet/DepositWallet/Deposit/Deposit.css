@@ -1,76 +1,16 @@
-.Deposit {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.Deposit h3 {
-  color: #e34530;
-  font-size: 14px;
-  font-weight: 400;
-  text-transform: uppercase;
-  margin-bottom: 15px;
-}
-
-.Middle {
-  width: 100%;
-  display: flex;
-  margin-bottom: 15px;
-  min-height: 50px;
-}
-
-.Middle > input {
+.Middle > div:first-of-type {
   flex: 4;
-  margin-right: 7px;
+  margin-right: 0.7rem;
 }
 
-.Middle > button {
+.Middle > div:nth-of-type(2),
+.Middle > div:nth-of-type(3) {
   flex: 1;
-  cursor: pointer;
-  text-transform: uppercase;
-}
-
-.Middle > button:first-of-type {
-  margin-right: 7px;
-}
-
-.Middle > input,
-.Middle > button {
-  border: none;
-  height: 50px;
-  background-color: rgba(22, 94, 106, 0.3);
-  color: #2f96ba;
-  font-size: 14px;
-  font-weight: 400;
-  padding: 15px 0;
-  box-sizing: border-box;
-  text-align: center;
-  outline: none;
 }
 
 .Bottom > p {
   color: #2f96ba;
-  font-size: 12px;
+  font-size: 1.2rem;
   font-weight: 400;
   text-transform: uppercase;
-}
-
-@media (max-width: 1300px) {
-  .Deposit > div:not(:nth-of-type(2)) {
-    display: block;
-  }
-
-  .Deposit h3,
-  .Bottom > p {
-    margin: 14px 0 7px;
-  }
-
-  .Bottom > p {
-    margin-top: 0;
-  }
-
-  .Middle {
-    margin-bottom: 3px;
-  }
 }

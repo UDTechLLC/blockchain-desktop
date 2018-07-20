@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/label-has-for */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -11,12 +12,17 @@ import commonCss from '../../../assets/css/common.css';
 const styles = { ...commonCss, ...css };
 
 class Input extends Component {
-  state = {
-    show: false
-  };
+  state = { show: false };
   render() {
     let inputElement = null;
-    const inputClasses = [styles.InputElement];
+    const inputClasses = [
+      styles.paddingSm,
+      styles.marginXsBottom,
+      styles.w100,
+      styles.cyan,
+      styles.lightBlueBg,
+      styles.InputElement
+    ];
     if (this.props.invalid && this.props.shouldValidate && this.props.touched) {
       inputClasses.push(styles.Invalid);
     }
@@ -40,27 +46,61 @@ class Input extends Component {
             <div
               role="button"
               tabIndex={0}
-              className={[...inputClasses, styles.Select].join(' ')}
+              className={[
+                styles.flex,
+                styles.alignCenter,
+                styles.relative,
+                styles.margin0,
+                styles.marginXsBottom,
+                styles.Select,
+                ...inputClasses
+              ].join(' ')}
               id={this.props.id}
               onClick={() => this.setState({ show: !this.state.show })}
             >
-              <div>
-                {this.props.value.displayValue ? this.props.value.displayValue : 'Choose one'}
+              <div
+                className={[
+                  styles.flexColumn,
+                  styles.justifyCenter,
+                  styles.blueGreenBg,
+                  styles.paddingSm
+                ].join(' ')}
+              >
+                {this.props.value.displayValue || 'Choose one'}
               </div>
-              <div className={this.state.show ? styles.Options : [styles.Options, styles.Hide].join(' ')}>
+              <div
+                className={[
+                  styles.flexColumn,
+                  styles.Options,
+                  this.state.show ? undefined : styles.Hide
+                ].join(' ')}
+              >
                 {
                   this.props.elementConfig.options.map((option, i) => (
                     <button
                       tabIndex={0}
                       key={i}
-                      onClick={() => this.props.changed(option)}
+                      className={[
+                        styles.cyan,
+                        styles.blueGreenBg,
+                        styles.paddingSm
+                      ].join(' ')}
+                      onClick={(e) => { e.stopPropagation(); this.props.changed(option); }}
                     >
                       {option.displayValue}
                     </button>
                   ))
                 }
               </div>
-              <div className={styles.ArrowDown}>
+              <div
+                className={[
+                  styles.flexAllCenter,
+                  styles.blueGreenBg,
+                  styles.h100,
+                  // styles.absolute100,
+                  styles.ArrowDown
+                ].join(' ')}
+              >
                 <i className="fa fa-chevron-down" aria-hidden="true" />
               </div>
             </div>
@@ -78,8 +118,8 @@ class Input extends Component {
                 id={this.props.id}
                 {...this.props.elementConfig}
               />
-              <div className={styles.ErrorMessage}>
-                {this.props.invalid ? this.props.errorMessage : null}
+              <div className={[styles.marginXsBottom, styles.ErrorMessage].join(' ')}>
+                {this.props.invalid ? this.props.errorMessage : undefined}
               </div>
             </div>
           </div>
@@ -93,31 +133,39 @@ class Input extends Component {
           show={this.state.show}
           onClick={() => this.setState({ show: !this.state.show })}
         />
-        <div className={styles.Input}>
+        <div className={[styles.w100, styles.Input].join(' ')}>
           {
             this.props.label && (typeof this.props.label !== 'object' || (typeof this.props.label === 'object' && this.props.label.top))
               ? (
-                // eslint-disable-next-line jsx-a11y/label-has-for
-                <label className={styles.Label} htmlFor={this.props.id}>
-                  {
-                    typeof this.props.label !== 'object'
-                      ? this.props.label
-                      : this.props.label.top
-                  }
+                <label
+                  className={[
+                    styles.blue,
+                    styles.marginXsBottom,
+                    styles.Label
+                  ].join(' ')}
+                  htmlFor={this.props.id}
+                >
+                  {typeof this.props.label !== 'object' ? this.props.label : this.props.label.top}
                 </label>
               )
-              : null
+              : undefined
           }
           {inputElement}
           {
             this.props.label && typeof this.props.label === 'object' && this.props.label.bottom
               ? (
-                // eslint-disable-next-line jsx-a11y/label-has-for
-                <div className={[styles.Label, styles.BottomLabel].join(' ')}>
+                <div
+                  className={[
+                    styles.blue,
+                    styles.marginXsBottom,
+                    styles.Label,
+                    styles.BottomLabel
+                  ].join(' ')}
+                >
                   {this.props.label.bottom}
                 </div>
               )
-              : null
+              : undefined
           }
         </div>
       </Aux>
@@ -147,21 +195,19 @@ Input.propTypes = {
     PropTypes.number,
     PropTypes.shape()
   ]),
-  id: PropTypes.string
+  id: PropTypes.string,
 };
 
 Input.defaultProps = {
   invalid: false,
-  label: '',
+  label: undefined,
   errorMessage: '',
   shouldValidate: false,
   touched: false,
-  changed: () => null,
-  value: '',
-  id: '',
-  elementConfig: {
-    type: 'text'
-  }
+  changed: () => undefined,
+  value: undefined,
+  id: undefined,
+  elementConfig: { type: 'text' }
 };
 
 export default Input;

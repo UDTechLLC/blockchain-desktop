@@ -1,11 +1,12 @@
 .Button {
   background-color: rgba(22, 94, 106, 0.3);
   text-transform: uppercase;
-  font-size: 2.5vh;
+  font-size: 1.4rem;
   line-height: 1.2;
   box-sizing: border-box;
   transition: color 0.4s linear;
-  height: 5.556vh;
+  /*height: 5.556vh;*/
+  height: 5rem;
   /*min-width: 226px;*/
   width: 100%;
   text-align: center;
