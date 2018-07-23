@@ -6,7 +6,7 @@ import UiNavLink from '../UI/NavLink/NavLink';
 import Loading from '../Animations/Loading/Loading';
 import Graph from '../Graph/Graph';
 import Search from '../Search/Search';
-import { bytes2HumanReadableSize } from '../../utils/commonFunctions';
+import { bytes2HumanReadableSize } from '../../utils/utils';
 
 import { logoGhost, logout, settings, wallet } from '../../assets/img/img';
 import css from './Header.css';

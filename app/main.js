@@ -16,12 +16,12 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const MenuBuilder = require('./menu');
 const utils = require('./electron/utils/utils');
 
-const auth = require('./electron/listeners/auth/auth');
-const flds = require('./electron/listeners/folders/folders');
-const fls = require('./electron/listeners/files/files');
-const nts = require('./electron/listeners/notes/notes');
-const bc = require('./electron/listeners/blockchain/blockchain');
-const ghstTime = require('./electron/listeners/ghost-time/ghost-time');
+const auth = require(`./electron/listeners/auth/auth`);
+const flds = require(`./electron/listeners/folders/folders`);
+const fls = require(`./electron/listeners/files/files`);
+const nts = require(`./electron/listeners/notes/notes`);
+const bc = require(`./electron/listeners/blockchain/blockchain`);
+const ghstTime = require(`./electron/listeners/ghost-time/ghost-time`);
 
 // let configFolder = `${process.cwd()}/.ghost-config`;
 // if (process.platform === 'darwin') {

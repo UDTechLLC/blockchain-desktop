@@ -1,8 +1,8 @@
 {
-  "name": "wize-electron",
-  "productName": "wize-electron",
-  "version": "1.0.0",
-  "description": "GhostDrive application on React, React Router, Webpack, React Hot Loader for rapid application development",
+  "name": "ghost-drive",
+  "productName": "ghost-drive",
+  "version": "0.3.3",
+  "description": "GhostDrive application on React, React Router, Webpack, React Hot Loader, Redux",
   "main": "./main.prod.js",
   "author": {
     "name": "Anthony Synenko",
