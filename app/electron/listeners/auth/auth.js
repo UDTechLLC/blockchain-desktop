@@ -1,12 +1,12 @@
 const fs = require('fs');
 
 const utils = require('../../utils/utils');
-const wallet = require('../../utils/wallet');
+const { newCredentials, validateAddress } = require('../../utils/wallet');
 const rest = require('../../rest/index');
 
 const signUp = (password, callback) => {
   //  create user data with wallet service
-  const userData = wallet.newCredentials();
+  const userData = newCredentials();
   const strData = JSON.stringify(userData);
   const encryptedHex = utils.aesEncrypt(strData, password, 'hex').encryptedHex;
   return callback(undefined, encryptedHex);
@@ -25,7 +25,7 @@ const signIn = (password, filePath, callback) => {
       if (err) {
         //  in case of troubles with parse decrypted info - there is wrong password
         return callback({ message: 'Wrong password!' });
-      } else if (!wallet.validateAddress(userData.address)) {
+      } else if (!validateAddress(userData.address)) {
         //  if decrypted address in not valid - throw an error
         return callback({ message: 'There`s something wrong with your credentials!' });
       }
@@ -48,7 +48,7 @@ const signIn = (password, filePath, callback) => {
             rest.mountBuckets(userData.cpk, digestInfo.storageNodes, mountErr => {
               if (mountErr) return callback(mountErr);
 
-              return callback(undefined, { ...userInfo, wallet, digestInfo, userData });
+              callback(undefined, { ...userInfo, wallet, digestInfo, userData });
             });
           });
         });

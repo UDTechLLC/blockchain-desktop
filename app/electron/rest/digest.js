@@ -11,7 +11,7 @@ const { DIGEST_URL } = require('./../../utils/const');
  */
 const getDigest = async (userData, passwordHash, callback) => {
   //  hardcoded development servers
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV !== 'production') {
     return callback(undefined, {
       bcNodes: ['http://127.0.0.1:4000', 'http://127.0.0.1:4000', 'http://127.0.0.1:4000'],
       raftNodes: ['http://127.0.0.1:11001', 'http://127.0.0.1:11002', 'http://127.0.0.1:11003'],

@@ -32,6 +32,8 @@ const ghstTime = require('./electron/listeners/ghost-time/ghost-time');
 
 //  mainWindow container
 let mainWindow;
+//  sign out data for auto unmount
+let signOutData = { userData: {}, storageNodes: [] };
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -84,11 +86,15 @@ app.on('ready', async () => {
     minHeight: 600
   });
   mainWindow.on('closed', () => {
-    // if (cpkGlob) {
-    //   utils.unmountFs(cpkGlob, fsUrlGlob, app.quit);
-    // } else {
+    const { userData, storageNodes } = signOutData;
+    //  if there is some user data in main process - unmount user buckets
+    if (typeof userData === 'object' && !!Object.keys(userData).length &&
+        Array.isArray(storageNodes) && !!storageNodes.length) {
+      auth.signOut(userData, storageNodes, error => {
+        if (error) errorHandler(error, mainWindow, 'sign-out');
+      });
+    }
     app.quit();
-    // }
   });
   mainWindow.loadURL(`file://${__dirname}/app.html`);
   mainWindow.webContents.on('did-finish-load', () => {
@@ -123,6 +129,11 @@ ipcMain.on('sign-up:start', (event, password) => {
 ipcMain.on('sign-in:start', (event, { password, filePath }) => {
   auth.signIn(password, filePath, (error, userData) => {
     if (error) return errorHandler(error, mainWindow, 'sign-in');
+
+    signOutData = {
+      userData: userData.userData,
+      storageNodes: userData.digestInfo.storageNodes
+    };
 
     mainWindow.webContents.send('sign-in:success', userData);
   });
