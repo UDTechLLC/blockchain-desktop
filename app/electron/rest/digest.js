@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const digestUrl = process.env.WB_DIGEST;
+const { DIGEST_URL } = require('./../../utils/const');
 
 /**
  * Request to get digest from digest server
@@ -23,7 +23,7 @@ const getDigest = async (userData, passwordHash, callback) => {
   }
 
   //  default request
-  const reqUrl = `${digestUrl}/hello/application`;
+  const reqUrl = `${DIGEST_URL}/hello/application`;
   const reqData = {
     address: userData.address,
     pubKey: userData.cpk,

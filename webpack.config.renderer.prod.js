@@ -18,10 +18,10 @@ export default merge.smart(baseConfig, {
 
   target: 'electron-renderer',
 
-  entry: './app/main',
+  entry: './app/index',
 
   output: {
-    path: path.join(__dirname, './app/dist'),
+    path: path.join(__dirname, 'app/dist'),
     publicPath: './dist/',
     filename: 'renderer.prod.js'
   },
@@ -88,9 +88,9 @@ export default merge.smart(baseConfig, {
               localIdentName: '[name]__[local]__[hash:base64:5]',
             }
           },
-          {
-            loader: 'sass-loader'
-          }]
+            {
+              loader: 'sass-loader'
+            }]
         }),
       },
       // WOFF Font

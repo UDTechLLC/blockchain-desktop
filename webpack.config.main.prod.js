@@ -16,7 +16,7 @@ export default merge.smart(baseConfig, {
 
   target: 'electron-main',
 
-  entry: './app/main',
+  entry: './app/main.dev',
 
   output: {
     path: __dirname,
