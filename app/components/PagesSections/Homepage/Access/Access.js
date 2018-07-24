@@ -56,6 +56,7 @@ const access = props => (
           ].join(' ')}
         value={props.password}
         placeholder="enter password"
+        readOnly
       />
     </div>
   </div>

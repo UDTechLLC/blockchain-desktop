@@ -2,17 +2,19 @@ import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../utils/utils';
 
 const initialState = {
-  searchText: ''
+  searchText: undefined,
+  filteredObject: {}
 };
 
 const actionStart = (state, action) => (updateObject(state, {
-  searchText: action.searchText
+  searchText: action.searchText,
+  filteredObject: action.filteredObject
 }));
 
 const reducer = (state = initialState, action) => {
   if (action) {
     switch (action.type) {
-      case actionTypes.SET_SEARCH_WORD: return actionStart(state, action);
+      case actionTypes.SET_SEARCH_TEXT: return actionStart(state, action);
       default: return state;
     }
   }
