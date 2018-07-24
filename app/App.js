@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import IdleTimer from 'react-idle-timer';
 
 import { checkInternet } from './store/actions/index';
 import Layout from './hoc/Layout/Layout';
@@ -24,6 +25,10 @@ class App extends Component {
     this.props.checkInternet();
     setTimeout(() => this.setState({ content: true }), 1649);
   }
+  onIdle = () => {
+    console.log('user is idle');
+    // console.log('last active', this.idleTimer.getLastActiveTime());
+  };
   render() {
     let routes = <NoInternetConnection />;
     if (this.props.isAuth && this.props.internet) {
@@ -52,13 +57,19 @@ class App extends Component {
       </div>
     );
     return (
-      <div style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover' }}>
-        {
-          this.state.content
-            ? (<Layout history={this.props.history}>{routes}</Layout>)
-            : (<div>{startAnimation}</div>)
-        }
-      </div>
+      <IdleTimer
+        // ref={ref => { this.idleTimer = ref; }}
+        onIdle={this.onIdle}
+        timeout={1000 * 60 * 15}
+      >
+        <div style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover' }}>
+          {
+            this.state.content
+              ? (<Layout history={this.props.history}>{routes}</Layout>)
+              : (<div>{startAnimation}</div>)
+          }
+        </div>
+      </IdleTimer>
     );
   }
 }
