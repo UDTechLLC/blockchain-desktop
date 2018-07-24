@@ -55,7 +55,7 @@ class PinCode extends Component {
   };
   componentWillMount() {
     this.setState({ buttons: this.shuffle(this.state.buttons) });
-    setInterval(() => {
+    this.PinCodeTimer = setInterval(() => {
       if (this.state.timer) {
         this.setState({ timer: this.state.timer - 1 });
       } else {
@@ -63,6 +63,9 @@ class PinCode extends Component {
       }
     }, 1000);
   }
+  componentWillUnmount() {
+    clearInterval(this.PinCodeTimer);
+  };
   shuffle = array => {
     const updatedArray = array;
     let currentIndex = array.length;

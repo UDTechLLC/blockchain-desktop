@@ -8,9 +8,10 @@ import Layout from './hoc/Layout/Layout';
 import NoInternetConnection from './components/PagesSections/NoInternetConnection/NoInternetConnection';
 import Homepage from './containers/Homepage/Homepage';
 import GhostDrive from './containers/GhostDrive/GhostDrive';
+import GhostNote from './containers/GhostNote/GhostNote';
 import Wallet from './containers/Wallet/Wallet';
 import Settings from './containers/Settings/Settings';
-import GhostNote from './containers/GhostNote/GhostNote';
+import SearchResults from './containers/SearchResults/SearchResults';
 import Logout from './containers/Homepage/Logout/Logout';
 import Ghost from './components/Animations/Ghost/Ghost';
 
@@ -32,6 +33,7 @@ class App extends Component {
           <Route exact path="/ghost-note" component={GhostNote} key={Math.random()} />
           <Route exact path="/account" component={Settings} key={Math.random()} />
           <Route exact path="/wallet" component={Wallet} key={Math.random()} />
+          <Route exact path="/search-results" component={SearchResults} key={Math.random()} />
           <Route exact path="/logout" component={Logout} key={Math.random()} />
           <Redirect to="/ghost-drive" />
         </Switch>
@@ -53,7 +55,7 @@ class App extends Component {
       <div style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover' }}>
         {
           this.state.content
-            ? (<Layout>{routes}</Layout>)
+            ? (<Layout history={this.props.history}>{routes}</Layout>)
             : (<div>{startAnimation}</div>)
         }
       </div>
@@ -64,7 +66,8 @@ class App extends Component {
 App.propTypes = {
   isAuth: PropTypes.bool.isRequired,
   checkInternet: PropTypes.func.isRequired,
-  internet: PropTypes.bool.isRequired
+  internet: PropTypes.bool.isRequired,
+  history: PropTypes.shape({}).isRequired
 };
 
 const mapStateToProps = state => ({

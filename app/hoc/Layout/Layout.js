@@ -19,6 +19,7 @@ class Layout extends Component {
           <Header
             isAuth={this.props.isAuth}
             loading={this.props.loading}
+            history={this.props.history}
           />
           <main className={[styles.w100, styles.relative].join(' ')}>
             <article className={[styles.wh100, styles.flexColumn, styles.justifyCenter].join(' ')}>
@@ -34,7 +35,8 @@ class Layout extends Component {
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
   isAuth: PropTypes.bool.isRequired,
-  loading: PropTypes.bool.isRequired
+  loading: PropTypes.bool.isRequired,
+  history: PropTypes.shape({}).isRequired
 };
 
 const mapStateToProps = state => ({

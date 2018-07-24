@@ -15,12 +15,14 @@ const register = props => (
           tabIndex={-1}
           value={props.password}
           placeholder="enter password"
+          readOnly
         />
         <input
           type="password"
           tabIndex={-1}
           value={props.repeatPassword}
           placeholder="repeat password"
+          readOnly
         />
       </div>
       <div className={classes.FileLine}>

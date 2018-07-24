@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Switch } from 'react-router-dom';
 
 import UiNavLink from '../UI/NavLink/NavLink';
 import Loading from '../Animations/Loading/Loading';
@@ -113,7 +113,7 @@ class Header extends Component {
                 ].join(' ')}
               >
                 <li>
-                  <Search />
+                  <Search history={this.props.history} />
                 </li>
                 {
                   rightMenu.map((item, index) => (
@@ -166,7 +166,8 @@ class Header extends Component {
 
 Header.propTypes = {
   isAuth: PropTypes.bool.isRequired,
-  loading: PropTypes.bool.isRequired
+  loading: PropTypes.bool.isRequired,
+  history: PropTypes.shape({}).isRequired
 };
 
 export default Header;

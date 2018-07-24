@@ -19,4 +19,4 @@ export {
   removeNotes,
   setGhostTime
 } from './raft';
-export { setSearchWord } from './search';
+export { setSearchText } from './search';
