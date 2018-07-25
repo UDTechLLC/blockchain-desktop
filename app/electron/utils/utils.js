@@ -12,7 +12,7 @@ const { dialog } = require('electron');
 const isOffline = async () => {
   const isProd = process.env.NODE_ENV === 'production';
   const online = await isOnline();
-  if (!online && !isProd) {
+  if (!online && isProd) {
     return ({ message: 'There is no internet connection.' });
   }
   return undefined;
