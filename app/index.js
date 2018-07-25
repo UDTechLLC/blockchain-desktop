@@ -7,7 +7,6 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { createHashHistory } from 'history';
 import thunk from 'redux-thunk';
 
-import common from './store/reducers/common';
 import auth from './store/reducers/auth';
 import raft from './store/reducers/raft';
 import blockchain from './store/reducers/blockchain';
@@ -19,14 +18,7 @@ import App from './App';
 
 const history = createHashHistory();
 
-const rootReducer = combineReducers({
-  common,
-  auth,
-  raft,
-  blockchain,
-  digest,
-  search
-});
+const rootReducer = combineReducers({ auth, raft, blockchain, digest, search });
 
 let composeEnhancers = null || compose;
 if (process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {

@@ -174,7 +174,7 @@ const getFileFromFS = async (signature, shardsAddresses, csk, callback) => {
 
     callback(undefined, base64File);
   } catch (e) {
-    callback(e.response.data);
+    callback(e.response.data.data || e.response.data);
   }
 };
 
@@ -205,7 +205,7 @@ const removeFilesFromFs = async (key, files, raftNode, csk, callback) => {
 
     callback(undefined, filesData);
   } catch (e) {
-    callback(e.response.data);
+    callback(e.response.data.data || e.response.data);
   }
 };
 

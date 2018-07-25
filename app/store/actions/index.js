@@ -4,7 +4,6 @@ export {
   auth,
   logout
 } from './auth';
-export { checkInternet } from './common';
 export { createTransaction } from './blockchain';
 export {
   // getAppSettings,

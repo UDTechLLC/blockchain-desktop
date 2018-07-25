@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
+import { Offline, Online } from 'react-detect-offline';
 
-import { checkInternet } from './store/actions/index';
 import Layout from './hoc/Layout/Layout';
 import NoInternetConnection from './components/PagesSections/NoInternetConnection/NoInternetConnection';
 import Homepage from './containers/Homepage/Homepage';
@@ -21,17 +21,18 @@ import classes from './App.css';
 
 class App extends Component {
   state = { content: false };
-  componentWillMount() {
-    this.props.checkInternet();
-    setTimeout(() => this.setState({ content: true }), 1649);
-  }
-  onIdle = () => {
-    console.log('user is idle');
-    // console.log('last active', this.idleTimer.getLastActiveTime());
-  };
+  //  stop animation
+  componentWillMount() { setTimeout(() => this.setState({ content: true }), 1649); }
+  //  auto logout after IdleTimer timeout if user is auth
+  onIdle = () => { if (this.props.isAuth) this.props.history.replace('/logout'); };
   render() {
-    let routes = <NoInternetConnection />;
-    if (this.props.isAuth && this.props.internet) {
+    let routes = (
+      <Switch>
+        <Route path="/" component={Homepage} key={Math.random()} />
+        <Redirect to="/" />
+      </Switch>
+    );
+    if (this.props.isAuth) {
       routes = (
         <Switch>
           <Route exact path="/ghost-drive" component={GhostDrive} key={Math.random()} />
@@ -43,31 +44,25 @@ class App extends Component {
           <Redirect to="/ghost-drive" />
         </Switch>
       );
-    } else if (this.props.internet) {
-      routes = (
-        <Switch>
-          <Route path="/" component={Homepage} key={Math.random()} />
-          <Redirect to="/" />
-        </Switch>
+    }
+    let content = (<div className={classes.AnimationWrapper}><Ghost /></div>);
+    if (this.state.content) {
+      content = (
+        <div>
+          <Online>
+            <Layout history={this.props.history}>{routes}</Layout>
+          </Online>
+          <Offline>
+            <NoInternetConnection />
+          </Offline>
+        </div>
       );
     }
-    const startAnimation = (
-      <div className={classes.AnimationWrapper}>
-        <Ghost />
-      </div>
-    );
     return (
-      <IdleTimer
-        // ref={ref => { this.idleTimer = ref; }}
-        onIdle={this.onIdle}
-        timeout={1000 * 60 * 15}
-      >
+      // ref={ref => { this.idleTimer = ref; }}
+      <IdleTimer onIdle={this.onIdle} timeout={1000 * 60 * 15}>
         <div style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover' }}>
-          {
-            this.state.content
-              ? (<Layout history={this.props.history}>{routes}</Layout>)
-              : (<div>{startAnimation}</div>)
-          }
+          {content}
         </div>
       </IdleTimer>
     );
@@ -76,19 +71,13 @@ class App extends Component {
 
 App.propTypes = {
   isAuth: PropTypes.bool.isRequired,
-  checkInternet: PropTypes.func.isRequired,
-  internet: PropTypes.bool.isRequired,
-  history: PropTypes.shape({}).isRequired
+  history: PropTypes.shape({
+    replace: PropTypes.func.isRequired
+  }).isRequired
 };
 
 const mapStateToProps = state => ({
-  isAuth: !!state.auth.userData.csk,
-  internetChecking: state.common.internetChecking,
-  internet: state.common.internet
+  isAuth: !!state.auth.userData.csk
 });
 
-const mapDispatchToProps = dispatch => ({
-  checkInternet: () => dispatch(checkInternet())
-});
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps)(App));

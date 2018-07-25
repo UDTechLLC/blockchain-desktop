@@ -22,10 +22,14 @@ const updateObject = (oldObject, updatedProperties) => (
 const b64toBlob = b64string => {
   // convert base64 to raw binary data held in a string
   // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-  const byteString = atob(b64string.split(',')[1]);
+  // check if b64string contains mime type
+  const containMimeType = b64string.indexOf(',') >= 0;
+
+  //  separate b64string
+  const byteString = containMimeType ? atob(b64string.split(',')[1]) : atob(b64string);
 
   // separate out the mime component
-  const mimeString = b64string.split(',')[0].split(':')[1].split(';')[0];
+  const mimeString = containMimeType ? b64string.split(',')[0].split(':')[1].split(';')[0] : 'text/plain';
 
   // write the bytes of the string to an ArrayBuffer
   const ab = new ArrayBuffer(byteString.length);
@@ -34,8 +38,7 @@ const b64toBlob = b64string => {
   const ia = new Uint8Array(ab);
 
   // set the bytes of the buffer to the correct values
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < byteString.length; i++) {
+  for (let i = 0; i < byteString.length; i += 1) {
     ia[i] = byteString.charCodeAt(i);
   }
   // write the ArrayBuffer to a blob, and you're done

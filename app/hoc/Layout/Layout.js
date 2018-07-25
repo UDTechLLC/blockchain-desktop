@@ -41,8 +41,7 @@ Layout.propTypes = {
 
 const mapStateToProps = state => ({
   isAuth: !!state.auth.userData.csk,
-  loading: state.common.loading || state.raft.loading || state.auth.loading
-    || state.blockchain.loading
+  loading: state.raft.loading || state.auth.loading || state.blockchain.loading
 });
 
 export default connect(mapStateToProps)(Layout);

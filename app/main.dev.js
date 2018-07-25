@@ -10,7 +10,6 @@
  * @flow
  */
 const path = require('path');
-const isOnline = require('is-online');
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 
 const MenuBuilder = require('./menu');
@@ -110,11 +109,6 @@ app.on('ready', async () => {
 });
 
 //  common listeners
-ipcMain.on('internet-connection:check', async () => {
-  const online = await isOnline();
-  mainWindow.webContents.send('internet-connection:status', online);
-});
-
 ipcMain.on('message-box:show', (event, options) => dialog.showMessageBox(options));
 
 //  auth listeners

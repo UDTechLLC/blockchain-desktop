@@ -4,7 +4,7 @@ const { ipcMain } = require('electron');
 
 const utils = require('../utils/utils');
 
-const common = (mainWindow, configFolder) => {
+const commonDeprecated = (mainWindow, configFolder) => {
   //  listener, that check if user internet connection is available
   ipcMain.on('internet-connection:check', () => (
     isOnline()
@@ -29,4 +29,4 @@ const common = (mainWindow, configFolder) => {
   });
 };
 
-export default common;
+export default commonDeprecated;

@@ -12,11 +12,6 @@ export const LOGOUT_START = 'LOGOUT_START';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const LOGOUT_FAIL = 'LOGOUT_FAIL';
 
-//  common actions
-export const NET_CHECK_START = 'NET_CHECK_START';
-export const NET_CHECK_SUCCESS = 'NET_CHECK_SUCCESS';
-export const NET_CHECK_FAIL = 'NET_CHECK_FAIL';
-
 //  blockchain actions
 export const CREATE_TRANSACTION_START = 'CREATE_TRANSACTION_START';
 export const CREATE_TRANSACTION_SUCCESS = 'CREATE_TRANSACTION_SUCCESS';
@@ -71,4 +66,5 @@ export const SET_GHOST_TIME_START = 'SET_GHOST_TIME_START';
 export const SET_GHOST_TIME_SUCCESS = 'SET_GHOST_TIME_SUCCESS';
 export const SET_GHOST_TIME_FAIL = 'SET_GHOST_TIME_FAIL';
 
-export const SET_SEARCH_TEXT = 'SET_SEARCH_WORD';
+//  search through redux
+export const SET_SEARCH_TEXT = 'SET_SEARCH_TEXT';
