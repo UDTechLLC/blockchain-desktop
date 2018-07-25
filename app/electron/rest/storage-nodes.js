@@ -12,6 +12,9 @@ const utils = require('./../utils/utils');
  * @returns {Promise<*>}
  */
 const mountBuckets = async (origin, storageNodes, callback) => {
+  const networkError = await utils.isOffline();
+  if (networkError) return callback(networkError);
+
   const threeUrls = storageNodes.slice(0, 3);
 
   let reqAllState = [].concat.apply([], threeUrls.map(url => (
@@ -60,7 +63,7 @@ const mountBuckets = async (origin, storageNodes, callback) => {
 
     callback(undefined);
   } catch (e) {
-    callback(e.response.data.data || e.response.data);
+    callback(e.response.data.data || e.response.data || { message: 'Storage nodes are not responding.' });
   }
 };
 
@@ -72,13 +75,16 @@ const mountBuckets = async (origin, storageNodes, callback) => {
  * @returns {Promise<*>}
  */
 const unmountBuckets = async (userData, storageNodes, callback) => {
+  const networkError = await utils.isOffline();
+  if (networkError) return callback(networkError);
+
   const reqs = storageNodes.map(url => axios.post(`${url}/buckets/${userData.cpk}/unmount`));
 
   try {
     await Promise.all(reqs);
     callback(undefined, { success: true });
   } catch (e) {
-    callback(e.response.data.data || e.response.data);
+    callback(e.response.data.data || e.response.data || { message: 'Storage nodes are not responding.' });
   }
 };
 
@@ -94,6 +100,9 @@ const unmountBuckets = async (userData, storageNodes, callback) => {
  */
 
 const files2FS = async (files, nodes, storageNodes, cpk, csk, callback) => {
+  const networkError = await utils.isOffline();
+  if (networkError) return callback(networkError);
+
   const fsNodes = storageNodes.slice(0, nodes);
   const filesPromises = _.map(files, file => new Promise(resolve => {
     const rawShards = utils.fileCrushing(file, nodes);
@@ -148,7 +157,7 @@ const files2FS = async (files, nodes, storageNodes, cpk, csk, callback) => {
     await Promise.all(reqs);
     callback(undefined, files);
   } catch (e) {
-    callback(e.response.data || { message: 'Seems like something bad happened!' });
+    callback(e.response.data.data || e.response.data || { message: 'Storage nodes are not responding.' });
   }
 };
 
@@ -161,6 +170,9 @@ const files2FS = async (files, nodes, storageNodes, cpk, csk, callback) => {
  * @returns {Promise<void>}
  */
 const getFileFromFS = async (signature, shardsAddresses, csk, callback) => {
+  const networkError = await utils.isOffline();
+  if (networkError) return callback(networkError);
+
   const shardsReq = shardsAddresses.map((url, i) => (
     axios.get(`${url}/files/${utils.aesEncrypt(signature, csk).encryptedHex}.${i}`)
   ));
@@ -174,7 +186,7 @@ const getFileFromFS = async (signature, shardsAddresses, csk, callback) => {
 
     callback(undefined, base64File);
   } catch (e) {
-    callback(e.response.data.data || e.response.data);
+    callback(e.response.data.data || e.response.data || { message: 'Storage nodes are not responding.' });
   }
 };
 
@@ -188,6 +200,9 @@ const getFileFromFS = async (signature, shardsAddresses, csk, callback) => {
  * @returns {Promise<void>}
  */
 const removeFilesFromFs = async (key, files, raftNode, csk, callback) => {
+  const networkError = await utils.isOffline();
+  if (networkError) return callback(networkError);
+
   try {
     const {data} = await axios.get(`${raftNode}/key/${key}`);
     const decryptedData = utils.decryptDataFromRaft(data, key, csk);
@@ -205,7 +220,7 @@ const removeFilesFromFs = async (key, files, raftNode, csk, callback) => {
 
     callback(undefined, filesData);
   } catch (e) {
-    callback(e.response.data.data || e.response.data);
+    callback(e.response.data.data || e.response.data || { message: 'Storage nodes are not responding.' });
   }
 };
 

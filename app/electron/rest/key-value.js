@@ -12,6 +12,9 @@ const raftKeys = require('./../utils/raft-keys');
  * @returns {Promise<*>}
  */
 const getAllUserInfo = async (userData, raftNode, callback) => {
+  const networkError = await utils.isOffline();
+  if (networkError) return callback(networkError);
+
   //  keys in raft
   const foldersKey = raftKeys.foldersKey(userData.cpk);
   const filesKey = raftKeys.filesKey(userData.cpk);
@@ -35,7 +38,7 @@ const getAllUserInfo = async (userData, raftNode, callback) => {
 
     return callback(undefined, data);
   } catch (e) {
-    callback(e.response.data);
+    callback(e.response.data || { message: 'Key-value nodes are not responding.' });
   }
 };
 
@@ -48,13 +51,16 @@ const getAllUserInfo = async (userData, raftNode, callback) => {
  * @returns {Promise<void>}
  */
 const getValuesByKvKey = async (key, raftNode, csk, callback) => {
+  const networkError = await utils.isOffline();
+  if (networkError) return callback(networkError);
+
   try {
     const { data } = await axios.get(`${raftNode}/key/${key}`);
     const decryptedData = utils.decryptDataFromRaft(data, key, csk);
 
     callback(undefined, decryptedData);
   } catch (e) {
-    callback(e.response.data);
+    callback(e.response.data || { message: 'Key-value nodes are not responding.' });
   }
 };
 
@@ -69,6 +75,9 @@ const getValuesByKvKey = async (key, raftNode, csk, callback) => {
  * @returns {Promise<*>}
  */
 const editKeyValue = async (mode, key, newKeyValue, raftNode, csk, callback) => {
+  const networkError = await utils.isOffline();
+  if (networkError) return callback(networkError);
+
   if (typeof mode !== 'object' || !mode.operation || !mode.objects) {
     return callback({ message: 'Kv request issues' });
   }
@@ -105,7 +114,7 @@ const editKeyValue = async (mode, key, newKeyValue, raftNode, csk, callback) => 
 
     callback(undefined);
   } catch (e) {
-    callback(e.response.data);
+    callback(e.response.data || { message: 'Key-value nodes are not responding.' });
   }
 };
 
@@ -119,6 +128,9 @@ const editKeyValue = async (mode, key, newKeyValue, raftNode, csk, callback) => 
  * @returns {Promise<*>}
  */
 const removeKeyValues = async (key, kvKeys, raftNode, csk, callback) => {
+  const networkError = await utils.isOffline();
+  if (networkError) return callback(networkError);
+
   try {
     const { data } = await axios.get(`${raftNode}/key/${key}`);
     const decryptedData = utils.decryptDataFromRaft(data, key, csk);
@@ -139,7 +151,7 @@ const removeKeyValues = async (key, kvKeys, raftNode, csk, callback) => {
 
     callback(undefined);
   } catch (e) {
-    callback(e.response.data);
+    callback(e.response.data || { message: 'Key-value nodes are not responding.' });
   }
 };
 

@@ -1,10 +1,22 @@
-/* eslint-disable max-len,no-plusplus */
-// const _ = require('lodash');
+const isOnline = require('is-online');
 const aesjs = require('aes-js');
 const bitcoin = require('bitcoinjs-lib');
 const fs = require('fs');
 const pbkdf2 = require('pbkdf2');
 const { dialog } = require('electron');
+
+/**
+ * Return undefined if there is internet connection or error message if user is offline
+ * @returns {Promise<*>}
+ */
+const isOffline = async () => {
+  const isProd = process.env.NODE_ENV === 'production';
+  const online = await isOnline();
+  if (!online && !isProd) {
+    return ({ message: 'There is no internet connection.' });
+  }
+  return undefined;
+};
 
 /**
  * convert string to bytes array
@@ -179,6 +191,7 @@ const errorHandler = (error, mainWindow, listenerName, log = true) => {
 };
 
 module.exports = {
+  isOffline,
   stringToBytes,
   ensureDirectoryExistence,
   aesEncrypt,

@@ -1,5 +1,6 @@
 const axios = require('axios');
 
+const { isOffline } = require('./../utils/utils');
 const { DIGEST_URL } = require('./../../utils/const');
 
 /**
@@ -10,6 +11,9 @@ const { DIGEST_URL } = require('./../../utils/const');
  * @returns {Promise<*>}
  */
 const getDigest = async (userData, passwordHash, callback) => {
+  const networkError = await isOffline();
+  if (networkError) return callback(networkError);
+
   //  hardcoded development servers
   if (process.env.NODE_ENV !== 'production') {
     return callback(undefined, {
@@ -44,7 +48,7 @@ const getDigest = async (userData, passwordHash, callback) => {
       }
     }
 
-    callback(e.response.data);
+    callback(e.response.data || { message: 'Digest nodes are not responding.' });
   }
 };
 
