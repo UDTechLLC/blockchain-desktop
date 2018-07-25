@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
-import { updateObject } from '../../utils/utility';
+import { updateObject } from '../../utils/utils';
 
 const initialState = {
   notes: [],
@@ -17,7 +17,7 @@ const getNotes = (state, action) => (updateObject(state, {
 }));
 
 const editNotesList = (state, action) => (updateObject(state, {
-  notes: [...action.notes],
+  notes: { ...state.notes, ...action.notes },
   loading: false
 }));
 

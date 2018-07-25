@@ -1,0 +1,26 @@
+.Content {
+  height: calc(100% - 20rem);
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  transition: height 0.4s linear;
+}
+
+.Content.ContentWithHidenInfo {
+  height: calc(100% - 0.9rem);
+}
+
+.InfoPanel {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 20rem;
+  transition: height 0.4s linear;
+}
+
+.InfoPanel.HidenPanel {
+  height: 0.9rem;
+}

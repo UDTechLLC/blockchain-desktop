@@ -16,23 +16,29 @@ const ghostFiles = props => {
     <Dropzone
       onDrop={(accepted, rejected) => props.onDrop(accepted, rejected)}
       maxSize={102400000}
+      className={styles.flexAllCenter}
     >
       {
         !Object.keys(props.files).length
           ? (
             <p>
-              {`There is no files in folder "${props.folderInfo[Object.keys(props.folderInfo)[0]].name}". You can drop it here or upload file with click.`}
+              {
+                `There is no files in folder "${props.folderInfo[Object.keys(props.folderInfo)[0]].name}".` +
+                ' You can drop it here or upload file with click.'
+              }
             </p>
           )
-          : null
+          : undefined
       }
     </Dropzone>
   );
   return (
     <div
       className={[
-        styles.flex,
-        styles.wh100,
+        styles.flexColumn,
+        styles.flex0050,
+        styles.h100,
+        styles.paddingSm,
         styles.GhostFiles
       ].join(' ')}
     >
@@ -44,6 +50,7 @@ const ghostFiles = props => {
                 className={[
                   styles.flex,
                   styles.wh100,
+                  styles.paddingSm,
                   styles.ItemsWrapper
                 ].join(' ')}
               >
@@ -84,16 +91,15 @@ const ghostFiles = props => {
 };
 
 ghostFiles.propTypes = {
-  folderInfo: PropTypes.shape().isRequired,
-  files: PropTypes.shape(),
-  onDrop: PropTypes.func.isRequired,
+  files: PropTypes.shape().isRequired,
   onFileCheck: PropTypes.func.isRequired,
-  activeFile: PropTypes.string
+  onDrop: PropTypes.func.isRequired,
+  activeFile: PropTypes.string,
+  folderInfo: PropTypes.shape().isRequired,
 };
 
 ghostFiles.defaultProps = {
-  files: {},
-  activeFile: ''
+  activeFile: undefined
 };
 
 export default ghostFiles;

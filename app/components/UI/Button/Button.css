@@ -1,21 +1,20 @@
 .Button {
-  border: none;
-  outline: none;
-  cursor: pointer;
-  font: inherit;
+  background-color: rgba(22, 94, 106, 0.3);
   text-transform: uppercase;
-  letter-spacing: 0.71px;
   font-size: 1.4rem;
-  padding: 16px;
+  line-height: 1.2;
   box-sizing: border-box;
-  transition: color 0.2s linear;
-  min-height: 50px;
-  min-width: 226px;
+  transition: color 0.4s linear;
+  /*height: 5.556vh;*/
+  height: 5rem;
+  /*min-width: 226px;*/
+  width: 100%;
   text-align: center;
 }
 
 .Button > div {
-  transition: all 0.2s linear;
+  transition: all 0.4s linear;
+  padding-top: 0.5rem;
 }
 
 .Button:hover,

@@ -1,46 +1,73 @@
 import { ipcRenderer } from 'electron';
+import { saveAs } from 'file-saver';
 
 import * as actionTypes from './actionTypes';
-import { getDigest } from './index';
 
-const regStart = (password) => {
-  ipcRenderer.send('registration:start', password);
-  return { type: actionTypes.REGISTRATION_START };
+const regStart = () => ({ type: actionTypes.REGISTRATION_START });
+
+const regSuccess = encryptedHex => {
+  const blob = new Blob([encryptedHex], {
+    type: 'text/plain'
+  });
+  saveAs(blob, 'credentials.bak');
+
+  return { type: actionTypes.REGISTRATION_SUCCESS };
 };
 
-const regSuccess = encryptedData => ({
-  type: actionTypes.REGISTRATION_SUCCESS,
-  encryptedData
+const regFail = error => ({
+  type: actionTypes.REGISTRATION_FAIL,
+  error
 });
 
+export const regCleanUp = () => ({ type: actionTypes.REGISTRATION_CLEAN_UP });
+
 export const registration = password => dispatch => {
-  dispatch(regStart(password));
-  ipcRenderer.once('registration:complete', (event, encryptedData) => dispatch(regSuccess(encryptedData)));
+  dispatch(regStart());
+  ipcRenderer.send('sign-up:start', password);
+  ipcRenderer.once('sign-up:success', (event, encryptedHex) => dispatch(regSuccess(encryptedHex)));
+  ipcRenderer.once('sign-up:fail', (event, error) => dispatch(regFail(error)));
 };
 
-const authStart = (password, filePath) => {
-  ipcRenderer.send('auth:start', { password, filePath });
-  return { type: actionTypes.AUTH_START };
-};
+const authStart = () => ({ type: actionTypes.AUTH_START });
 
-export const authSuccess = userData => ({
+const authSuccess = data => ({
   type: actionTypes.AUTH_SUCCESS,
-  userData
+  userData: data.userData,
+  digestInfo: data.digestInfo,
+  folders: data.folders,
+  files: data.files,
+  notes: data.notes,
+  wallet: data.wallet
+});
+
+const authFail = error => ({
+  type: actionTypes.AUTH_FAIL,
+  error
 });
 
 export const auth = (password, filePath) => dispatch => {
-  dispatch(authStart(password, filePath));
-  ipcRenderer.once('auth:complete', (event, userData) => {
-    dispatch(getDigest(JSON.parse(userData), password));
-    ipcRenderer.once('fs:mounted', () => {
-      // console.log(JSON.parse(userData).csk);
-      // console.log(JSON.parse(userData).cpk);
-      // console.log(JSON.parse(userData).address);
-      dispatch(authSuccess(JSON.parse(userData)));
-    });
-  });
+  dispatch(authStart());
+  ipcRenderer.send('sign-in:start', { password, filePath });
+  ipcRenderer.once('sign-in:success', (event, userData) => dispatch(authSuccess(userData)));
+  ipcRenderer.once('sign-in:fail', (event, error) => dispatch(authFail(error)));
 };
 
-export const logout = () => ({
-  type: actionTypes.AUTH_LOGOUT
+const logoutStart = () => ({ type: actionTypes.LOGOUT_START });
+
+const logoutSuccess = () => ({ type: actionTypes.LOGOUT_SUCCESS });
+
+const logoutFail = error => ({
+  type: actionTypes.LOGOUT_FAIL,
+  error
 });
+
+export const logout = (userData, storageNodes = undefined) => dispatch => {
+  dispatch(logoutStart());
+  if (storageNodes && storageNodes.length) {
+    ipcRenderer.send('sign-out:start', { userData, storageNodes });
+    ipcRenderer.once('sign-out:success', () => dispatch(logoutSuccess()));
+    ipcRenderer.once('sign-out:fail', (event, error) => dispatch(logoutFail(error)));
+  } else {
+    dispatch(logoutSuccess());
+  }
+};

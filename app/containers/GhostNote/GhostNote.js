@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import * as actions from '../../store/actions';
-import PageWithInfoPanel from '../PageWithInfoPanel/PageWithInfoPanel';
+import InfoPanelWrapper from '../../components/InfoPanelWrapper/InfoPanelWrapper';
 import NotesList from '../../components/PagesSections/GhostNote/NotesList/NotesList';
 import NoteText from '../../components/PagesSections/GhostNote/NoteText/NoteText';
 
@@ -17,14 +17,12 @@ class GhostNote extends Component {
   state = {
     activeNote: {},
     showRemoveButton: false,
-    timepickerDate: new Date()
+    timePickerDate: new Date()
   };
   componentWillMount() {
     if (this.props.notes && Object.keys(this.props.notes).length) {
       const firstKey = Object.keys(this.props.notes)[0];
-      this.setState({
-        activeNote: this.props.notes[firstKey]
-      });
+      this.setState({ activeNote: this.props.notes[firstKey] });
     }
   }
   handleNoteCheck = signature => {
@@ -42,28 +40,23 @@ class GhostNote extends Component {
       name = text;
     }
     this.setState({
-      activeNote: {
-        ...this.state.activeNote,
-        text,
-        name
-      }
+      activeNote: { ...this.state.activeNote, text, name }
     });
   };
   handleEditNote = () => {
-    const noteUpdateData = {
-      name: this.state.activeNote.name,
-      text: this.state.activeNote.text
-    };
     this.props.editNote(
-      this.state.activeNote.id,
-      noteUpdateData,
+      { [this.state.activeNote.id]: this.state.activeNote },
       this.props.userData,
       this.props.raftNode
     );
     this.setState({ showRemoveButton: false });
   };
   handleRemoveNote = () => {
-    this.props.removeNote(this.state.activeNote.id, this.props.userData, this.props.raftNode);
+    this.props.removeNote(
+      { [this.state.activeNote.id]: this.state.activeNote },
+      this.props.userData,
+      this.props.raftNode
+    );
     this.setState({ activeNote: {}, showRemoveButton: false });
   };
   toggleShowRemoveButton = () => {
@@ -71,15 +64,13 @@ class GhostNote extends Component {
       showRemoveButton: !this.state.showRemoveButton
     });
   };
-  //  set timepicker date
-  handleTimepickerChange = timepickerDate => this.setState({ timepickerDate });
   //  set file timebomb
-  handleSetTimebomb = () => {
-    const timestamp = +this.state.timepickerDate.getTime() / 1000;
-    this.props.setTimebomb(
-      'note',
-      this.state.activeNote.id,
-      timestamp,
+  handleSetGhostTime = () => {
+    const ghostTime = this.state.timePickerDate.getTime();
+
+    this.props.setGhostTime(
+      { notes: { [this.state.activeNote.id]: this.state.activeNote }},
+      ghostTime,
       this.props.userData,
       this.props.raftNode
     );
@@ -87,16 +78,16 @@ class GhostNote extends Component {
   };
   render() {
     return (
-      <PageWithInfoPanel
-        disableManipulationButtons={!Object.keys(this.state.activeNote)}
+      <InfoPanelWrapper
+        disableManBtns={!Object.keys(this.state.activeNote)}
         showRemoveButton={this.state.showRemoveButton}
-        toggleShowRemoveButton={() => this.toggleShowRemoveButton()}
-        onTopManipulationButtonClick={() => this.handleEditNote()}
-        onBottomManipulationButtonClick={() => this.handleRemoveNote()}
-        manipulationFirstButtonText="save"
-        timepickerDate={this.state.timepickerDate}
-        onTimepickerChange={date => this.handleTimepickerChange(date)}
-        onTimebombSet={() => this.handleSetTimebomb()}
+        toggleShowRemoveBtn={this.toggleShowRemoveButton}
+        onTopManBtnClick={this.handleEditNote}
+        onBottomManBtnClick={this.handleRemoveNote}
+        firstManBtnText="save"
+        timePickerDate={this.state.timePickerDate}
+        onTimePickerChange={timePickerDate => this.setState({ timePickerDate })}
+        onGhostTimeSet={this.handleSetGhostTime}
       >
         <div
           className={[
@@ -120,7 +111,7 @@ class GhostNote extends Component {
             />
           </div>
         </div>
-      </PageWithInfoPanel>
+      </InfoPanelWrapper>
     );
   }
 }
@@ -132,7 +123,7 @@ GhostNote.propTypes = {
   createNote: PropTypes.func.isRequired,
   editNote: PropTypes.func.isRequired,
   removeNote: PropTypes.func.isRequired,
-  setTimebomb: PropTypes.func.isRequired
+  setGhostTime: PropTypes.func.isRequired
 };
 
 GhostNote.defaultProps = {
@@ -151,10 +142,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(actions.editNote(signature, noteUpdateData, userData, raftNode))
   ),
   removeNote: (signature, userData, raftNode) => (
-    dispatch(actions.removeNote(signature, userData, raftNode))
+    dispatch(actions.removeNotes(signature, userData, raftNode))
   ),
-  setTimebomb: (objType, signature, timestamp, userData, raftNode) => (
-    dispatch(actions.setTimebomb(objType, signature, timestamp, userData, raftNode))
+  setGhostTime: (objType, signature, timestamp, userData, raftNode) => (
+    dispatch(actions.setGhostTime(objType, signature, timestamp, userData, raftNode))
   )
 });
 

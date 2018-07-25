@@ -1,0 +1,16 @@
+.Middle > div:first-of-type {
+  flex: 4;
+  margin-right: 0.7rem;
+}
+
+.Middle > div:nth-of-type(2),
+.Middle > div:nth-of-type(3) {
+  flex: 1;
+}
+
+.Bottom > p {
+  color: #2f96ba;
+  font-size: 1.2rem;
+  font-weight: 400;
+  text-transform: uppercase;
+}

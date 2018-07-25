@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { saveAs } from 'file-saver';
 
 import { ROOT_HASH } from '../../utils/const';
 import * as actionTypes from '../../store/actions';
-import PageWithInfoPanel from '../PageWithInfoPanel/PageWithInfoPanel';
+import InfoPanelWrapper from '../../components/InfoPanelWrapper/InfoPanelWrapper';
 import GhostFolders from '../../components/PagesSections/GhostDrive/GhostFolders/GhostFolders';
 import GhostFiles from '../../components/PagesSections/GhostDrive/GhostFiles/GhostFiles';
-import b64toBlob from '../../utils/b64toBlob';
 
 import css from './GhostDrive.css';
 import commonCss from '../../assets/css/common.css';
@@ -20,56 +18,62 @@ const styles = { ...commonCss, ...css };
 class GhostDrive extends Component {
   state = {
     checkedFolder: ROOT_HASH,
-    nameThatMayChange: 'root',
-    checkedFile: '',
+    nameThatMayChange: 'Root',
+    checkedFile: undefined,
     showRemoveButton: false,
-    timepickerDate: new Date()
+    timePickerDate: new Date()
   };
-  componentWillMount() {
-    //  get all raft data on auth
-    this.props.getUserData(this.props.userData, this.props.raftNode);
-  }
   //  if user checks one of folders
-  handleCheckFolder = name => {
-    const checkedFolder = Object.keys(this.props.folders).find(el => (
-      this.props.folders[el].name === name
+  handleCheckFolder = id => {
+    const checkedFolders = _.pickBy(this.props.folders, el => (
+      el.id === id
     ));
+
+    const checkedFolder = Object.keys(checkedFolders)[0];
+
     return this.setState({
       checkedFolder,
-      nameThatMayChange: this.props.folders[checkedFolder].name,
-      checkedFile: '',
+      nameThatMayChange: checkedFolder ? this.props.folders[checkedFolder].name : 'Root',
+      checkedFile: undefined,
       showRemoveButton: false
     });
   };
   //  create new folder
   handleCreateNewFolder = () => {
-    const defaultNameFolders = _.pickBy(this.props.folders, v => v.name.indexOf('New Folder') >= 0);
-    const newFolderName = `New Folder${Object.keys(defaultNameFolders).length
-      ? ` (${Object.keys(defaultNameFolders).length})`
-      : ''}`;
-    return this.props.createNewFolder(newFolderName, this.props.userData, this.props.raftNode);
+    const defaultNameFolders = _.pickBy(this.props.folders, v => (
+      v.name ? v.name.indexOf('New Folder') >= 0 : false
+    ));
+    let name = 'New Folder';
+    const dnfKeysArr = Object.keys(defaultNameFolders);
+    if (dnfKeysArr.length) {
+      const last = defaultNameFolders[dnfKeysArr[dnfKeysArr.length - 1]].name;
+      const number = +last.substr((last.indexOf('New Folder (') + 12), 1) || NaN;
+      const i = !Number.isNaN(number) ? number + 1 : 1;
+      name = `New Folder (${i})`;
+    }
+    return this.props.createNewFolder(name, this.props.userData, this.props.raftNode);
   };
   //  edit folders name
   handleChangeOnNameThatMayChange = nameThatMayChange => this.setState({ nameThatMayChange });
   //  submit eddited folder
   handleFolderNameEdit = () => {
-    if (this.state.nameThatMayChange) {
-      this.props.editFolder(
-        this.state.checkedFolder,
-        this.state.nameThatMayChange,
-        this.props.userData,
-        this.props.raftNode
-      );
+    if (this.state.nameThatMayChange && this.state.nameThatMayChange !== 'Root') {
+      const folder = {
+        ...this.props.folders[this.state.checkedFolder],
+        name: this.state.nameThatMayChange
+      };
+
+      this.props.editFolder(folder, this.props.userData, this.props.raftNode);
     }
-    this.setState({ checkedFolder: ROOT_HASH, nameThatMayChange: 'root' });
+    this.setState({ checkedFolder: ROOT_HASH, nameThatMayChange: 'Root' });
   };
   //  delete checked folder
-  handleDeleteFolder = name => {
-    const folderId = Object.keys(this.props.folders).find(el => (
-      this.props.folders[el].name === name
+  handleRemoveFolder = id => {
+    const folders = _.pickBy(this.props.folders, el => (
+      el.id === id
     ));
-    this.props.deleteFolder(folderId, this.props.userData, this.props.raftNode);
-    this.setState({ checkedFolder: ROOT_HASH, nameThatMayChange: 'root' });
+    this.props.removeFolders(folders, this.props.userData, this.props.raftNode);
+    this.setState({ checkedFolder: ROOT_HASH, nameThatMayChange: 'Root' });
   };
   //  if user checks one of files
   handleCheckFile = signature => (
@@ -85,7 +89,7 @@ class GhostDrive extends Component {
     if (rejected.length) {
       console.log(rejected);
     }
-    const timestamp = Math.round(+new Date() / 1000);
+    const timestamp = new Date().getTime();
     const promises = _.map(accepted, file => (new Promise(resolve => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -100,15 +104,14 @@ class GhostDrive extends Component {
     return Promise.all(promises)
       .then(files => (
         this.props.uploadFiles(
-          this.props.userData,
           files,
+          this.props.userData,
           this.props.storageNodes,
           this.props.raftNode
         )
       ))
       .catch(error => console.log(error));
   };
-  //  triggers through redux action electron listener "file:download" that'll save file in RAM
   handleDownloadFile = () => {
     if (!this.state.checkedFile) {
       return false;
@@ -119,60 +122,48 @@ class GhostDrive extends Component {
       this.props.raftNode
     );
   };
-  //  get downloaded file from RAM
-  handleSaveDownloadedFile = () => {
-    const blob = b64toBlob(this.props.downloadedFile.base64File);
-    const filesaver = saveAs(blob, this.props.downloadedFile.name);
-    filesaver.onwriteend = () => this.props.saveDownloadedFile();
-    return filesaver;
-  };
   //  toggles confirmation button visibility
   toggleShowRemoveButton = () => {
-    if (!this.state.checkedFile) {
-      return false;
-    }
+    if (!this.state.checkedFile) return false;
+
     return this.setState({ showRemoveButton: !this.state.showRemoveButton });
   };
   //  handles checked file remove
   handleRemoveFile = () => {
-    if (!this.state.checkedFile) {
-      return false;
-    }
-    this.props.removeFile(
-      this.state.checkedFile,
+    if (!this.state.checkedFile) return false;
+
+    this.props.removeFiles(
+      { [this.state.checkedFile]: this.props.files[this.state.checkedFile] },
       this.props.userData,
       this.props.raftNode
     );
+
     return this.setState({ showRemoveButton: false });
   };
-  //  set timepicker date
-  handleTimepickerChange = timepickerDate => this.setState({ timepickerDate });
-  //  set file timebomb
-  handleSetTimebomb = () => {
-    const timestamp = +this.state.timepickerDate.getTime() / 1000;
-    this.props.setTimebomb(
-      'file',
-      this.state.checkedFile,
+  //  set file ghost time
+  handleSetGhostTime = () => {
+    const timestamp = this.state.timePickerDate.getTime();
+
+    this.props.setGhostTime(
+      { files: { [this.state.checkedFile]: this.props.files[this.state.checkedFile] } },
       timestamp,
       this.props.userData,
       this.props.raftNode
     );
-    this.setState({ checkedFile: '' });
+
+    this.setState({ checkedFile: undefined });
   };
   render() {
-    if (!this.props.downloadedFile.downloaded) {
-      this.handleSaveDownloadedFile();
-    }
     return (
-      <PageWithInfoPanel
-        disableManipulationButtons={!this.state.checkedFile}
+      <InfoPanelWrapper
+        disableManBtns={!this.state.checkedFile}
         showRemoveButton={this.state.showRemoveButton}
-        toggleShowRemoveButton={() => this.toggleShowRemoveButton()}
-        onTopManipulationButtonClick={() => this.handleDownloadFile()}
-        onBottomManipulationButtonClick={() => this.handleRemoveFile()}
-        timepickerDate={this.state.timepickerDate}
-        onTimepickerChange={date => this.handleTimepickerChange(date)}
-        onTimebombSet={() => this.handleSetTimebomb()}
+        toggleShowRemoveBtn={this.toggleShowRemoveButton}
+        onTopManBtnClick={this.handleDownloadFile}
+        onBottomManBtnClick={this.handleRemoveFile}
+        timePickerDate={this.state.timePickerDate}
+        onTimePickerChange={timePickerDate => this.setState({ timePickerDate })}
+        onGhostTimeSet={this.handleSetGhostTime}
       >
         <div
           className={[
@@ -183,13 +174,13 @@ class GhostDrive extends Component {
           <div className={styles.flex1}>
             <GhostFolders
               folders={this.props.folders}
-              onFolderCheck={name => this.handleCheckFolder(name)}
-              onCreateFolder={() => this.handleCreateNewFolder()}
-              onFolderDelete={name => this.handleDeleteFolder(name)}
-              activeFolder={this.props.folders[this.state.checkedFolder].name}
+              onFolderCheck={id => this.handleCheckFolder(id)}
+              onCreateFolder={this.handleCreateNewFolder}
+              onFolderRemove={id => this.handleRemoveFolder(id)}
+              activeFolder={this.state.checkedFolder}
               nameThatMayChange={this.state.nameThatMayChange}
               onNameThatMayChange={val => this.handleChangeOnNameThatMayChange(val)}
-              onFolderNameEdit={() => this.handleFolderNameEdit()}
+              onFolderNameEdit={this.handleFolderNameEdit}
             />
           </div>
           <div className={styles.flex3}>
@@ -204,7 +195,7 @@ class GhostDrive extends Component {
             />
           </div>
         </div>
-      </PageWithInfoPanel>
+      </InfoPanelWrapper>
     );
   }
 }
@@ -217,14 +208,11 @@ GhostDrive.propTypes = {
   files: PropTypes.shape().isRequired,
   createNewFolder: PropTypes.func.isRequired,
   editFolder: PropTypes.func.isRequired,
-  getUserData: PropTypes.func.isRequired,
-  deleteFolder: PropTypes.func.isRequired,
+  removeFolders: PropTypes.func.isRequired,
   uploadFiles: PropTypes.func.isRequired,
   downloadFile: PropTypes.func.isRequired,
-  removeFile: PropTypes.func.isRequired,
-  downloadedFile: PropTypes.shape().isRequired,
-  saveDownloadedFile: PropTypes.func.isRequired,
-  setTimebomb: PropTypes.func.isRequired
+  removeFiles: PropTypes.func.isRequired,
+  setGhostTime: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -232,33 +220,30 @@ const mapStateToProps = state => ({
   raftNode: state.digest.digestInfo.raftNodes[0],
   storageNodes: state.digest.digestInfo.storageNodes,
   folders: state.raft.folders,
-  files: state.raft.files,
-  downloadedFile: state.raft.downloadedFile
+  files: state.raft.files
 });
 
 const mapDispatchToProps = dispatch => ({
-  getUserData: (userData, raftNode) => dispatch(actionTypes.getUserData(userData, raftNode)),
   createNewFolder: (newFolderName, userData, raftNode) => (
     dispatch(actionTypes.createNewFolder(newFolderName, userData, raftNode))
   ),
-  editFolder: (signature, newName, userData, raftNode) => (
-    dispatch(actionTypes.editFolder(signature, newName, userData, raftNode))
+  editFolder: (folder, userData, raftNode) => (
+    dispatch(actionTypes.editFolder(folder, userData, raftNode))
   ),
-  deleteFolder: (signature, userData, raftNode) => (
-    dispatch(actionTypes.deleteFolder(signature, userData, raftNode))
+  removeFolders: (signature, userData, raftNode) => (
+    dispatch(actionTypes.removeFolders(signature, userData, raftNode))
   ),
-  uploadFiles: (userData, files, storageNodes, raftNode) => (
-    dispatch(actionTypes.uploadFiles(userData, files, storageNodes, raftNode))
+  uploadFiles: (files, userData, storageNodes, raftNode) => (
+    dispatch(actionTypes.uploadFiles(files, userData, storageNodes, raftNode))
   ),
   downloadFile: (signature, userData, raftNode) => (
     dispatch(actionTypes.downloadFile(signature, userData, raftNode))
   ),
-  saveDownloadedFile: () => dispatch(actionTypes.saveDownloadedFile()),
-  removeFile: (signature, userData, raftNode) => (
-    dispatch(actionTypes.removeFile(signature, userData, raftNode))
+  removeFiles: (files, userData, raftNode) => (
+    dispatch(actionTypes.removeFiles(files, userData, raftNode))
   ),
-  setTimebomb: (objType, signature, timestamp, userData, raftNode) => (
-    dispatch(actionTypes.setTimebomb(objType, signature, timestamp, userData, raftNode))
+  setGhostTime: (upd, ghostTime, userData, raftNode) => (
+    dispatch(actionTypes.setGhostTime(upd, ghostTime, userData, raftNode))
   )
 });
 

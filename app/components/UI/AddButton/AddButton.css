@@ -1,16 +1,15 @@
-.AddButton {
-  position: relative;
-  height: 0;
-}
-
-.AddButton > div {
+.AddButton > div:first-of-type {
   background-position: center;
   background-size: 50%;
   background-repeat: no-repeat;
-  z-index: 2;
-  font-weight: 400;
-  text-transform: uppercase;
-  padding: calc(25% + 10px);
+  z-index: 0;
+}
+
+.Text {
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
 }
 
 @media (max-width: 1300px) {

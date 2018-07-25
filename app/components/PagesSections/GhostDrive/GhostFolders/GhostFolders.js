@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import AddButton from '../../../UI/AddButton/AddButton';
@@ -11,47 +11,56 @@ import commonCss from '../../../../assets/css/common.css';
 // and component classes - uppercase: styles.Class
 const styles = { ...commonCss, ...css };
 
-const ghostFolders = props => (
-  <WithCustomScrollbar>
-    <div
-      className={[
-        styles.flex,
-        styles.wh100,
-        styles.GhostFolders
-      ].join(' ')}
-    >
-      <AddButton onClick={() => props.onCreateFolder()} />
-      {
-        Object.keys(props.folders).map((key, i) => (
-          <FolderItem
-            key={i}
-            folder={props.folders[key]}
-            onFolderCheck={name => props.onFolderCheck(name)}
-            isActive={props.folders[key].name === props.activeFolder}
-            onDelete={name => props.onFolderDelete(name)}
-            nameThatMayChange={props.nameThatMayChange}
-            onNameThatMayChange={val => props.onNameThatMayChange(val)}
-            onFolderNameEdit={() => props.onFolderNameEdit()}
-          />
-        ))
-      }
-    </div>
-  </WithCustomScrollbar>
-);
+class GhostFolders extends Component {
+  render() {
+    return (
+      <WithCustomScrollbar>
+        <div
+          className={[
+            styles.flexColumn,
+            styles.flex0050,
+            styles.paddingSm,
+            styles.FoldersBlock
+          ].join(' ')}
+        >
+          <div
+            className={[
+              styles.flex,
+              styles.wh100,
+              styles.GhostFolders
+            ].join(' ')}
+          >
+            <AddButton onClick={this.props.onCreateFolder} />
+            {
+              Object.keys(this.props.folders).map((key, i) => (
+                <FolderItem
+                  key={i}
+                  folder={this.props.folders[key]}
+                  onFolderCheck={id => this.props.onFolderCheck(id)}
+                  isActive={key === this.props.activeFolder}
+                  onRemove={id => this.props.onFolderRemove(id)}
+                  nameThatMayChange={this.props.nameThatMayChange}
+                  onNameThatMayChange={val => this.props.onNameThatMayChange(val)}
+                  onFolderNameEdit={this.props.onFolderNameEdit}
+                />
+              ))
+            }
+          </div>
+        </div>
+      </WithCustomScrollbar>
+    );
+  }
+}
 
-ghostFolders.propTypes = {
-  folders: PropTypes.shape(),
+GhostFolders.propTypes = {
+  folders: PropTypes.shape().isRequired,
   onFolderCheck: PropTypes.func.isRequired,
   activeFolder: PropTypes.string.isRequired,
   onCreateFolder: PropTypes.func.isRequired,
-  onFolderDelete: PropTypes.func.isRequired,
+  onFolderRemove: PropTypes.func.isRequired,
   nameThatMayChange: PropTypes.string.isRequired,
   onNameThatMayChange: PropTypes.func.isRequired,
   onFolderNameEdit: PropTypes.func.isRequired
 };
 
-ghostFolders.defaultProps = {
-  folders: {}
-};
-
-export default ghostFolders;
+export default GhostFolders;

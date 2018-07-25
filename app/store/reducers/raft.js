@@ -1,20 +1,8 @@
 import _ from 'lodash';
 import * as actionTypes from '../actions/actionTypes';
-import { updateObject } from '../../utils/utility';
+import { updateObject } from '../../utils/utils';
 import { ROOT_HASH } from '../../utils/const';
-// import { objOrderBy } from '../../utils/commonFunctions';
 
-const rootFolderObject = {
-  parentFolder: null,
-  name: 'root',
-  timestamp: 0,
-  securityLayers: {
-    _2fa: false,
-    pin: false,
-    key: false,
-    voice: false
-  }
-};
 const initialState = {
   settings: {
     loginMethod: {
@@ -45,216 +33,186 @@ const initialState = {
       musicSlider: false
     }
   },
-  folders: {
-    [ROOT_HASH]: rootFolderObject
-  },
+  folders: {},
   files: {},
   notes: {},
-  downloadedFile: {
-    signature: '',
-    name: '',
-    base64File: '',
-    downloaded: true
-  },
-  error: null,
+  error: undefined,
   loading: false
 };
 
-const actionStart = state => (updateObject(state, {
-  loading: true
-}));
+const actionStart = state => (updateObject(state, { loading: true }));
 
-const actionFailed = state => (updateObject(state, {
+const actionFail = (state, action) => (updateObject(state, {
+  error: action.error,
   loading: false
 }));
 
-const getAppSettingsSuccess = (state, action) => (updateObject(state, {
-  settings: {
-    ...state.settings,
-    ...action.settings
-  },
-  loading: false
-}));
-
-const getUserDataSuccess = (state, action) => (updateObject(state, {
+const authSuccess = (state, action) => (updateObject(state, {
   folders: {
-    ...action.data.folders,
-    ...state.folders
+    [ROOT_HASH]: {
+      id: ROOT_HASH,
+      name: 'Root',
+      parentFolder: null,
+      timestamp: 0,
+      securityLayers: {
+        _2fa: false,
+        pin: false,
+        key: false,
+        voice: false
+      }
+    },
+    ...action.folders
   },
-  files: {
-    ...state.files,
-    ...action.data.files
+  files: action.files,
+  notes: action.notes,
+  loading: false
+}));
+
+const authFail = (state, action) => (updateObject(state, {
+  folders: {
+    [ROOT_HASH]: {
+      id: ROOT_HASH,
+      name: 'Root',
+      parentFolder: null,
+      timestamp: 0,
+      securityLayers: {
+        _2fa: false,
+        pin: false,
+        key: false,
+        voice: false
+      }
+    }
   },
-  notes: {
-    ...state.notes,
-    ...action.data.notes
+  files: {},
+  notes: {},
+  error: action.error,
+  loading: false
+}));
+
+const authLogout = state => (updateObject(state, {
+  folders: {
+    [ROOT_HASH]: {
+      id: ROOT_HASH,
+      name: 'Root',
+      parentFolder: null,
+      timestamp: 0,
+      securityLayers: {
+        _2fa: false,
+        pin: false,
+        key: false,
+        voice: false
+      }
+    }
   },
+  files: {},
+  notes: {},
   loading: false
 }));
 
 const createNewFolderSuccess = (state, action) => (updateObject(state, {
-  folders: {
-    ...action.newFolder,
-    ...state.folders
-  },
+  folders: { ...state.folders, ...action.folder },
   loading: false
 }));
 
-const editFolderSuccess = (state, action) => updateObject(state, {
-  folders: {
-    ...state.folders,
-    [action.signature]: {
-      ...state.folders[action.signature],
-      name: action.newName
-    }
-  },
+const editFolderSuccess = (state, action) => (updateObject(state, {
+  folders: { ...state.folders, ...action.folder },
   loading: false
-});
+}));
 
 const deleteFolderSuccess = (state, action) => (updateObject(state, {
-  folders: _.pickBy(state.folders, (v, k) => k !== action.folderId),
-  files: _.pickBy(state.files, v => v.parentFolder !== action.folderId),
+  folders: _.omitBy(state.folders, (v, k) => (
+    Object.keys(action.folders).includes(k)
+  )),
+  files: _.omitBy(state.files, (v, k) => (
+    Object.keys(action.files).includes(k)
+  )),
   loading: false
 }));
 
 const uploadFilesSuccess = (state, action) => (updateObject(state, {
-  files: action.filesList,
+  files: { ...state.files, ...action.files },
   loading: false
 }));
 
-const downloadFileSuccess = (state, action) => (updateObject(state, {
-  downloadedFile: {
-    signature: action.signature,
-    base64File: action.base64File,
-    name: state.files[action.signature].name,
-    downloaded: false
-  },
+const downloadFileSuccess = state => (updateObject(state, {
   loading: false
-}));
-
-const saveDownloadedFile = state => (updateObject(state, {
-  downloadedFile: {
-    ...state.downloadedFile,
-    downloaded: !state.downloadedFile.downloaded
-  }
 }));
 
 const removeFileSuccess = (state, action) => (updateObject(state, {
-  files: _.pickBy(state.files, (v, k) => k !== action.signature),
+  files: _.omitBy(state.files, (v, k) => (
+    Object.keys(action.files).includes(k)
+  )),
+  loading: false
+}));
+
+const setGhostTimeSuccess = (state, action) => (updateObject(state, {
+  [action.key]: {
+    ...state[action.key],
+    ...action.data
+  },
   loading: false
 }));
 
 const createNoteSuccess = (state, action) => (updateObject(state, {
-  notes: {
-    ...action.newNote,
-    ...state.notes
-  },
+  notes: { ...state.notes, ...action.note },
   loading: false
 }));
 
 const updateNoteSuccess = (state, action) => (updateObject(state, {
-  notes: {
-    ...state.notes,
-    [action.signature]: {
-      ...state.notes[action.signature],
-      ...action.noteUpdateData
-    }
-  },
+  notes: { ...state.notes, ...action.note },
   loading: false
 }));
 
-const removeNoteSuccess = (state, action) => (updateObject(state, {
-  notes: _.pickBy(state.notes, (v, k) => k !== action.signature),
+const removeNotesSuccess = (state, action) => (updateObject(state, {
+  notes: _.omitBy(state.notes, (v, k) => (
+    Object.keys(action.notes).includes(k)
+  )),
   loading: false
 }));
-
-const setTimebombSuccess = (state, action) => {
-  let result;
-  switch (action.objType) {
-    case 'note':
-      result = (
-        updateObject(state, {
-          notes: {
-            ...state.notes,
-            [action.signature]: {
-              ...state.notes[action.signature],
-              timebomb: action.timestamp
-            }
-          },
-          loading: false
-        })
-      );
-      break;
-    default:
-      result = (
-        updateObject(state, {
-          files: {
-            ...state.files,
-            [action.signature]: {
-              ...state.files[action.signature],
-              timebomb: action.timestamp
-            }
-          },
-          loading: false
-        })
-      );
-      break;
-  }
-  return result;
-};
 
 const reducer = (state = initialState, action) => {
   if (action) {
     switch (action.type) {
-      //  get settings
-      case actionTypes.GET_APP_SETTINGS_START: return actionStart(state, action);
-      case actionTypes.GET_APP_SETTINGS_SUCCESS: return getAppSettingsSuccess(state, action);
-      case actionTypes.GET_APP_SETTINGS_FAIL: return actionFailed(state, action);
-      //  get raft data
-      case actionTypes.GET_USER_DATA_START: return actionStart(state, action);
-      case actionTypes.GET_USER_DATA_SUCCESS: return getUserDataSuccess(state, action);
-      case actionTypes.GET_USER_DATA_FAIL: return actionFailed(state, action);
-      // folders- create
-      case actionTypes.CREATE_NEW_FOLDER_START: return actionStart(state, action);
+      //  start actions
+      case actionTypes.AUTH_START:
+      case actionTypes.CREATE_NEW_FOLDER_START:
+      case actionTypes.EDIT_FOLDER_START:
+      case actionTypes.REMOVE_FOLDERS_START:
+      case actionTypes.UPLOAD_FILES_START:
+      case actionTypes.DOWNLOAD_FILE_START:
+      case actionTypes.REMOVE_FILES_START:
+      case actionTypes.CREATE_NOTE_START:
+      case actionTypes.EDIT_NOTE_START:
+      case actionTypes.REMOVE_NOTES_START:
+      case actionTypes.SET_GHOST_TIME_START:
+        return actionStart(state, action);
+      //  fail actions
+      case actionTypes.AUTH_FAIL:
+        return authFail(state, action);
+      case actionTypes.CREATE_NEW_FOLDER_FAIL:
+      case actionTypes.EDIT_FOLDER_FAIL:
+      case actionTypes.REMOVE_FOLDERS_FAIL:
+      case actionTypes.UPLOAD_FILES_FAIL:
+      case actionTypes.DOWNLOAD_FILE_FAIL:
+      case actionTypes.REMOVE_FILES_FAIL:
+      case actionTypes.CREATE_NOTE_FAIL:
+      case actionTypes.EDIT_NOTE_FAIL:
+      case actionTypes.REMOVE_NOTES_FAIL:
+      case actionTypes.SET_GHOST_TIME_FAIL:
+        return actionFail(state, action);
+      //  success actions
+      case actionTypes.AUTH_SUCCESS: return authSuccess(state, action);
+      case actionTypes.LOGOUT_SUCCESS: return authLogout(state, action);
       case actionTypes.CREATE_NEW_FOLDER_SUCCESS: return createNewFolderSuccess(state, action);
-      case actionTypes.CREATE_NEW_FOLDER_FAIL: return actionFailed(state, action);
-      //  folders - update
-      case actionTypes.EDIT_FOLDER_START: return actionStart(state, action);
       case actionTypes.EDIT_FOLDER_SUCCESS: return editFolderSuccess(state, action);
-      case actionTypes.EDIT_FOLDER_FAIL: return actionFailed(state, action);
-      //  folders - delete
-      case actionTypes.DELETE_FOLDER_START: return actionStart(state, action);
-      case actionTypes.DELETE_FOLDER_SUCCESS: return deleteFolderSuccess(state, action);
-      case actionTypes.DELETE_FOLDER_FAIL: return actionFailed(state, action);
-      //  files - create
-      case actionTypes.UPLOAD_FILES_START: return actionStart(state, action);
+      case actionTypes.REMOVE_FOLDERS_SUCCESS: return deleteFolderSuccess(state, action);
       case actionTypes.UPLOAD_FILES_SUCCESS: return uploadFilesSuccess(state, action);
-      case actionTypes.UPLOAD_FILES_FAIL: return actionFailed(state, action);
-      //  files - get
-      case actionTypes.DOWNLOAD_FILE_START: return actionStart(state, action);
       case actionTypes.DOWNLOAD_FILE_SUCCESS: return downloadFileSuccess(state, action);
-      case actionTypes.DOWNLOAD_FILE_FAIL: return actionFailed(state, action);
-      case actionTypes.SAVE_DOWNLOADED_FILE: return saveDownloadedFile(state, action);
-      //  files- remove
-      case actionTypes.REMOVE_FILE_START: return actionStart(state, action);
-      case actionTypes.REMOVE_FILE_SUCCESS: return removeFileSuccess(state, action);
-      case actionTypes.REMOVE_FILE_FAIL: return actionFailed(state, action);
-      //  notes - create
-      case actionTypes.CREATE_NOTE_START: return actionStart(state, action);
+      case actionTypes.REMOVE_FILES_SUCCESS: return removeFileSuccess(state, action);
       case actionTypes.CREATE_NOTE_SUCCESS: return createNoteSuccess(state, action);
-      case actionTypes.CREATE_NOTE_FAIL: return actionFailed(state, action);
-      //  notes - update
-      case actionTypes.EDIT_NOTE_START: return actionStart(state, action);
       case actionTypes.EDIT_NOTE_SUCCESS: return updateNoteSuccess(state, action);
-      case actionTypes.EDIT_NOTE_FAIL: return actionFailed(state, action);
-      //  notes - delete
-      case actionTypes.REMOVE_NOTE_START: return actionStart(state, action);
-      case actionTypes.REMOVE_NOTE_SUCCESS: return removeNoteSuccess(state, action);
-      case actionTypes.REMOVE_NOTE_FAIL: return actionFailed(state, action);
-      //  timebomb - set
-      case actionTypes.SET_TIMEBOMB_START: return actionStart(state, action);
-      case actionTypes.SET_TIMEBOMB_SUCCESS: return setTimebombSuccess(state, action);
-      case actionTypes.SET_TIMEBOMB_FAIL: return actionFailed(state, action);
+      case actionTypes.REMOVE_NOTES_SUCCESS: return removeNotesSuccess(state, action);
+      case actionTypes.SET_GHOST_TIME_SUCCESS: return setGhostTimeSuccess(state, action);
       default: return state;
     }
   }

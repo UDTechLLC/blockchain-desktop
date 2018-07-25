@@ -1,73 +1,47 @@
 .Input {
-  width: 100%;
   box-sizing: border-box;
 }
 
 .Label {
   display: block;
-  margin: 0 0 4px;
-  padding: 0 15px;
   border: none;
   vertical-align: baseline;
-  cursor: pointer;
-  font-size: 14px;
-  line-height: 1.3;
-  margin-bottom: 10px;
-  color: #2f96ba;
+  font-size: 1.4rem;
+  line-height: 1;
   font-weight: bold;
-  text-transform: uppercase;
 }
 
 .InputElement {
   outline: none;
   font-size: 1.4rem;
-  padding: 16px 20px;
   display: block;
-  width: 100%;
   box-sizing: border-box;
   font-weight: bold;
-  text-transform: uppercase;
   letter-spacing: 0.2px;
-  margin-bottom: 10px;
-  line-height: 23px;
-  transition: opacity 0.2s linear;
-  min-height: 50px;
-  height: 50px;
+  line-height: 2;
+  transition: opacity 0.4s linear;
+  /*height: 5.556vh;*/
+  height: 5rem;
   border: none;
-  color: #30d6d6;
-  background-color: rgba(22, 94, 106, 0.3);
 }
 
 .InputElement::placeholder {
-  color: #0cf;
-}
-
-.InputElement:focus {
-  outline: none;
+  color: #30d6d6;
+  text-transform: uppercase;
 }
 
 .Select {
-  display: flex;
-  align-items: center;
-  position: relative;
-  padding: 0;
-  margin: 0;
-  margin-bottom: 15px;
-  cursor: pointer;
   background-color: transparent;
+  padding: 0;
 }
 
 .Select > div:first-of-type {
-  background-color: #207c7f;
-  width: calc(100% - 52px);
-  margin: 0 2px 0 0;
-  padding: 13px 20px 10px;
+  width: calc(100% - 5.2rem);
+  margin-right: 2px;
   box-sizing: border-box;
-  height: 50px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  /*height: 5.556vh;*/
+  height: 5rem;
+  padding-top: 2rem;
 }
 
 .ArrowDown {
@@ -75,13 +49,8 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: 50px;
-  height: 100%;
+  width: 5rem;
   box-sizing: border-box;
-  background-color: #207c7f;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   outline: none;
 }
 
@@ -90,26 +59,22 @@
   top: calc(100% + 2px);
   right: 0;
   left: 0;
-  display: flex;
-  flex-direction: column;
-  padding-right: 52px;
+  padding-right: 5.2rem;
 }
 
 .Options > button {
+  font-family: "Aldrich", sans-serif;
   border: none;
-  background-color: #207c7f;
-  color: #30d6d6;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-weight: bold;
   text-transform: uppercase;
   display: inline-flex;
   align-items: center;
-  padding: 13px 20px 10px;
-  margin: 0 0 2px 0;
-  cursor: pointer;
+  margin-bottom: 2px;
   z-index: 100501;
   box-sizing: border-box;
   outline: none;
+  padding-top: 2rem;
 }
 
 .Select .Hide {
@@ -120,35 +85,9 @@
   border: 1px solid #ff6060;
 }
 
-.Untouchable {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.Datepicker {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.DatepickerPicker {
-  position: absolute;
-  right: -1px;
-  top: 100%;
-  overflow: hidden;
-  transition: opacity 0.2s linear;
-}
-
-.ActiveDatepicker .DatepickerPicker {
-  z-index: 100500;
-}
-
 .ErrorMessage {
   color: #ff6060;
-  margin: 0 0 10px;
-  font-size: 15px;
+  font-size: 1.4rem;
   font-weight: 400;
   line-height: 1;
   text-align: left;
@@ -157,114 +96,4 @@
 
 .Invalid ~ .ErrorMessage {
   display: block;
-}
-
-.PhoneInputGroup {
-  position: relative;
-  display: block;
-}
-
-.PhoneInputGroup > div {
-  position: absolute;
-  right: 0;
-  top: 0;
-}
-
-.FileInput {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.FileInput label {
-  display: none;
-}
-
-.FileInput > div {
-  background-color: #3c5b0b;
-  color: #fff;
-  font-size: 19px;
-  font-weight: 400;
-  letter-spacing: 0.2px;
-  width: calc(100% - 138px);
-  padding: 16px 20px;
-  box-sizing: border-box;
-  text-align: left;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.FileInput > button {
-  position: relative;
-  color: #2f4b0b;
-  font-size: 21px;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.71px;
-  padding: 15px 26px;
-  max-width: 138px;
-  cursor: pointer;
-  outline: none;
-}
-
-.FileInput > button > input {
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  outline: none;
-}
-
-.DatepickerButton {
-  background-color: transparent;
-  border: none;
-  padding: 0 18px;
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  cursor: pointer;
-  outline: none;
-}
-
-.IsValid {
-  margin-top: 1px;
-}
-
-.IsValid img {
-  height: 100%;
-  padding: 15px;
-}
-
-.IsValid button {
-  border: none;
-  cursor: pointer;
-  height: 100%;
-  padding: 15px;
-  color: #fff;
-  font-size: 21px;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.71px;
-  background-color: #78aa27;
-  outline: none;
-}
-
-@media (max-width: 767px) {
-  .InputElement {
-    margin-bottom: 30px;
-    border: none;
-  }
-}
-
-@media (max-width: 335px) {
-  .DatepickerPicker {
-    right: -15px;
-  }
 }

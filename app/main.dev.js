@@ -1,5 +1,4 @@
-/* eslint-disable object-curly-newline */
-/* eslint global-require: 0, flowtype-errors/show-errors: 0 */
+/* eslint-disable global-require */
 /**
  * This module executes inside of electron's main process. You can start
  * electron renderer process from here and communicate with the other processes
@@ -10,36 +9,31 @@
  *
  * @flow
  */
-const axios = require('axios');
-const fs = require('fs');
 const path = require('path');
+const isOnline = require('is-online');
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 
-const utils = require('./electron/utils/utils');
-
 const MenuBuilder = require('./menu');
-const CommonListeners = require('./electron/app/common');
-const Digest = require('./electron/app/digest');
-const Auth = require('./electron/app/auth');
-const FS = require('./electron/app/filesystem');
-const Raft = require('./electron/app/raft');
-// const FilesListeners = require('./electron/app/files');
-const BlockChain = require('./electron/app/blockchain');
-// const GhostPad = require('./electron/app/notes');
+const { errorHandler } = require('./electron/utils/utils');
 
-let configFolder = `${process.cwd()}/.wizeconfig`;
-if (process.platform === 'darwin') {
-  configFolder = '/Applications/Wizebit.app/Contents/Resources/.wizeconfig';
-} else if (process.platform === 'win32') {
-  configFolder = `${process.cwd()}\\wizeconfig`;
-}
+const auth = require('./electron/listeners/auth/auth');
+const flds = require('./electron/listeners/folders/folders');
+const fls = require('./electron/listeners/files/files');
+const nts = require('./electron/listeners/notes/notes');
+const bc = require('./electron/listeners/blockchain/blockchain');
+const ghstTime = require('./electron/listeners/ghost-time/ghost-time');
+
+// let configFolder = `${process.cwd()}/.ghost-config`;
+// if (process.platform === 'darwin') {
+//   configFolder = '/Applications/GhostDrive.app/Contents/Resources/.ghost-config';
+// } else if (process.platform === 'win32') {
+//   configFolder = `${process.cwd()}\\ghost-config`;
+// }
 
 //  mainWindow container
 let mainWindow;
-//  private key container for listeners
-let cpkGlob;
-//  file system container for listeners
-let fsUrlGlob;
+//  sign out data for auto unmount
+let signOutData = { userData: {}, storageNodes: [] };
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -76,6 +70,7 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
 //  main listener - on app start
 app.on('ready', async () => {
   //  install extensions
@@ -91,11 +86,15 @@ app.on('ready', async () => {
     minHeight: 600
   });
   mainWindow.on('closed', () => {
-    if (cpkGlob) {
-      utils.unmountFs(cpkGlob, fsUrlGlob, app.quit);
-    } else {
-      app.quit();
+    const { userData, storageNodes } = signOutData;
+    //  if there is some user data in main process - unmount user buckets
+    if (typeof userData === 'object' && !!Object.keys(userData).length &&
+        Array.isArray(storageNodes) && !!storageNodes.length) {
+      auth.signOut(userData, storageNodes, error => {
+        if (error) errorHandler(error, mainWindow, 'sign-out');
+      });
     }
+    app.quit();
   });
   mainWindow.loadURL(`file://${__dirname}/app.html`);
   mainWindow.webContents.on('did-finish-load', () => {
@@ -108,138 +107,135 @@ app.on('ready', async () => {
   //  menu builder
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
-  //  common
-  CommonListeners(mainWindow, configFolder);
-  //  digest
-  Digest(mainWindow);
-  //  raft
-  Raft(mainWindow);
-  //  file system listeners
-  FS(mainWindow, cpkGlob, fsUrlGlob);
-  //  auth
-  Auth(mainWindow, configFolder, cpkGlob);
-  // //  files listeners
-  // FilesListeners(mainWindow);
-  //  blockchain listeners
-  BlockChain(mainWindow);
-  // //  notes listeners
-  // GhostPad(mainWindow);
 });
 
-// this listeners is here because of redefining cpkGlob and fsUrlGlob
-
-//  fs mounting
-ipcMain.on('fs:mount', (event, fsUrl) => {
-  const origin = cpkGlob;
-  const threeUrls = fsUrl.slice(0, 3);
-  //  send fs url of user to main func
-  fsUrlGlob = threeUrls;
-  const reqAllState = [];
-  const reqAllMount = [];
-  // const reqAllCreate = [];
-  if (threeUrls[0] === threeUrls[2]) {
-    reqAllState.push(axios.get(`${threeUrls[0]}/${origin}/state`));
-    reqAllMount.push(axios.post(`${threeUrls[0]}/${origin}/mount`));
-    // reqAllCreate.push(axios.post(threeUrls[0], { data: { origin } }));
-  } else {
-    for (let i = 0; i < threeUrls.length; i += 1) {
-      reqAllState.push(axios.get(`${threeUrls[i]}/${origin}/state`));
-      reqAllMount.push(axios.post(`${threeUrls[i]}/${origin}/mount`));
-      //  unexpected trigger on create request
-      // reqAllCreate.push(axios.post(`${threeUrls[i]}`, { data: { origin }}));
-    }
-  }
-  // // user origin create and mount requests
-  // return Promise.all(reqAllMount)
-  //   .then(() => mainWindow.webContents.send('fs:mounted'))
-  //   .catch(({ response }) => {
-  //     if (response.data.data.exitcode === 7) {
-  //       return mainWindow.webContents.send('fs:mounted');
-  //     }
-  //     return setTimeout(() => (
-  //       Promise.all(reqAllCreate)
-  //         .then(() => mainWindow.webContents.send('fs:mounted'))
-  //         .catch(({ response }) => {
-  //           if (response.data.data.exitcode === 7) {
-  //             return mainWindow.webContents.send('fs:mounted');
-  //           }
-  //           console.log(response.data.data);
-  //         })
-  //     ), 100);
-  //   });
-
-  // with status method
-  return Promise.all(reqAllState)
-    .then(responses => {
-      //  find out what nodes are not mounted
-      const reqMount = utils.cleanArray(responses.map((response, i) => (
-        !response.data.mounted
-          ? reqAllMount[i]
-          : null
-      )));
-      // not created
-      const urlsCreate = utils.cleanArray(responses.map((response, i) => (
-        !response.data.created
-          ? threeUrls[i]
-          : null
-      )));
-      // if we have nodes to create
-      if (urlsCreate.length) {
-        return Promise.all(urlsCreate.map(url => (
-          axios.post(url, { data: { origin } })
-        )))
-          .then(() => (
-            Promise.all(reqMount)
-              .then(() => mainWindow.webContents.send('fs:mounted'))
-              .catch(({ response }) => {
-                console.log(response.data);
-                return dialog.showErrorBox('Error', response.data.message);
-              })
-          ))
-          .catch(({ response }) => {
-            console.log(response.data);
-            return dialog.showErrorBox('Error', response.data.message);
-          });
-      } else
-      if (!urlsCreate && reqMount.length) {
-        //  only mount
-        return Promise.all(reqMount)
-          .then(() => mainWindow.webContents.send('fs:mounted'))
-          .catch(({ response }) => {
-            console.log(response.data);
-            return dialog.showErrorBox('Error', response.data.message);
-          });
-      }
-      return mainWindow.webContents.send('fs:mounted');
-    })
-    .catch(({ response }) => {
-      console.log(response.data);
-      return dialog.showErrorBox('Error', response.data.message);
-    });
+//  common listeners
+ipcMain.on('internet-connection:check', async () => {
+  const online = await isOnline();
+  mainWindow.webContents.send('internet-connection:status', online);
 });
-//  on auth listener
-ipcMain.on('auth:start', (event, { password, filePath }) => {
-  let encryptedHex;
-  // eslint-disable-next-line comma-spacing
-  let credFilePath = process.platform !== 'win32' ? filePath : filePath.replace(/\\/gi,'/');
-  if (credFilePath.indexOf('/') < 0 || !credFilePath) {
-    credFilePath = `${configFolder}/${filePath}`;
-  }
-  return fs.readFile(credFilePath, (err, data) => {
-    if (err) {
-      dialog.showErrorBox('Error', err);
-    }
-    encryptedHex = data;
-    if (!encryptedHex) {
-      dialog.showErrorBox('Error', 'There is no credentials file');
-      return;
-    }
-    const decrypt = utils.aesDecrypt(encryptedHex, password, 'hex');
 
-    //  send cpk of user to main func
-    cpkGlob = JSON.parse(decrypt.strData).cpk;
+ipcMain.on('message-box:show', (event, options) => dialog.showMessageBox(options));
 
-    // on user data decryption and mounting fs - give userData to react part
-    mainWindow.webContents.send('auth:complete', decrypt.strData);
+//  auth listeners
+ipcMain.on('sign-up:start', (event, password) => {
+  auth.signUp(password, (error, encryptedHex) => {
+    if (error) return errorHandler(error, mainWindow, 'sign-up');
+
+    mainWindow.webContents.send('sign-up:success', encryptedHex);
+  });
+});
+
+ipcMain.on('sign-in:start', (event, { password, filePath }) => {
+  auth.signIn(password, filePath, (error, userData) => {
+    if (error) return errorHandler(error, mainWindow, 'sign-in');
+
+    signOutData = {
+      userData: userData.userData,
+      storageNodes: userData.digestInfo.storageNodes
+    };
+
+    mainWindow.webContents.send('sign-in:success', userData);
+  });
+});
+
+ipcMain.on('sign-out:start', (event, { userData, storageNodes }) => {
+  auth.signOut(userData, storageNodes, (error, success) => {
+    if (error) return errorHandler(error, mainWindow, 'sign-out');
+
+    mainWindow.webContents.send('sign-out:success', success);
+  });
+});
+
+//  folders listeners
+ipcMain.on('create-folder:start', (event, { name, parentFolder, userData, raftNode }) => {
+  flds.createOne(name, parentFolder, userData, raftNode, (error, folder) => {
+    if (error) return errorHandler(error, mainWindow, 'create-folder');
+
+    mainWindow.webContents.send('create-folder:success', folder);
+  });
+});
+
+ipcMain.on('edit-folder:start', (event, { folder, userData, raftNode }) => {
+  flds.editOne(folder, userData, raftNode, (error, theFolder) => {
+    if (error) return errorHandler(error, mainWindow, 'edit-folder');
+
+    mainWindow.webContents.send('edit-folder:success', theFolder);
+  });
+});
+
+ipcMain.on('remove-folders:start', (event, { folders, userData, raftNode }) => {
+  flds.remove(folders, userData, raftNode, (error, files) => {
+    if (error) return errorHandler(error, mainWindow, 'remove-folders');
+
+    mainWindow.webContents.send('remove-folders:success', { folders, files });
+  });
+});
+
+//  files listeners
+ipcMain.on('upload-files:start', (event, { files, userData, storageNodes, raftNode }) => {
+  fls.upload(files, userData, storageNodes, raftNode, (error, theFiles) => {
+    if (error) return errorHandler(error, mainWindow, 'upload-files');
+
+    mainWindow.webContents.send('upload-files:success', theFiles);
+  });
+});
+
+ipcMain.on('download-file:start', (event, { signature, userData, raftNode }) => {
+  fls.downloadOne(signature, userData, raftNode, (error, { name, base64File }) => {
+    if (error) return errorHandler(error, mainWindow, 'download-file');
+
+    mainWindow.webContents.send('download-file:success', { name, base64File });
+  });
+});
+
+ipcMain.on('remove-files:start', (event, { files, userData, raftNode }) => {
+  fls.remove(files, userData, raftNode, (error, theFiles) => {
+    if (error) return errorHandler(error, mainWindow, 'remove-files');
+
+    mainWindow.webContents.send('remove-files:success', theFiles);
+  });
+});
+
+//  notes listeners
+ipcMain.on('create-note:start', (event, { userData, raftNode }) => {
+  nts.createOne(userData, raftNode, (error, note) => {
+    if (error) return errorHandler(error, mainWindow, 'create-note');
+
+    mainWindow.webContents.send('create-note:success', note);
+  });
+});
+
+ipcMain.on('edit-note:start', (event, { note, userData, raftNode }) => {
+  nts.editOne(note, userData, raftNode, (error, theNote) => {
+    if (error) return errorHandler(error, mainWindow, 'edit-note');
+
+    mainWindow.webContents.send('edit-note:success', theNote);
+  });
+});
+
+ipcMain.on('remove-notes:start', (event, { notes, userData, raftNode }) => {
+  nts.remove(notes, userData, raftNode, (error, theNotes) => {
+    if (error) return errorHandler(error, mainWindow, 'remove-notes');
+
+    mainWindow.webContents.send('remove-notes:success', theNotes);
+  });
+});
+
+//  blockchain listeners
+ipcMain.on('create-transaction:start', (event, { userData, to, amount, bcNode }) => {
+  bc.createTransaction(userData, to, amount, bcNode, (error, wallet) => {
+    if (error) return errorHandler(error, mainWindow, 'create-transaction');
+
+    mainWindow.webContents.send('create-transaction:success', wallet);
+  });
+});
+
+//  ghost-time listeners
+ipcMain.on('set-ghost-time:start', (event, { kv, ghostTime, userData, raftNode }) => {
+  ghstTime.set(kv, ghostTime, userData, raftNode, (error, updated) => {
+    if (error) return errorHandler(error, mainWindow, 'set-ghost-time');
+
+    mainWindow.webContents.send('set-ghost-time:success', updated);
   });
 });

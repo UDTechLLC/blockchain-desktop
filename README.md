@@ -1,4 +1,4 @@
-# Wizebit desktop app
+# GhostDrive desktop app
 
 ## Install
 

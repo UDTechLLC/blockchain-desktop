@@ -2,12 +2,15 @@
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
+
 @import "~font-awesome/css/font-awesome.css";
 @import "~react-datetime-picker/dist/DateTimePicker.css";
 @import "~react-clock/dist/Clock.css";
+
+/* fonts upload */
+
 @import url('https://fonts.googleapis.com/css?family=Aldrich');
 
-/*
 @font-face {
   font-family: "Digital Counter 7";
   src: url("assets/fonts/digital_counter_7/digital_counter_7.ttf") format("truetype");
@@ -19,39 +22,92 @@
   src: url("assets/fonts/digital_counter_7/digital_counter_7_italic.ttf") format("truetype");
   font-style: italic;
 }
-*/
 
-html {
-  font-size: 10px;
+/* css reset */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font-family: "Aldrich", sans-serif;
+  vertical-align: baseline;
+}
+
+sub, sup {
+  vertical-align: top;
+  line-height: inherit;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* HTML5 display-role reset for older browsers */
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Aldrich', sans-serif;
-  background-color: #05293a;
-  color: #2f96ba;
-  font-weight: 400;
+  line-height: 1;
+  color: #fff;
 }
 
-#root {
-  width: 100%;
-  height: 100%;
-  margin: 0;
+ol, ul {
+  list-style: none;
 }
 
-h1 {
-  font-size: 50px;
-  font-weight: 200;
-  line-height: 1.2;
-  text-transform: uppercase;
-  margin-bottom: 15px;
-  display: inline-block;
-  vertical-align: middle !important;
-  margin-top: 0;
+blockquote, q {
+  quotes: none;
 }
 
-h1 > b {
-  font-weight: 600;
-  letter-spacing: 1px;
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
+  content: '';
+  content: none;
 }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+a, button {
+  outline: none;
+}
+
+/* Custom styles */
+
+html {
+  font-size: 62.5%;
+}
+
+h2 {
+  font-size: 3.2rem;
+}
+
+h3 {
+  font-size: 1.8rem;
+}
+
+/*
+::selection {
+  background: red;
+}
+*/

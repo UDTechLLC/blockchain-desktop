@@ -1,33 +1,22 @@
 export {
   registration,
-  authSuccess,
+  regCleanUp,
   auth,
   logout
 } from './auth';
+export { checkInternet } from './common';
+export { createTransaction } from './blockchain';
 export {
-  // getCredFilesList,
-  checkInternet
-} from './commonInfo';
-export { getBalance } from './blockchain';
-export { getDigest } from './digest';
-// export {
-//   getNotes,
-//   editNotesList,
-//   deleteNote
-// } from './notes';
-export {
-  getAppSettings,
-  getUserData,
+  // getAppSettings,
   createNewFolder,
   editFolder,
-  deleteFolder,
+  removeFolders,
   uploadFiles,
   downloadFile,
-  saveDownloadedFile,
-  removeFile,
+  removeFiles,
   createNote,
   editNote,
-  removeNote,
-  setTimebomb
+  removeNotes,
+  setGhostTime
 } from './raft';
 export { setSearchWord } from './search';

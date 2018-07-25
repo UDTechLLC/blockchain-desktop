@@ -15,109 +15,100 @@ import commonCss from '../../../../../assets/css/common.css';
 const styles = { ...commonCss, ...cornersCss, ...css };
 
 class GhostFolders extends Component {
-  state = {
-    trueDelete: false
-  };
-  handleToggleButton = () => this.setState({ trueDelete: !this.state.trueDelete });
-  handleTrueDelete = () => {
+  state = { trueRemove: false };
+  handleToggleButton = () => this.setState({ trueRemove: !this.state.trueRemove });
+  handleTrueRemove = () => {
     this.handleToggleButton();
-    return this.props.onDelete(this.props.folder.name);
+    return this.props.onRemove(this.props.folder.id);
   };
   render() {
     return (
-      <div
+      <button
         className={[
+          styles.transparentButton,
           styles.w100,
-          styles.FolderItem
+          styles.relative,
+          styles.blue,
+          styles.marginXsBottom,
+          styles.FolderItem,
+          !this.props.isActive ? null : styles.Active
         ].join(' ')}
+        onClick={() => this.props.onFolderCheck(this.props.folder.id)}
       >
         <div
-          className={[
-            styles.absolute100,
-            !this.props.isActive ? null : styles.Active
-          ].join(' ')}
+          className={styles.absolute100}
           style={{ backgroundImage: `url(${!this.props.isActive ? folderI : folderA})` }}
+        />
+        <div
+          className={[
+            styles.flexAllCenter,
+            styles.w100,
+            styles.flex1,
+            styles.RemoveButtonWrapper
+          ].join(' ')}
         >
-          <div
-            className={[
-              styles.flexColumnBetweenCenter,
-              styles.absolute100,
-              styles.Content
-            ].join(' ')}
-          >
-            <div
-              className={[
-                styles.flexAllCenter,
-                styles.w100,
-                styles.flex1,
-                styles.DeleteButtonWrapper
-              ].join(' ')}
-            >
-              <Aux>
-                <Backdrop
-                  show={this.state.trueDelete}
-                  onClick={() => this.handleToggleButton()}
-                  transparent
-                />
-                <button
-                  type="button"
-                  className={styles.transparentButton}
-                  onClick={() => (
-                    !this.state.trueDelete
-                      ? this.handleToggleButton()
-                      : this.handleTrueDelete()
-                  )}
-                >
-                  {!this.state.trueDelete ? 'delete' : 'confirm'}
-                </button>
-              </Aux>
-            </div>
+          <Aux>
+            <Backdrop
+              show={this.state.trueRemove}
+              onClick={() => this.handleToggleButton()}
+              transparent
+            />
             <div
               role="button"
               tabIndex={0}
-              onClick={() => this.props.onFolderCheck(this.props.folder.name)}
-              className={[
-                styles.flex,
-                styles.wh100,
-                styles.flex4,
-                styles.SecurityLayers
-              ].join(' ')}
+              className={styles.transparentButton}
+              onClick={e => {
+                e.stopPropagation();
+                return !this.state.trueRemove
+                  ? this.handleToggleButton()
+                  : this.handleTrueRemove();
+              }}
             >
-              {
-                Object.keys(this.props.folder.securityLayers).map((key, i) => (
-                  <div key={i}>
-                    {this.props.folder.securityLayers[key] ? key : null}
-                  </div>
-                ))
-              }
+              {!this.state.trueRemove ? 'delete' : 'confirm'}
             </div>
-            <div
-              className={[
-                styles.flex1,
-                styles.w100,
-                styles.FolderNameWrapper
-              ].join(' ')}
-            >
-              <TextThatOnDCChanged
-                onClick={val => this.props.onFolderCheck(val)}
-                value={!this.props.isActive ? this.props.folder.name : this.props.nameThatMayChange}
-                defaultValue={this.props.folder.name}
-                onValueChange={val => this.props.onNameThatMayChange(val)}
-                onFolderNameEdit={() => this.props.onFolderNameEdit()}
-              />
-            </div>
-          </div>
-          <div
-            className={[
-              styles.absolute100,
-              styles.corners,
-              styles.Corners
-            ].join(' ')}
-          >
-            <div /><div />
-          </div>
+          </Aux>
         </div>
-      </div>
+        <div
+          className={[
+            styles.flex1,
+            styles.w100,
+            styles.FolderNameWrapper
+          ].join(' ')}
+        >
+          <TextThatOnDCChanged
+            onClick={val => this.props.onFolderCheck(val)}
+            value={!this.props.isActive ? this.props.folder.name : this.props.nameThatMayChange}
+            defaultValue={this.props.folder.name}
+            onValueChange={val => this.props.onNameThatMayChange(val)}
+            onFolderNameEdit={() => this.props.onFolderNameEdit()}
+          />
+        </div>
+        <div
+          className={[
+            styles.flex,
+            styles.wh100,
+            styles.flex4,
+            styles.SecurityLayers
+          ].join(' ')}
+        >
+          {
+            Object.keys(this.props.folder.securityLayers).map((key, i) => (
+              <div key={i}>
+                {this.props.folder.securityLayers[key] ? key : null}
+              </div>
+            ))
+          }
+        </div>
+        <div
+          className={[
+            styles.absolute100,
+            styles.corners,
+            styles.Corners
+          ].join(' ')}
+        >
+          <div /><div />
+        </div>
+      </button>
     );
   }
 }
@@ -126,7 +117,7 @@ GhostFolders.propTypes = {
   folder: PropTypes.shape().isRequired,
   onFolderCheck: PropTypes.func.isRequired,
   isActive: PropTypes.bool,
-  onDelete: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired,
   nameThatMayChange: PropTypes.string.isRequired,
   onNameThatMayChange: PropTypes.func.isRequired,
   onFolderNameEdit: PropTypes.func.isRequired

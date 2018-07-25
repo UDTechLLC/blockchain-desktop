@@ -32,7 +32,8 @@ class Settings extends Component {
         className={[
           styles.flex,
           styles.justifyBetween,
-          styles.wh100
+          styles.wh100,
+          styles.paddingSm
         ].join(' ')}
       >
         {

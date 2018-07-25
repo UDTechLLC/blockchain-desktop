@@ -32,6 +32,139 @@
   left: 0;
 }
 
+.relative {
+  position: relative;
+}
+
+/* margin`s & padding`s */
+.margin0 {
+  margin: 0;
+}
+
+.padding0 {
+  padding: 0;
+}
+
+.marginXsTop {
+  margin-top: 0.7rem;
+}
+
+.marginXsRight {
+  margin-right: 0.7rem;
+}
+
+.marginXsBottom {
+  margin-bottom: 0.7rem;
+}
+
+.marginXsLeft {
+  margin-left: 0.7rem;
+}
+
+.marginXs {
+  margin: 0.7rem;
+}
+
+.paddingXsTop {
+  padding-top: 0.7rem;
+}
+
+.paddingXsRight {
+  padding-right: 0.7rem;
+}
+
+.paddingXsBottom {
+  padding-bottom: 0.7rem;
+}
+
+.paddingXsLeft {
+  padding-left: 0.7rem;
+}
+
+.paddingXs {
+  padding: 0.7rem;
+}
+
+.marginSmTop {
+   margin-top: 1.5rem;
+ }
+
+.marginSmRight {
+  margin-right: 1.5rem;
+}
+
+.marginSmBottom {
+  margin-bottom: 1.5rem;
+}
+
+.marginSmLeft {
+  margin-left: 1.5rem;
+}
+
+.marginSm {
+  margin: 1.5rem;
+}
+
+.paddingSmTop {
+  padding-top: 1.5rem;
+}
+
+.paddingSmRight {
+  padding-right: 1.5rem;
+}
+
+.paddingSmBottom {
+  padding-bottom: 1.5rem;
+}
+
+.paddingSmLeft {
+  padding-left: 1.5rem;
+}
+
+.paddingSm {
+  padding: 1.5rem;
+}
+
+.marginMdTop {
+  margin-top: 4rem;
+}
+
+.marginMdRight {
+  margin-right: 4rem;
+}
+
+.marginMdBottom {
+  margin-bottom: 4rem;
+}
+
+.marginMdLeft {
+  margin-left: 4rem;
+}
+
+.marginMd {
+  margin: 4rem;
+}
+
+.paddingMdTop {
+  padding-top: 4rem;
+}
+
+.paddingMdRight {
+  padding-right: 4rem;
+}
+
+.paddingMdBottom {
+  padding-bottom: 4rem;
+}
+
+.paddingMdLeft {
+  padding-left: 4rem;
+}
+
+.paddingMd {
+  padding: 4rem;
+}
+
 /* flex boxes */
 .flex {
   box-sizing: border-box;
@@ -56,6 +189,10 @@
 
 .flex5 {
   flex: 5;
+}
+
+.flex0050 {
+  flex: 0 0 50%;
 }
 
 .flexColumn {
@@ -145,24 +282,52 @@
 }
 
 /* colors */
+.white {
+  color: #fff;
+}
+
+.cyan {
+  color: #30d6d6;
+}
+
 .blue {
   color: #2f96ba;
+}
+
+.lightBlue {
+  color: rgba(22, 94, 106, 0.3);
+}
+
+.blueGreen {
+  color: #207c7f;
+}
+
+.orange {
+  color: #e34530;
+}
+
+.whiteBg {
+  background-color: white;
+}
+
+.cyanBg {
+  background-color: #30d6d6;
 }
 
 .blueBg {
   background-color: #2f96ba;
 }
 
-.orange {
-  color: #e14737;
-}
-
 .lightBlueBg {
   background-color: rgba(22, 94, 106, 0.3);
 }
 
-.white {
-  color: white;
+.blueGreenBg {
+  background-color: #207c7f;
+}
+
+.orangeBg {
+  background-color: #e34530;
 }
 
 .shadow {
@@ -270,14 +435,9 @@
 
 .orangeHeader {
   color: #e34530;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 300;
   text-transform: uppercase;
-  margin: 0 0 14px;
-}
-
-.padding15 {
-  padding: 15px;
 }
 
 /* media queries */

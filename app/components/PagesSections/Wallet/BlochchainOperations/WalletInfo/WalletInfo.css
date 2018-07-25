@@ -1,0 +1,17 @@
+.WaletsInfo div > p {
+  font-size: 1.4rem;
+  line-height: 1;
+  color: #2f96ba;
+  margin-bottom: 0.7rem;
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+}
+
+.WaletsInfo div > p:not(:nth-of-type(2)) {
+  text-transform: uppercase;
+}
+
+.WaletsInfo div > p:nth-of-type(2) {
+  color: #30d6d6;
+}

@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
-import { updateObject } from '../../utils/utility';
+import { updateObject } from '../../utils/utils';
 
 const initialState = {
   balance: {
@@ -7,35 +7,37 @@ const initialState = {
     approved: 0,
     pending: 0
   },
-  success: false,
-  error: null,
+  error: undefined,
   loading: false
 };
 
-const getBalanceStart = state => (updateObject(state, {
-  loading: true
-}));
+const actionStart = state => (updateObject(state, { loading: true }));
 
-const getBalanceSuccess = (state, action) => (updateObject(state, {
-  balance: {
-    ...state.balance,
-    ...action.balance
-  },
-  success: action.success,
+const actionFail = (state, action) => (updateObject(state, {
+  error: action.error,
   loading: false
 }));
 
-const getBalanceFail = (state, action) => (updateObject(state, {
-  error: action.error,
+const updBalance = (state, action) => (updateObject(state, {
+  balance: { ...state.balance, ...action.wallet.balance },
   loading: false
 }));
 
 const reducer = (state = initialState, action) => {
   if (action) {
     switch (action.type) {
-      case actionTypes.GET_BALANCE_START: return getBalanceStart(state, action);
-      case actionTypes.GET_BALANCE_SUCCESS: return getBalanceSuccess(state, action);
-      case actionTypes.GET_BALANCE_FAIL: return getBalanceFail(state, action);
+      //  start actions
+      case actionTypes.AUTH_START:
+      case actionTypes.CREATE_TRANSACTION_START:
+        return actionStart(state, action);
+      //  fail actions
+      case actionTypes.AUTH_FAIL:
+      case actionTypes.CREATE_TRANSACTION_FAIL:
+        return actionFail(state, action);
+      //  success actions
+      case actionTypes.AUTH_SUCCESS:
+      case actionTypes.CREATE_TRANSACTION_SUCCESS:
+        return updBalance(state, action);
       default: return state;
     }
   }

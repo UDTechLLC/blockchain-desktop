@@ -24,7 +24,7 @@ export default class MenuBuilder {
   }
 
   setupDevelopmentEnvironment() {
-    this.mainWindow.openDevTools();
+    // this.mainWindow.openDevTools();
     this.mainWindow.webContents.on('context-menu', (e, props) => {
       const { x, y } = props;
 
@@ -41,7 +41,7 @@ export default class MenuBuilder {
 
   buildDarwinTemplate() {
     const subMenuAbout = {
-      label: 'Electron',
+      label: 'GhostDrive',
       submenu: [
         { label: 'About ElectronReact', selector: 'orderFrontStandardAboutPanel:' },
         { type: 'separator' },

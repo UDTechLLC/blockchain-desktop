@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
@@ -7,18 +6,11 @@ import UiNavLink from '../UI/NavLink/NavLink';
 import Loading from '../Animations/Loading/Loading';
 import Graph from '../Graph/Graph';
 import Search from '../Search/Search';
-import { bytes2HumanReadableSize } from '../../utils/commonFunctions';
+import { bytes2HumanReadableSize } from '../../utils/utils';
 
-import {
-  logoGhost,
-  // loop,
-  logout,
-  settings,
-  wallet
-  /* , logoTitle */
-} from '../../assets/img/img';
+import { logoGhost, logout, settings, wallet } from '../../assets/img/img';
 import css from './Header.css';
-import commonCss from '../../assets/css/common.css';
+import commonCss from './../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
 const styles = { ...commonCss, ...css };
@@ -26,58 +18,17 @@ const styles = { ...commonCss, ...css };
 class Header extends Component {
   state = {
     unAuthorisedMenu: [
-      {
-        link: '/access',
-        label: 'Access'
-      },
-      {
-        link: '/register',
-        label: 'Register'
-      }
+      { link: '/access', label: 'Access' },
+      { link: '/register', label: 'Register' }
     ],
     authorisedMenu: [
-      {
-        link: '/ghost-drive',
-        label: 'Ghost drive'
-      },
-      // {
-      //   link: '/files',
-      //   label: 'Files'
-      // },
-      // {
-      //   link: '/upload',
-      //   label: 'Upload'
-      // },
-      // {
-      //   link: '/x-files',
-      //   label: 'Ghost Files'
-      // },
-      {
-        link: '/ghost-pad',
-        label: 'Ghost note'
-      }
+      { link: '/ghost-drive', label: 'Ghost drive' },
+      { link: '/ghost-note', label: 'Ghost note' }
     ],
     iconsMenu: [
-      // {
-      //   link: '/deposit',
-      //   label: loop,
-      //   alt: 'logout'
-      // },
-      {
-        link: '/wallet',
-        label: wallet,
-        alt: 'settings'
-      },
-      {
-        link: '/account',
-        label: settings,
-        alt: 'settings'
-      },
-      {
-        link: '/logout',
-        label: logout,
-        alt: 'logout'
-      },
+      { link: '/wallet', label: wallet, alt: 'settings' },
+      { link: '/account', label: settings, alt: 'settings' },
+      { link: '/logout', label: logout, alt: 'logout' },
     ],
     userFilesSize: 340 * 1024 * 1024,
     userFilesLimit: 1024 * 1024 * 1024
@@ -88,11 +39,16 @@ class Header extends Component {
       : this.state.unAuthorisedMenu;
     const rightMenu = this.props.isAuth
       ? this.state.iconsMenu
-      : null;
+      : undefined;
     return (
       <div
         className={[
+          styles.w100,
           styles.flexBetweenCenter,
+          styles.paddingSmTop,
+          styles.paddingMdRight,
+          styles.paddingSmBottom,
+          styles.paddingMdLeft,
           styles.Header
         ].join(' ')}
       >
@@ -100,14 +56,27 @@ class Header extends Component {
           <div
             className={[
               styles.flexAlignCenter,
+              styles.relative,
               styles.Logo
             ].join(' ')}
           >
             {
               !this.props.loading
-                ? <img src={logoGhost} alt="Ghostdrive" />
+                ? (
+                  <img
+                    src={logoGhost}
+                    alt="GhostDrive logo"
+                    className={styles.marginSmRight}
+                  />
+                )
                 : (
-                  <div className={styles.LogoImg}>
+                  <div
+                    className={[
+                      styles.relative,
+                      styles.marginSmRight,
+                      styles.LogoImg
+                    ].join(' ')}
+                  >
                     <Loading color="white" />
                   </div>
                 )
@@ -120,10 +89,10 @@ class Header extends Component {
             />
           </div>
           <nav>
-            <ul className={styles.NavList}>
+            <ul className={[styles.flex, styles.NavList].join(' ')}>
               {
                 leftMenu.map((item, index) => (
-                  <li key={index}>
+                  <li key={index} className={styles.marginSmRight}>
                     <UiNavLink
                       link={item.link}
                       label={item.label}
@@ -157,11 +126,13 @@ class Header extends Component {
                     >
                       {
                         index !== rightMenu.length - 1
-                          ? null
+                          ? undefined
                           : (
                             <li
                               className={[
                                 styles.flexBetweenCenter,
+                                styles.marginSmRight,
+                                styles.white,
                                 styles.GraphWrapper
                               ].join(' ')}
                             >
@@ -174,7 +145,7 @@ class Header extends Component {
                             </li>
                           )
                       }
-                      <li>
+                      <li className={styles.marginSmRight}>
                         <NavLink
                           to={item.link}
                         >
@@ -186,7 +157,7 @@ class Header extends Component {
                 }
               </ul>
             )
-            : null
+            : undefined
         }
       </div>
     );

@@ -88,9 +88,9 @@ export default merge.smart(baseConfig, {
               localIdentName: '[name]__[local]__[hash:base64:5]',
             }
           },
-          {
-            loader: 'sass-loader'
-          }]
+            {
+              loader: 'sass-loader'
+            }]
         }),
       },
       // WOFF Font
