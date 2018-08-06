@@ -29,7 +29,7 @@ const walletInfo = props => (
         Balance
       </p>
       <p>
-        { props.balance } GHST
+        { props.balance } SDS
       </p>
     </div>
   </div>

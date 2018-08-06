@@ -12,50 +12,41 @@ import Wallet from './containers/Wallet/Wallet';
 import Settings from './containers/Settings/Settings';
 import GhostNote from './containers/GhostNote/GhostNote';
 import Logout from './containers/Homepage/Logout/Logout';
-import Ghost from './components/Animations/Ghost/Ghost';
+// import Ghost from './components/Animations/Ghost/Ghost';
 
 import { bg } from './assets/img/img';
-import classes from './App.css';
 
 class App extends Component {
-  state = { content: false };
   componentWillMount() {
     this.props.checkInternet();
-    setTimeout(() => this.setState({ content: true }), 1649);
   }
+
   render() {
-    let routes = <NoInternetConnection />;
+    let routes = (
+      <Switch>
+        <Route path="/" component={Homepage} key={Math.random()} />
+        <Redirect to="/" />
+      </Switch>
+    );
     if (this.props.isAuth && this.props.internet) {
       routes = (
         <Switch>
-          <Route exact path="/ghost-drive" component={GhostDrive} key={Math.random()} />
-          <Route exact path="/ghost-note" component={GhostNote} key={Math.random()} />
+          <Route exact path="/drive" component={GhostDrive} key={Math.random()} />
+          <Route exact path="/note" component={GhostNote} key={Math.random()} />
           <Route exact path="/account" component={Settings} key={Math.random()} />
           <Route exact path="/wallet" component={Wallet} key={Math.random()} />
           <Route exact path="/logout" component={Logout} key={Math.random()} />
-          <Redirect to="/ghost-drive" />
+          <Redirect to="/drive" />
         </Switch>
       );
-    } else if (this.props.internet) {
-      routes = (
-        <Switch>
-          <Route path="/" component={Homepage} key={Math.random()} />
-          <Redirect to="/" />
-        </Switch>
-      );
+    } else if (!this.props.internet) {
+      routes = <NoInternetConnection />;
     }
-    const startAnimation = (
-      <div className={classes.AnimationWrapper}>
-        <Ghost />
-      </div>
-    );
     return (
       <div style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover' }}>
-        {
-          this.state.content
-            ? (<Layout>{routes}</Layout>)
-            : (<div>{startAnimation}</div>)
-        }
+        <Layout>
+          {routes}
+        </Layout>
       </div>
     );
   }

@@ -28,7 +28,7 @@ const Manipulation = props => (
       ].join(' ')}
     >
       <h3 className={styles.orangeHeader}>
-        ADD GHOST TIME
+        ADD TIME BOMB
       </h3>
       <div
         className={[

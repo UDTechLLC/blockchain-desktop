@@ -26,15 +26,15 @@ class Wallet extends Component {
         options: [
           {
             value: 'ghost-gst1',
-            displayValue: 'GHOST GST + 30% BONUS'
+            displayValue: '2SDS SDS + 30% BONUS'
           },
           {
             value: 'ghost-gst2',
-            displayValue: 'GHOST GST + 31% BONUS'
+            displayValue: '2SDS SDS + 31% BONUS'
           },
           {
             value: 'ghost-gst3',
-            displayValue: 'GHOST GST + 32% BONUS'
+            displayValue: '2SDS SDS + 32% BONUS'
           }
         ]
       }

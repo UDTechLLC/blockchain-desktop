@@ -17,8 +17,8 @@ const access = props => (
       accept=".bak"
     >
       <div className={styles.Content}>
-        <h1>GHOST ACCESS</h1>
-        <h2>Powered by WizeBit Blockchain</h2>
+        <h1>2SDS ACCESS</h1>
+        <h2>Powered by 2SDS Blockchain</h2>
         <div
           className={styles.InnerTextWrapper}
         >

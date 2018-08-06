@@ -1,8 +1,8 @@
 {
-  "name": "ghostdrive",
-  "productName": "GhostDrive",
-  "version": "0.3.3",
-  "description": "GhostDrive desktop application",
+  "name": "2SDS",
+  "productName": "2SDS",
+  "version": "0.3.4",
+  "description": "2SDS desktop application",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.dev.dll.js --colors",
@@ -32,8 +32,8 @@
   },
   "browserslist": "electron 1.6",
   "build": {
-    "productName": "GhostDrive",
-    "appId": "org.develar.GhostDrive",
+    "productName": "2SDS",
+    "appId": "org.develar.2SDS",
     "files": [
       "dist/",
       "node_modules/",

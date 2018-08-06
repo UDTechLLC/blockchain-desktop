@@ -5,7 +5,7 @@ const initialState = {
   settings: {
     loginMethod: {
       pinCode: false,
-      wize_2Fa: false,
+      _2Fa: false,
       password: false
     },
     nodeStaking: {
@@ -25,7 +25,7 @@ const initialState = {
     },
     securityLayers: {
       pin: false,
-      wize_2Fa: false,
+      _2Fa: false,
       voiceBiometric: false,
       faceRecognition: false,
       musicSlider: false

@@ -1,13 +1,13 @@
 {
-  "name": "ghost-drive",
-  "productName": "ghost-drive",
-  "version": "0.3.3",
-  "description": "GhostDrive application on React, React Router, Webpack, React Hot Loader, Redux",
+  "name": "2SDS",
+  "productName": "2SDS",
+  "version": "0.3.4",
+  "description": "2SDS application on React, React Router, Webpack, React Hot Loader, Redux",
   "main": "./main.prod.js",
   "author": {
-    "name": "Anthony Synenko",
+    "name": "UDTech",
     "email": "synenko.a@udtech.co",
-    "url": "https://github.com/syntony"
+    "url": "https://udtech.co"
   },
   "scripts": {
     "electron-rebuild": "node -r babel-register ../internals/scripts/ElectronRebuild.js",

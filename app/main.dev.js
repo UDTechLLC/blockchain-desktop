@@ -25,7 +25,7 @@ const ghstTime = require('./electron/listeners/ghost-time/ghost-time');
 
 // let configFolder = `${process.cwd()}/.ghost-config`;
 // if (process.platform === 'darwin') {
-//   configFolder = '/Applications/GhostDrive.app/Contents/Resources/.ghost-config';
+//   configFolder = '/Applications/2SDS.app/Contents/Resources/.ghost-config';
 // } else if (process.platform === 'win32') {
 //   configFolder = `${process.cwd()}\\ghost-config`;
 // }

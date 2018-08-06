@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import classes from './Register.css';
-import { fileImg, logo2 } from '../../../../assets/img/img';
+import { fileImg } from '../../../../assets/img/img';
 
 const register = props => (
   <div className={classes.Registration}>
     <div className={classes.Content}>
-      <h1>GHOST DRIVE ACCESS POINT</h1>
-      <h2>Powered by WizeBit Blockchain</h2>
+      <h1>2SDS ACCESS POINT</h1>
+      <h2>Powered by 2SDS Blockchain</h2>
       <div className={classes.Inputs}>
         <input
           type="password"
@@ -36,9 +36,6 @@ const register = props => (
             <p>only access to administrator</p>
           </div>
         </div>
-      </div>
-      <div className={classes.ImgLine}>
-        <img src={logo2} alt="WizeBit" />
       </div>
     </div>
   </div>

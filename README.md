@@ -1,4 +1,4 @@
-# GhostDrive desktop app
+# 2SDS desktop app
 
 ## Install
 

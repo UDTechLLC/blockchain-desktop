@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
 import UiNavLink from '../UI/NavLink/NavLink';
-import Loading from '../Animations/Loading/Loading';
 import Graph from '../Graph/Graph';
 import Search from '../Search/Search';
 import { bytes2HumanReadableSize } from '../../utils/utils';
 
-import { logoGhost, logout, settings, wallet } from '../../assets/img/img';
+import { logout, settings, wallet } from '../../assets/img/img';
 import css from './Header.css';
 import commonCss from './../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
@@ -22,8 +21,8 @@ class Header extends Component {
       { link: '/register', label: 'Register' }
     ],
     authorisedMenu: [
-      { link: '/ghost-drive', label: 'Ghost drive' },
-      { link: '/ghost-note', label: 'Ghost note' }
+      { link: '/drive', label: 'Drive' },
+      { link: '/note', label: 'Note' }
     ],
     iconsMenu: [
       { link: '/wallet', label: wallet, alt: 'settings' },
@@ -60,33 +59,8 @@ class Header extends Component {
               styles.Logo
             ].join(' ')}
           >
-            {
-              !this.props.loading
-                ? (
-                  <img
-                    src={logoGhost}
-                    alt="GhostDrive logo"
-                    className={styles.marginSmRight}
-                  />
-                )
-                : (
-                  <div
-                    className={[
-                      styles.relative,
-                      styles.marginSmRight,
-                      styles.LogoImg
-                    ].join(' ')}
-                  >
-                    <Loading color="white" />
-                  </div>
-                )
-            }
-            <div
-              className={[
-                styles.orangeBar,
-                styles.Bar
-              ].join(' ')}
-            />
+            <h3>2SDS</h3>
+            <div className={[styles.orangeBar, styles.Bar].join(' ')} />
           </div>
           <nav>
             <ul className={[styles.flex, styles.NavList].join(' ')}>
@@ -165,8 +139,7 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-  isAuth: PropTypes.bool.isRequired,
-  loading: PropTypes.bool.isRequired
+  isAuth: PropTypes.bool.isRequired
 };
 
 export default Header;

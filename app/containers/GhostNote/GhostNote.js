@@ -79,7 +79,7 @@ class GhostNote extends Component {
   render() {
     return (
       <InfoPanelWrapper
-        disableManBtns={!Object.keys(this.state.activeNote)}
+        disableManBtns={!Object.keys(this.state.activeNote).length}
         showRemoveButton={this.state.showRemoveButton}
         toggleShowRemoveBtn={this.toggleShowRemoveButton}
         onTopManBtnClick={this.handleEditNote}
