@@ -3,30 +3,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { ConnectedRouter } from 'react-router-redux';
 import { Provider } from 'react-redux';
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { createHashHistory } from 'history';
 import thunk from 'redux-thunk';
 
-import common from './store/reducers/common';
-import auth from './store/reducers/auth';
-import raft from './store/reducers/raft';
-import blockchain from './store/reducers/blockchain';
-import digest from './store/reducers/digest';
-import search from './store/reducers/search';
-
 import './app.global.css';
 import App from './App';
+import rootReducer from './store/reducers';
 
 const history = createHashHistory();
-
-const rootReducer = combineReducers({
-  common,
-  auth,
-  raft,
-  blockchain,
-  digest,
-  search
-});
 
 let composeEnhancers = null || compose;
 if (process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {

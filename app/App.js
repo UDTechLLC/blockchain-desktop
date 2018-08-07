@@ -7,12 +7,11 @@ import { checkInternet } from './store/actions/index';
 import Layout from './hoc/Layout/Layout';
 import NoInternetConnection from './components/PagesSections/NoInternetConnection/NoInternetConnection';
 import Homepage from './containers/Homepage/Homepage';
-import GhostDrive from './containers/GhostDrive/GhostDrive';
+import Drive from './containers/Drive/Drive';
+import Note from './containers/Note/Note';
 import Wallet from './containers/Wallet/Wallet';
 import Settings from './containers/Settings/Settings';
-import GhostNote from './containers/GhostNote/GhostNote';
 import Logout from './containers/Homepage/Logout/Logout';
-// import Ghost from './components/Animations/Ghost/Ghost';
 
 import { bg } from './assets/img/img';
 
@@ -31,8 +30,8 @@ class App extends Component {
     if (this.props.isAuth && this.props.internet) {
       routes = (
         <Switch>
-          <Route exact path="/drive" component={GhostDrive} key={Math.random()} />
-          <Route exact path="/note" component={GhostNote} key={Math.random()} />
+          <Route exact path="/drive" component={Drive} key={Math.random()} />
+          <Route exact path="/note" component={Note} key={Math.random()} />
           <Route exact path="/account" component={Settings} key={Math.random()} />
           <Route exact path="/wallet" component={Wallet} key={Math.random()} />
           <Route exact path="/logout" component={Logout} key={Math.random()} />

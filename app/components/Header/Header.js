@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
-import UiNavLink from '../UI/NavLink/NavLink';
-import Graph from '../Graph/Graph';
-import Search from '../Search/Search';
-import { bytes2HumanReadableSize } from '../../utils/utils';
+import UiNavLink from './../UI/NavLink/NavLink';
+import Graph from './../Graph/Graph';
+import Search from './../Search/Search';
+import { TM_LABEL } from '../../utils/const';
+import { bytes2HumanReadableSize } from './../../utils/utils';
 
-import { logout, settings, wallet } from '../../assets/img/img';
+import { logout, settings, wallet } from './../../assets/img/img';
 import css from './Header.css';
 import commonCss from './../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
@@ -25,20 +26,78 @@ class Header extends Component {
       { link: '/note', label: 'Note' }
     ],
     iconsMenu: [
-      { link: '/wallet', label: wallet, alt: 'settings' },
+      { link: '/wallet', label: wallet, alt: 'wallet' },
       { link: '/account', label: settings, alt: 'settings' },
       { link: '/logout', label: logout, alt: 'logout' },
     ],
     userFilesSize: 340 * 1024 * 1024,
     userFilesLimit: 1024 * 1024 * 1024
   };
+
+  renderLeftMenu() {
+    const { authorisedMenu, unAuthorisedMenu } = this.state;
+    let leftMenu = unAuthorisedMenu;
+
+    if (this.props.isAuth) leftMenu = authorisedMenu;
+
+    return (
+      <ul className={[styles.flex, styles.NavList].join(' ')}>
+        {
+          leftMenu.map((item, index) => (
+            <li key={index} className={styles.marginSmRight}>
+              <UiNavLink
+                link={item.link}
+                label={item.label}
+              />
+            </li>))
+        }
+      </ul>
+    );
+  }
+
+  renderRightMenu() {
+    if (!this.props.isAuth) return undefined;
+    const rightMenu = this.state.iconsMenu;
+
+    return (
+      <ul className={[styles.flexBetweenCenter, styles.IconsMenu].join(' ')}>
+        <li><Search /></li>
+        {
+          rightMenu.map((item, index) => (
+            <div
+              key={index}
+              className={[styles.flexAllCenter, styles.h100].join(' ')}
+            >
+              {
+                index !== rightMenu.length - 1 ? undefined : (
+                  <li
+                    className={[
+                      styles.flexBetweenCenter,
+                      styles.marginSmRight,
+                      styles.white,
+                      styles.GraphWrapper
+                    ].join(' ')}
+                  >
+                    <Graph progress={this.state.userFilesSize / this.state.userFilesLimit} />
+                    <span>
+                      {`${bytes2HumanReadableSize(this.state.userFilesSize)} / ${bytes2HumanReadableSize(this.state.userFilesLimit)}`}
+                    </span>
+                  </li>
+                )
+              }
+              <li className={styles.marginSmRight}>
+                <NavLink to={item.link}>
+                  <img src={item.label} alt={item.alt} height={18} />
+                </NavLink>
+              </li>
+            </div>
+          ))
+        }
+      </ul>
+    );
+  }
+
   render() {
-    const leftMenu = this.props.isAuth
-      ? this.state.authorisedMenu
-      : this.state.unAuthorisedMenu;
-    const rightMenu = this.props.isAuth
-      ? this.state.iconsMenu
-      : undefined;
     return (
       <div
         className={[
@@ -52,94 +111,19 @@ class Header extends Component {
         ].join(' ')}
       >
         <div className={styles.flexAllCenter}>
-          <div
-            className={[
-              styles.flexAlignCenter,
-              styles.relative,
-              styles.Logo
-            ].join(' ')}
-          >
-            <h3>2SDS</h3>
+          <div className={[styles.flexAlignCenter, styles.relative, styles.Logo].join(' ')}>
+            <h3>{TM_LABEL}</h3>
             <div className={[styles.orangeBar, styles.Bar].join(' ')} />
           </div>
-          <nav>
-            <ul className={[styles.flex, styles.NavList].join(' ')}>
-              {
-                leftMenu.map((item, index) => (
-                  <li key={index} className={styles.marginSmRight}>
-                    <UiNavLink
-                      link={item.link}
-                      label={item.label}
-                    />
-                  </li>
-                ))
-              }
-            </ul>
-          </nav>
+          <nav>{this.renderLeftMenu()}</nav>
         </div>
-        {
-          rightMenu
-            ? (
-              <ul
-                className={[
-                  styles.flexBetweenCenter,
-                  styles.IconsMenu
-                ].join(' ')}
-              >
-                <li>
-                  <Search />
-                </li>
-                {
-                  rightMenu.map((item, index) => (
-                    <div
-                      key={index}
-                      className={[
-                        styles.flexAllCenter,
-                        styles.h100
-                      ].join(' ')}
-                    >
-                      {
-                        index !== rightMenu.length - 1
-                          ? undefined
-                          : (
-                            <li
-                              className={[
-                                styles.flexBetweenCenter,
-                                styles.marginSmRight,
-                                styles.white,
-                                styles.GraphWrapper
-                              ].join(' ')}
-                            >
-                              <Graph
-                                progress={this.state.userFilesSize / this.state.userFilesLimit}
-                              />
-                              <span>
-                                {`${bytes2HumanReadableSize(this.state.userFilesSize)} / ${bytes2HumanReadableSize(this.state.userFilesLimit)}`}
-                              </span>
-                            </li>
-                          )
-                      }
-                      <li className={styles.marginSmRight}>
-                        <NavLink
-                          to={item.link}
-                        >
-                          <img src={item.label} alt={item.alt} height={18} />
-                        </NavLink>
-                      </li>
-                    </div>
-                  ))
-                }
-              </ul>
-            )
-            : undefined
-        }
+
+        {this.renderRightMenu()}
       </div>
     );
   }
 }
 
-Header.propTypes = {
-  isAuth: PropTypes.bool.isRequired
-};
+Header.propTypes = { isAuth: PropTypes.bool.isRequired };
 
 export default Header;

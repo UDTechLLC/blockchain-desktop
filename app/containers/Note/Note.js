@@ -7,13 +7,13 @@ import InfoPanelWrapper from '../../components/InfoPanelWrapper/InfoPanelWrapper
 import NotesList from '../../components/PagesSections/GhostNote/NotesList/NotesList';
 import NoteText from '../../components/PagesSections/GhostNote/NoteText/NoteText';
 
-import css from './GhostNote.css';
+import css from './Note.css';
 import commonCss from '../../assets/css/common.css';
 // global classes names starts with lowercase letter: styles.class
 // and component classes - uppercase: styles.Class
 const styles = { ...commonCss, ...css };
 
-class GhostNote extends Component {
+class Note extends Component {
   state = {
     activeNote: {},
     showRemoveButton: false,
@@ -116,7 +116,7 @@ class GhostNote extends Component {
   }
 }
 
-GhostNote.propTypes = {
+Note.propTypes = {
   notes: PropTypes.shape(),
   userData: PropTypes.shape().isRequired,
   raftNode: PropTypes.string.isRequired,
@@ -126,7 +126,7 @@ GhostNote.propTypes = {
   setGhostTime: PropTypes.func.isRequired
 };
 
-GhostNote.defaultProps = {
+Note.defaultProps = {
   notes: {}
 };
 
@@ -149,4 +149,4 @@ const mapDispatchToProps = dispatch => ({
   )
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(GhostNote);
+export default connect(mapStateToProps, mapDispatchToProps)(Note);
