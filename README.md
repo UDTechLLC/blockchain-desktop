@@ -1,4 +1,4 @@
-# Wizebit desktop app
+# Desktop app
 
 ## Install
 
@@ -8,7 +8,7 @@
 First, clone the repo via git and then install dependencies with npm.
 
 ```bash
-$ cd wize-desktop
+$ cd blockchain-desktop
 $ npm install
 ```
 
