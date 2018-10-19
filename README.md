@@ -134,7 +134,7 @@ git pull upstream master
 ```
 
 ## License
-MIT © [C. T. Lin](https://github.com/chentsulin)
+MIT © UDTechLLC https://github.com/UDTechLLC
 
 [npm-image]: https://img.shields.io/npm/v/electron-react-boilerplate.svg?style=flat-square
 [github-tag-image]: https://img.shields.io/github/tag/chentsulin/electron-react-boilerplate.svg
